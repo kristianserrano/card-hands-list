@@ -1,10 +1,10 @@
 # hand-mini-bar
 
-Hand Mini Bar - a mini toolbar to display a hand of cards
+Hand Mini Bar - a mini toolbar for FoundryVTT to display a hand of cards
 
 ## What?
 
-A module to display a players hand of cards on the screen in a small toolbar
+A module to display a players hand of cards on the FoundryVTT game screen in a small toolbar
 
 ## Usage
 
