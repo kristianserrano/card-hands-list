@@ -1,0 +1,24 @@
+{
+    "HANDMINIBAR.ModuleName":"Hand Mini Bar",
+    "HANDMINIBAR.NoHandMessageBefore":"Select the",
+    "HANDMINIBAR.NoHandMessageAfter":"Icon to choose a hand",
+    "HANDMINIBAR.ChooseHand":"Select Hand",
+    "HANDMINIBAR.NoAvailableHands":"This user does not have any available hands.",
+    "HANDMINIBAR.CardBack":"Back",
+    "HANDMINIBAR.CardHidden":"Hidden",
+    "HANDMINIBAR.AddCard":"Draw Cards",
+    "HANDMINIBAR.ResetHandConfirmTitle":"Reset Hand",
+    "HANDMINIBAR.ResetHandConfirmQuestion":"Place all cards back in their original Deck?",
+    "HANDMINIBAR.DeckList":"List of Hands",
+    "HANDMINIBAR.OpenHand":"Hand Info",
+    "HANDMINIBAR.Pass":"Pass Cards",
+    "HANDMINIBAR.HandCountSetting":"Hand Count",
+    "HANDMINIBAR.HandCountSettingHint":"Number of hands to display on the screen",
+    "HANDMINIBAR.DisplayHandNameSetting":"Display Hand Name",
+    "HANDMINIBAR.DisplayHandNameSettingHint":"Displays the name for the hand above the hand (useful for multiple hands)",
+    "HANDMINIBAR.HideMessagesSetting":"No Messages",
+    "HANDMINIBAR.HideMessagesSettingHint":"Disables Messages when cards are moved to and from the mini bar",
+    "HANDMINIBAR.BetterChatMessagesSetting":"Better Chat Messages",
+    "HANDMINIBAR.BetterChatMessagesSettingHint":"Messages in Chat are displayed with card images and descriptions"
+
+}

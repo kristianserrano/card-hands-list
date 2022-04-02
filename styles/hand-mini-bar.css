@@ -1,0 +1,266 @@
+#hand-mini-bar-container{
+    display:flex;
+    flex-direction: column;
+}
+
+#hand-mini-bar-hands-container{
+    display:flex;
+    flex-direction: column;
+    max-height:900px;
+    transition: max-height 500ms ease-in-out;
+    padding-top: 18px;
+    padding-bottom: 25px;
+    overflow: hidden;
+}
+
+#hand-mini-bar-container.hidden #hand-mini-bar-hands-container{
+    max-height:0px;
+    padding-bottom: 0px; 
+}
+
+#hand-mini-bar-container.hidden i.hand-mini-bar-hide-show{
+    margin-top:0px;
+}
+
+i.hand-mini-bar-hide-show{
+    margin-left:109px;
+    color:#c9c7b8;
+    padding:2px;
+    cursor:pointer;
+    pointer-events: all;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;    
+    font-size: 17px;
+    margin-top:-24px;
+}
+
+
+i.hand-mini-bar-hide-show:before{
+    content: "\f107";
+}
+
+i.hand-mini-bar-hide-show.show{
+    line-height: 18px;
+    margin-top: -24px;
+}
+
+i.hand-mini-bar-hide-show.show:before{
+    content: "\f106";
+}
+
+.hand-mini-bar-hand{
+    display:flex;
+    flex-direction: column;
+    max-width:200px;
+    max-height: 65px;
+    margin: 5px 5px 0px 15px;
+    color: var(--color-text-light-highlight);
+    z-index: var(--z-index-ui);
+    pointer-events: all;
+}
+
+.hand-mini-bar-hand-inner{
+    display:flex;
+    flex-direction: row;
+    padding: 0;
+    background: url(../../../ui/denim075.png) repeat;
+    border-radius: 5px;
+    box-shadow: 0 0 20px var(--color-shadow-dark);
+    border: 1px solid #000;
+}
+
+.hand-mini-bar-hand-name{
+    display:none;
+    font-size: 12px;
+    /*color: #c9c7b8;*/
+    color:#FFF;
+    width: 200px;
+    text-align: center;
+}
+
+#hand-mini-bar-container.show-names .hand-mini-bar-hand-name{
+    display:block;
+
+}
+
+.hand-mini-bar-settings,
+.hand-mini-bar-actions{
+    display:flex;
+    cursor: pointer;
+    flex-direction: column; 
+    height: 50px;
+
+}
+
+.hand-mini-bar-settings-hand{
+    background-image: url(/modules/hand-mini-bar/artwork/cards.png);
+    background-size: 20px;
+    background-repeat: no-repeat;
+    width: 23px;
+    height: 25px;
+    background-position-y: 1px;
+    background-position-x: 0px;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+    border-radius: 5px 0 0 0;
+    color: #c9c7b8;
+}
+
+.hand-mini-bar-settings-choose{
+    background-size: 30px;
+    background-repeat: no-repeat;
+    width: 23px;
+    height: 25px;
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
+    border-radius:0 0 0 5px;
+    color:#c9c7b8;
+    font-size: 21px;
+    padding-left: 1px;
+    line-height: 23px;
+}
+
+.hand-mini-bar-settings-choose:before{
+    content:'\2699';
+}
+
+
+.hand-mini-bar-reset{
+    width: 23px;
+    height: 25px;
+    background-position-y: 7px;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-radius:0 0 5px 0;
+    color:#c9c7b8;
+    padding-left: 2px;
+    font-size: 22px;
+    line-height: 23px;
+}
+
+.hand-mini-bar-reset:before{
+    content: "\21bb";
+}
+
+.hand-mini-bar-pass{
+    width: 23px;
+    height: 25px;
+    background-position-y: 7px;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-radius:0 0 5px 0;
+    color:#c9c7b8;
+    padding-left: 2px;
+    font-size: 22px;
+    line-height: 23px;
+}
+
+.hand-mini-bar-pass:before{
+    content: "\21aa";
+}
+
+.hand-mini-bar-draw{
+    display:block;
+    width: 23px;
+    height:25px;
+    color:#c9c7b8;
+    border-left: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-radius:0 5px 0 0;
+    padding-left:1px;
+}
+
+
+.hand-mini-bar-settings-choose:hover,
+.hand-mini-bar-pass:hover,
+.hand-mini-bar-settings-hand:hover,
+.hand-mini-bar-draw:hover{
+    border: 1px solid var(--color-border-highlight-alt);
+    border-bottom: 1px solid var(--color-border-highlight);
+    box-shadow: 0 0 10px var(--color-shadow-highlight);
+}
+
+.hand-mini-bar-draw:before{
+    content: '+';
+    font-size: 36px;
+    line-height: 22px;
+}
+
+.hand-mini-bar-card-container{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    max-width: 154px;
+    max-height: 50px;
+    /*To Overlap cards and tokens*/
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.hand-mini-bar-card{
+    height: 50px;
+    width: 50px;
+    /*better for catds?
+     *width: calc(48px * 2 / 3);
+    */
+    background-repeat: no-repeat;  
+    background-size: auto 50px;
+    margin-left: 1px;
+    cursor: pointer;
+    /*To Overlap cards and tokens*/
+    margin-left: -14px;
+    margin-right: -14px;    
+    z-index:1000;
+    filter: drop-shadow(0px 0px 3px #000);
+}
+
+.hand-mini-bar-card:hover{
+    height: 100px;
+    width: calc(100px * 2 / 3);
+    background-size: calc(100px * 2 / 3) auto;
+    background-position: center;
+    margin-top:-24px;
+    flex: none;
+    margin-left:-24px;
+    filter:drop-shadow(5px 5px 5px #000);
+}
+
+
+.hand-mini-bar-message{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.hand-mini-bar-message-info{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    max-width: 224px;
+    padding-left: 4px;
+}
+
+.hand-mini-bar-message-name{
+    margin-bottom: 2px;
+}
+
+.hand-mini-bar-message-description{
+    font-size: smaller;
+}
+
+.hand-mini-bar-message-card{
+    height: 50px;
+    width: 50px;
+    background-position: center;
+    background-size: auto 50px;
+    background-repeat:no-repeat;
+
+}
+
+.empty-hand-message{
+    margin-left:-10px;
+    padding:8px;
+}
+.empty-hand-message .settings-icon{
+    color:greenyellow;
+}
