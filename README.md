@@ -16,13 +16,13 @@ The Module will display a single hand toolbar in the bottom left corner by defau
 
 ![Toolbar Cards](artwork/tutorial-cards.png?raw=true)
 
-The toolbar has buttons to `draw cards`, `pass cards`, or `show hand` window. Left Clicking a card will pull up the play card dialog. Right click will flip the card to it's back. Dragging and dropping can be used to drop cards between toolbars or back and forth from the deck/hand/pile windows.
+The toolbar has buttons to `draw cards`, `pass cards`, or `show hand` window. Left Clicking a card will pull up the play card dialog. Right click will flip the card to it's back. Dragging and dropping can be used to drop cards between toolbars or back and forth from the deck/hand/pile windows. If the hand is in the way the arrow at the bottom will hide/show all the hands displayed.
 
 ![Settings Panel](artwork/tutorial-settings.png?raw=true)
 
 Advanced options are available to display up to 10 hands and their titles making the module more useful for a DM to track everyones hands.
 
-By Default the toolbar disables messages to chat. This can be re-enabled in the module settings. Also included is a better message when playing the card which includes the image title and description.
+By Default the toolbar disables messages to chat. This can be re-enabled in the module settings. Also included is a better message when playing the card which includes the image, title and description.
 
 ## Why?
 
