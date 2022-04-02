@@ -4,7 +4,7 @@ Hand Mini Bar - a mini toolbar to display a hand of cards
 
 ## What?
 
-A Module to display mini toolbars which display the cards in a particular hand.
+A module to display a players hand of cards on the screen in a small toolbar
 
 ## Usage
 
