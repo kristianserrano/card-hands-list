@@ -1,7 +1,7 @@
 {
   "name": "hand-mini-bar",
-  "title": "Hand Mini Bar",
-  "description": "A Module to Display A players hand of cards on the screen in a small toolbar",
+  "title": "Card Hand Mini Toolbar",
+  "description": "A module to display a players hand of cards on the screen in a small toolbar",
   "author": "pengrath",
   "version": "1.0.0",
   "minimumCoreVersion": "0.9.0",
