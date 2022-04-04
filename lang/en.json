@@ -1,5 +1,6 @@
 {
     "HANDMINIBAR.ModuleName":"Hand Mini Bar",
+    "HANDMINIBAR.NoHandSelected":"You must first select a hand for this toolbar.",
     "HANDMINIBAR.NoHandMessageBefore":"Select the",
     "HANDMINIBAR.NoHandMessageAfter":"Icon to choose a hand",
     "HANDMINIBAR.ChooseHand":"Select Hand",
