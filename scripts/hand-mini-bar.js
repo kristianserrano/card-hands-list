@@ -893,6 +893,7 @@ Hooks.on("ready", function() {
               HandMiniBarConfig.updatePlayerHandsDelayed();
             }
           });
+          HandMiniBarConfig.updatePlayerHands();
       }
   )
 });
