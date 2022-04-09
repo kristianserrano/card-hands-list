@@ -1,8 +1,16 @@
 <form class="cards-dialog">
     <figure>
         <img class="thumbnail" src="{{card.img}}" height="480"/>
-        <figcaption>{{card.name}}</figcaption>
+        <figcaption>
+            {{card.name}}
+            {{#if card.data.description}}
+                <p class="hand-mini-bar-play-dialog-description">
+                    {{card.data.description}}
+                </p>
+            {{/if}}
+        </figcaption>
     </figure>
+
     <p class="notes">{{localize "CARD.PlayHint"}}</p>
 
     <div class="form-group stacked">
@@ -14,7 +22,7 @@
         </div>
     </div>
 
-    {{#if cardMode}}
+    {{#if notFaceUpMode}}
         <div class="form-group">
             <label>{{localize "CARDS.Facedown"}}</label>
             <div class="form-fields">

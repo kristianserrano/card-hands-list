@@ -1,6 +1,7 @@
 #hand-mini-bar-container{
     display:flex;
     flex-direction: column;
+    z-index: 1;
 }
 
 #hand-mini-bar-hands-container{
@@ -249,6 +250,13 @@ i.hand-mini-bar-hide-show.show:before{
 
 .hand-mini-bar-message-name{
     margin-bottom: 2px;
+}
+
+.hand-mini-bar-play-dialog-description{
+    text-align:center;
+    margin: 0px;
+    font-weight: normal;
+    font-size: 12px;
 }
 
 .hand-mini-bar-message-description{
