@@ -20,6 +20,13 @@
     "HANDMINIBAR.HideMessagesSetting":"No Messages",
     "HANDMINIBAR.HideMessagesSettingHint":"Disables Messages when cards are moved to and from the mini bar",
     "HANDMINIBAR.BetterChatMessagesSetting":"Better Chat Messages",
-    "HANDMINIBAR.BetterChatMessagesSettingHint":"Messages in Chat are displayed with card images and descriptions"
+    "HANDMINIBAR.BetterChatMessagesSettingHint":"Messages in Chat are displayed with card images and descriptions",
+    "HANDMINIBAR.BarPositionAbovePlayersSetting":"Above Player List",
+    "HANDMINIBAR.BarPositionRightMacroSetting":"Right of Macro Bar",
+    "HANDMINIBAR.BarPositionLeftMacroSetting":"Left of Macro Bar",
+    "HANDMINIBAR.BarPositionSetting":"Bar Position",
+    "HANDMINIBAR.BarPositionSettingHint":"Select the position of the bar for all users",
+    "HANDMINIBAR.TokenModeSetting":"Token Mode",
+    "HANDMINIBAR.TokenModeSettingHint":"Disables the ability to flip when using the module for tokens"
 
 }

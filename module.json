@@ -27,7 +27,7 @@
   "styles": [
     "styles/hand-mini-bar.css"
   ],  
-  "socket": false,
+  "socket": true,
   "manifest": "https://gitlab.com/pengrath/hand-mini-bar/-/raw/main/module.json",
   "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/main/hand-mini-bar-main.zip"
 }

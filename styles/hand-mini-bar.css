@@ -9,8 +9,9 @@
     max-height:900px;
     transition: max-height 500ms ease-in-out;
     padding-top: 18px;
-    padding-bottom: 25px;
-    overflow: hidden;
+    padding-bottom: 10px;
+    overflow: hidden;    
+    margin: 0px 0px 0px auto;
 }
 
 #hand-mini-bar-container.hidden #hand-mini-bar-hands-container{
@@ -18,8 +19,17 @@
     padding-bottom: 0px; 
 }
 
-#hand-mini-bar-container.hidden i.hand-mini-bar-hide-show{
-    margin-top:0px;
+.hand-mini-bar-buttons-container{
+    max-width: 220px;
+    min-width: 220px;
+    margin: 0px 0px 0px auto;
+    display: flex;
+    flex-grow: 1;
+}
+
+.hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
+  height: 24px;
+  align-self: self-end;
 }
 
 i.hand-mini-bar-hide-show{
@@ -31,7 +41,8 @@ i.hand-mini-bar-hide-show{
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;    
     font-size: 17px;
-    margin-top:-24px;
+    /*margin-top:-24px;*/
+    margin: 0px auto -24px auto;
 }
 
 
@@ -41,7 +52,6 @@ i.hand-mini-bar-hide-show:before{
 
 i.hand-mini-bar-hide-show.show{
     line-height: 18px;
-    margin-top: -24px;
 }
 
 i.hand-mini-bar-hide-show.show:before{
@@ -191,6 +201,7 @@ i.hand-mini-bar-hide-show.show:before{
     flex-grow: 1;
     flex-direction: row;
     max-width: 154px;
+    min-width: 154px;
     max-height: 50px;
     /*To Overlap cards and tokens*/
     padding-left: 14px;
@@ -263,4 +274,61 @@ i.hand-mini-bar-hide-show.show:before{
 }
 .empty-hand-message .settings-icon{
     color:greenyellow;
+}
+
+/* For displaying at the bottom-right of the screen*/
+
+#ui-bottom.hand-mini-bar{
+  display: grid;
+  grid-auto-rows: minmax(auto, auto);
+}
+
+.hand-mini-bar-right{
+    grid-template-columns: minmax(auto, auto) minmax(220px, 220px);
+}
+
+.hand-mini-bar-left{
+    grid-template-columns: minmax(220px, 220px) minmax(auto, auto) ;
+}
+
+#ui-bottom div{
+    grid-row: 3;
+}
+
+#ui-bottom div#camera-views{
+    grid-row: 2;
+}
+
+#ui-bottom div#hand-mini-bar-container{
+    grid-row: 1/4;
+    grid-column: 2;
+}
+#ui-bottom.hand-mini-bar-left div#hand-mini-bar-container{
+    grid-column: 1;
+}
+
+#ui-bottom.hand-mini-bar-right div#hand-mini-bar-container{
+    grid-column: 2;
+}
+
+/* Shrink macro bar sooner*/
+@media (max-width: 1316px)
+{
+    #hotbar {
+        width: calc(var(--hotbar-width) / 2);
+        height: calc(var(--hotbar-height) * 2);
+    }
+    #hotbar #macro-list {
+        grid-template-columns: repeat(5, 50px);
+    }
+}
+
+@media (max-width: 1065px)
+{
+    #ui-bottom div#hand-mini-bar-container div#hand-mini-bar-hands-container{
+        margin-left:24px;
+    }
+    #ui-bottom{
+      grid-template-columns: minmax(auto, auto) minmax(244px, 244px);
+    }
 }

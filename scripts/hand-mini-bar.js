@@ -5,8 +5,36 @@
    */
 let HandMiniBarOptions = {
   betterChatMessages: false,
-  hideMessages: false
+  hideMessages: false,
+  tokenMode: false,
+  position:"",
+  positionDefault:"right_bar"
 };
+
+let HandMiniBarConfig = {
+  updatePostion:function(){
+    let position = HandMiniBarOptions.position;
+    let content = $("#hand-mini-bar-container ").detach();
+    //reset classes
+    $("#ui-bottom").removeClass("hand-mini-bar-left");
+    $("#ui-bottom").removeClass("hand-mini-bar-right");
+    $("#ui-bottom").removeClass("hand-mini-bar");
+
+
+    if (position === "left_bar"){
+      $("#ui-bottom").addClass("hand-mini-bar-left");
+      $("#ui-bottom").addClass("hand-mini-bar");
+      $("#ui-bottom").append(content);
+    }else if(position === "right_bar"){
+      $("#ui-bottom").addClass("hand-mini-bar-right");
+      $("#ui-bottom").addClass("hand-mini-bar");
+      $("#ui-bottom").append(content);
+    }else{
+      $("#players").before(content);
+      //above players
+    }
+  }
+}
 class HandMiniBar{
   constructor(id) {
     /**
@@ -66,6 +94,14 @@ class HandMiniBar{
     $('#hand-mini-bar-card-container-' + t.id).empty();
     if(typeof this.currentCards !== "undefined"){
       let length = this.currentCards.data.cards.contents.length;
+      if(HandMiniBarOptions.tokenMode){
+        // Check to make sure all the cards are flipped over to their face
+        $(this.currentCards.data.cards.contents.sort(this.cardSort)).each(function(i,c){
+          if(c.face == null){
+            c.flip();
+          }
+        });
+      }
       $(this.currentCards.data.cards.contents.sort(this.cardSort)).each(function(i,c){
         let renderData = {
           id: c.data._id,
@@ -260,18 +296,14 @@ class HandMiniBar{
     }
     let id = $(e.target).data("card-id");
     let card = this.currentCards.data.cards.get(id);
-    if(HandMiniBarOptions.betterChatMessages){
-      this.betterPlayDialog(card);
-    }else{
-      this.currentCards.playDialog(card);
-    }
+    this.playDialog(card);
   }
-  async betterPlayDialog(card){
-      const cards = game.cards.filter(c => (c !== this) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
+  async playDialog(card){
+      const cards = game.cards.filter(c => (c !== this.currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
       if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
   
       // Construct the dialog HTML
-      const html = await renderTemplate("templates/cards/dialog-play.html", {card, cards});
+      const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, cardMode: !HandMiniBarOptions.tokenMode});
     
       const currentCards = this.currentCards;
       // Display the prompt
@@ -286,33 +318,42 @@ class HandMiniBar{
           //override chat notification here
           const options = {action: "play", chatNotification:!HandMiniBarOptions.hideMessages, updateData: fd.down ? {face: null} : {}};
 
-          let created = currentCards.pass(to, [card.id], options).catch(err => {
-            return ui.notifications.error(err.message);
-          });
            
-          let renderData = {
-            id: card.data._id,
-            back: (card.face == null),
-            img: (card.face !== null) ? card.face.img : card.back.img,
-            name:(card.face !== null) ? card.data.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
-            description: (card.face !== null) ? card.data.description : null,
-            action: "Played"
-          };
-          renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
-            content => {
-              const messageData = {
-                  speaker: {
-                      scene: game.scenes?.active?.id,
-                      actor: game.userId,
-                      token: null,
-                      alias: null,
-                  },
-                  content: content,
-              };
-              ChatMessage.create(messageData);
+          if(HandMiniBarOptions.betterChatMessages){
 
-          });
-          return created;
+            let created = currentCards.pass(to, [card.id], options).catch(err => {
+              return ui.notifications.error(err.message);
+            });
+            let renderData = {
+              id: card.data._id,
+              back: (card.face == null),
+              img: (card.face !== null) ? card.face.img : card.back.img,
+              name:(card.face !== null) ? card.data.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
+              description: (card.face !== null) ? card.data.description : null,
+              action: "Played"
+            };
+            renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
+              content => {
+                const messageData = {
+                    speaker: {
+                        scene: game.scenes?.active?.id,
+                        actor: game.userId,
+                        token: null,
+                        alias: null,
+                    },
+                    content: content,
+                };
+                ChatMessage.create(messageData);
+
+            });
+            return created;
+          }
+          else{
+            return card.pass(to, [card.id], options).catch(err => {
+              ui.notifications.error(err.message);
+              return card;
+            });
+          }
         },
         rejectClose: false,
         options: {jQuery: false}
@@ -320,6 +361,9 @@ class HandMiniBar{
   }
   //Flip the card the player right clicked on
   async flipCard(e){
+    if(HandMiniBarOptions.tokenMode){
+      return;// do not flip when in token mode
+    }
     if(this.currentCards == undefined){
       ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
       return;
@@ -327,6 +371,7 @@ class HandMiniBar{
     let id = $(e.target).data("card-id");
     let card = this.currentCards.data.cards.get(id);
     card.flip();
+    
   }
   //Draws a card into this hand
   async drawCard(e){
@@ -521,8 +566,37 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
+  game.settings.register('hand-mini-bar', 'TokenOnlyMode', {
+    name: game.i18n.localize("HANDMINIBAR.TokenModeSetting"),
+    hint: game.i18n.localize("HANDMINIBAR.TokenModeSettingHint"),
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: Boolean,       // Number, Boolean, String,
+    default: false,
+    onChange: value => { // value is the new value of the setting
+      HandMiniBarOptions.tokenMode = value;
+    },
+    filePicker: false,  // set true with a String `type` to use a file picker input
+  });
+  game.settings.register('hand-mini-bar', 'BarPosition', {
+    name: game.i18n.localize("HANDMINIBAR.BarPositionSetting"),
+    hint: game.i18n.localize("HANDMINIBAR.BarPositionSettingHint"),
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: String,       // Number, Boolean, String,
+    choices: {
+      "above_players":  game.i18n.localize("HANDMINIBAR.BarPositionAbovePlayersSetting"),
+      "right_bar":  game.i18n.localize("HANDMINIBAR.BarPositionRightMacroSetting"),
+      "left_bar": game.i18n.localize("HANDMINIBAR.BarPositionLeftMacroSetting")
+    },
+    default: "right_bar",
+    onChange: value => { // value is the new value of the setting
+      HandMiniBarOptions.position = value;
+      HandMiniBarConfig.updatePostion();
+    },
+    filePicker: false,  // set true with a String `type` to use a file picker input
+  });
 });
-
 Hooks.on("ready", function() {
   // Pre Load templates.
   const templatePaths = ['modules/hand-mini-bar/templates/hand.html',
@@ -534,7 +608,11 @@ Hooks.on("ready", function() {
   renderTemplate('modules/hand-mini-bar/templates/hand-container.html', {}).then(
       content => {
           content = $(content);
-          $('#players').before(content);
+          $("#ui-bottom").append(content);
+
+          HandMiniBarOptions.position = game.settings.get("hand-mini-bar", "BarPosition");
+          HandMiniBarConfig.updatePostion();
+
           let count = game.settings.get("hand-mini-bar", "HandCount");
           count = count ? count : 0;
           if (count > handMiniBarHandMax){
@@ -556,6 +634,9 @@ Hooks.on("ready", function() {
           }
           if(game.settings.get("hand-mini-bar", "BetterChatMessages") == true){
             HandMiniBarOptions.betterChatMessages = true;
+          }
+          if(game.settings.get("hand-mini-bar", "TokenOnlyMode") == true){
+            HandMiniBarOptions.tokenMode = true;
           }
       }
   )
