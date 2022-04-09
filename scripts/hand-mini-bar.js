@@ -37,6 +37,12 @@ let HandMiniBarConfig = {
       //above players
     }
   },
+  //updates the player hands but with a delay so user flags are correctly set
+  updatePlayerHandsDelayed: function(){
+    setTimeout(function(){
+      HandMiniBarConfig.updatePlayerHands();
+    },1000);
+  },
   //updates the player hands that are owned by other players (the DM)
   updatePlayerHands: function(){
     if(game.user.isGM){
@@ -248,6 +254,11 @@ class HandMiniBar{
           $("#hand-mini-bar-hand-name-" + t.id).html(this.currentUser.data.name);
         }
       }
+      renderTemplate('modules/hand-mini-bar/templates/empty-hand-message.html', {}).then(
+          content => {
+            $("#hand-mini-bar-card-container-" + t.id).html(content);
+            t.updatePlayerColor();
+      });
     }
   }
   //Attach for dragging cards from the toolbar
@@ -313,11 +324,18 @@ class HandMiniBar{
   //sets and renders the cards based on users choice
   setCardsOption(choice){
     this.currentCards = choice;
-    this.storeCardsID(this.currentCards.data._id);
-    this.update();
-    if(game.user.isGM && this.currentUser != undefined){
-      this.currentUser.setFlag(HandMiniBarConfig.moduleName,'CardsID-0' , this.currentCards.data._id);
+    if(!choice){
+      this.resetCardsID();
+      if(game.user.isGM && this.currentUser != undefined){
+        this.currentUser.unsetFlag(HandMiniBarConfig.moduleName,'CardsID-0');
+      }
+    }else{
+      this.storeCardsID(this.currentCards.data._id);
+      if(game.user.isGM && this.currentUser != undefined){
+        this.currentUser.setFlag(HandMiniBarConfig.moduleName,'CardsID-0' , this.currentCards.data._id);
+      }
     }
+    this.update();
     //if this is the first hand then make sure it's updated for DMs
     if(this.id == 0){
       socket.emit(HandMiniBarConfig.eventName, {'action': 'updatePlayers'});
@@ -343,19 +361,27 @@ class HandMiniBar{
   }
   //sets and renders the cards based on the id
   setCardsID(id){
-    let cards = game.cards.get(id);
-    if(cards != undefined){
-      this.currentCards = cards;
-      if(this.currentCards != undefined){
-        this.update();
+    if(!id){
+      this.currentCards = undefined;
+    }else{
+      let cards = game.cards.get(id);
+      if(cards != undefined){
+        this.currentCards = cards;
+        if(this.currentCards != undefined){
+          this.update();
+        }
       }
     }
   }
   //sets and renders the cards based on the id
   setUserID(id){
-    let user = game.users.get(id);
-    if(user != undefined){
-      this.currentUser = user;
+    if(!id){
+      this.currentUser = undefined;
+    }else{
+      let user = game.users.get(id);
+      if(user != undefined){
+        this.currentUser = user;
+      }
     }
   }
   async chooseDialog(){
@@ -420,6 +446,11 @@ class HandMiniBar{
           };
       }
     });
+    //The ability to set "No Hand" to this toolbar
+    handsAvailable[game.i18n.localize("HANDMINIBAR.NoHand")] = {
+      label: game.i18n.localize("HANDMINIBAR.NoHand"),
+      callback: function(){handChosen(undefined)}
+    };
     if(count == 0){
       ui.notifications.info( game.i18n.localize("HANDMINIBAR.NoAvailableHands"));
     }else{
@@ -437,8 +468,8 @@ class HandMiniBar{
       return;
     }
     let d = Dialog.confirm({
-     title: game.i18n.localize("HANDMINIBAR.ResetHandConfirmTitle"),
-     content: "<p>" + game.i18n.localize("HANDMINIBAR.ResetHandConfirmQuestion") + "</p>",
+     title: game.i18n.localize("HANDMINIBAR.ResetToolbarDialogTitle"),
+     content: "<p>" + game.i18n.localize("HANDMINIBAR.ResetToolbarDialogQuestion") + "</p>",
      yes: () => this.reset(),
      no: function(){},//do nothing
      defaultYes: true
@@ -687,11 +718,10 @@ class HandMiniBar{
     let t = this;
     this.resetCardsID();
     this.resetUserID();
-    renderTemplate('modules/hand-mini-bar/templates/empty-hand-message.html', {}).then(
-        content => {
-          $("#hand-mini-bar-card-container-" + t.id).html(content);
-          t.updatePlayerColor();
-    });
+    //if this is the first hand then make sure it's updated for DMs
+    if(t.id == 0){
+      socket.emit(HandMiniBarConfig.eventName, {'action': 'updatePlayers'});
+    }
   }
 
   //Removes the html element from the screen
@@ -850,7 +880,6 @@ Hooks.on("ready", function() {
             HandMiniBarOptions.faceUpMode = true;
           }
           socket.on(HandMiniBarConfig.eventName, data => {
-            console.log(data)
             if(data.action === "rerender"){
               HandMiniBarConfig.rerender();
             }
@@ -861,7 +890,7 @@ Hooks.on("ready", function() {
               HandMiniBarConfig.restore();
             }
             else if(data.action === "updatePlayers"){
-              HandMiniBarConfig.updatePlayerHands();
+              HandMiniBarConfig.updatePlayerHandsDelayed();
             }
           });
       }

@@ -31,6 +31,9 @@
     "HANDMINIBAR.ChooseForGMTitle":"Assign User or Hand",
     "HANDMINIBAR.ChooseForGMQuestion":"Choose to assign a User or Hand to this Toolbar",
     "HANDMINIBAR.UserList":"User List",
-    "HANDMINIBAR.ChooseUser":"Select a Player for the Toolbar"
+    "HANDMINIBAR.ChooseUser":"Select a Player for the Toolbar",
+    "HANDMINIBAR.ResetToolbarDialogTitle":"Reset Toolbar",
+    "HANDMINIBAR.ResetToolbarDialogQuestion":"Reset The Toolbar back to default?",
+    "HANDMINIBAR.NoHand":"No Hand"
 
 }
