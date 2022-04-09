@@ -6,7 +6,7 @@
 let HandMiniBarOptions = {
   betterChatMessages: false,
   hideMessages: false,
-  tokenMode: false,
+  faceUpMode: false,
   position:"",
   positionDefault:"right_bar"
 };
@@ -774,9 +774,9 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  game.settings.register(HandMiniBarConfig.moduleName, 'TokenOnlyMode', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'FaceUpMode', {
     name: game.i18n.localize("HANDMINIBAR.FaceUpModeSetting"),
-    hint: game.i18n.localize("HANDMINIBAR.FaceUpSettingHint"),
+    hint: game.i18n.localize("HANDMINIBAR.FaceUpModeSettingHint"),
     scope: 'world',     // "world" = sync to db, "client" = local storage
     config: true,       // false if you dont want it to show in module config
     type: Boolean,       // Number, Boolean, String,
@@ -846,7 +846,7 @@ Hooks.on("ready", function() {
           if(game.settings.get(HandMiniBarConfig.moduleName, "BetterChatMessages") == true){
             HandMiniBarOptions.betterChatMessages = true;
           }
-          if(game.settings.get(HandMiniBarConfig.moduleName, "TokenOnlyMode") == true){
+          if(game.settings.get(HandMiniBarConfig.moduleName, "FaceUpMode") == true){
             HandMiniBarOptions.faceUpMode = true;
           }
           socket.on(HandMiniBarConfig.eventName, data => {
