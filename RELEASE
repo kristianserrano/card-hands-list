@@ -8,6 +8,7 @@ Update 1.0.1
     -- The GM Can now select a player for each toolbar which assigns the same hand to the player's first hand
     -- When the player selects their own first hand it sets it on the GMs hands
 - Added right click settings for reset Toolbar Dialog (mostly for easier QA)
+- Added the ability to select 'No Hand' for the toolbar
 - Added Description to Play Dialog if available
 - Efficiency improvements pertaining to hooks
 - Style (css) Updates
