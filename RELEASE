@@ -6,5 +6,6 @@ Update 1.0.1
 - Added sockets for more GM Control over players and their configuration
     -- Configurations change for all users on the fly using sockets
     -- The GM Can now select a player for each toolbar which assigns the same hand to the player's first hand
+- Efficiency improvements partaining to hooks
 - Style (css) Updates
 

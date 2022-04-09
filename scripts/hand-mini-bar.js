@@ -93,16 +93,22 @@ class HandMiniBar{
      * Hooks to listen to changes in this hand
      * Useful: CONFIG.debug.hooks = true
      */
-    Hooks.on("updateCard", function() {
-      t.update();
+    Hooks.on("updateCard", function(target, data) {
+      if(!!data.drawn || data.sort !== undefined || data.face !== undefined){
+        t.update();
+      }
     });
     
-    Hooks.on("deleteCard", function() {
-      t.update();
+    Hooks.on("deleteCard", function(target) {
+      if(!!target && !!target.parent && target.parent.data._id == t.currentCards.data._id){
+        t.update();
+      }
     });
     
-    Hooks.on("passCards", function() {
-      t.update();
+    Hooks.on("passCards", function(target, data, from, hi) {
+      if(!!data.data && data.data._id == t.currentCards.data._id){
+        t.update();
+      }
     });
 
     Hooks.on("updateUser",function(target, data){
