@@ -41,7 +41,7 @@ let HandMiniBarConfig = {
   updatePlayerHandsDelayed: function(){
     setTimeout(function(){
       HandMiniBarConfig.updatePlayerHands();
-    },1000);
+    },500);
   },
   //updates the player hands that are owned by other players (the DM)
   updatePlayerHands: function(){
