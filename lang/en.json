@@ -25,7 +25,7 @@
     "HANDMINIBAR.BarPositionRightMacroSetting":"Right of Macro Bar",
     "HANDMINIBAR.BarPositionLeftMacroSetting":"Left of Macro Bar",
     "HANDMINIBAR.BarPositionSetting":"Bar Position",
-    "HANDMINIBAR.BarPositionSettingHint":"Select the position of the bar for all users",
+    "HANDMINIBAR.BarPositionSettingHint":"Select the position of the bar for all players",
     "HANDMINIBAR.TokenModeSetting":"Token Mode",
     "HANDMINIBAR.TokenModeSettingHint":"Disables the ability to flip when using the module for tokens"
 

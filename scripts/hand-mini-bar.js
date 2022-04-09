@@ -12,6 +12,7 @@ let HandMiniBarOptions = {
 };
 
 let HandMiniBarConfig = {
+  eventName:"module.hand-mini-bar",
   updatePostion:function(){
     let position = HandMiniBarOptions.position;
     let content = $("#hand-mini-bar-container ").detach();
@@ -33,6 +34,11 @@ let HandMiniBarConfig = {
       $("#players").before(content);
       //above players
     }
+  },
+  reRender: function(){
+    $(handMiniBarHandList).each(function(i, h){
+      h.renderCards();
+    });
   }
 }
 class HandMiniBar{
@@ -575,6 +581,8 @@ Hooks.on("init", function() {
     default: false,
     onChange: value => { // value is the new value of the setting
       HandMiniBarOptions.tokenMode = value;
+      socket.emit(HandMiniBarConfig.eventName, {'action': 'rerender'});
+      HandMiniBarConfig.reRender();
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
@@ -593,6 +601,7 @@ Hooks.on("init", function() {
     onChange: value => { // value is the new value of the setting
       HandMiniBarOptions.position = value;
       HandMiniBarConfig.updatePostion();
+      socket.emit(HandMiniBarConfig.eventName, {'action': 'reposition'});
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
@@ -638,6 +647,15 @@ Hooks.on("ready", function() {
           if(game.settings.get("hand-mini-bar", "TokenOnlyMode") == true){
             HandMiniBarOptions.tokenMode = true;
           }
+          socket.on(HandMiniBarConfig.eventName, data => {
+            console.log(data)
+            if(data.action === "rerender"){
+              HandMiniBarConfig.reRender();
+            }
+            else if(data.action === "reposition"){
+              HandMiniBarConfig.updatePostion();
+            }
+          });
       }
   )
 });
