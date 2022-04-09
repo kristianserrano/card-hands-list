@@ -107,11 +107,14 @@ class HandMiniBar{
 
     Hooks.on("updateUser",function(target, data){
       //GM informs others not informaed by players
-      if(data.flags !== undefined)
+      if(data != undefined && data.flags !== undefined)
       {
         if(data.flags[HandMiniBarConfig.moduleName] !== undefined){
           t.restore();
         }
+      }
+      if(game.user.isGM && data != undefined && data.color != undefined){
+        t.restore();
       }
     });
   }
