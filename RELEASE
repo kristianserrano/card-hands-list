@@ -3,7 +3,8 @@ Update 1.0.1
 - Added two new positions, left and right of the macro bar (configurable)
     --Defaults to 'Right of Macro Bar'
 - Added 'Token Mode' which disables flipping and always shows the card face
-- Added sockets for more DM Control over players and their configuration
-- The GM Can now select a player for each toolbar which assigns the same hand to
-the player's Hand "0"
+- Added sockets for more GM Control over players and their configuration
+    -- Configurations change for all users on the fly using sockets
+    -- The GM Can now select a player for each toolbar which assigns the same hand to the player's first hand
+- Style (css) Updates
 

@@ -81,8 +81,8 @@ i.hand-mini-bar-hide-show.show:before{
 .hand-mini-bar-hand-name{
     display:none;
     font-size: 12px;
-    /*color: #c9c7b8;*/
     color:#FFF;
+    text-shadow: 2px 2px #000;
     width: 200px;
     text-align: center;
 }
