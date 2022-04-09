@@ -76,7 +76,6 @@ i.hand-mini-bar-hide-show.show:before{
     background: url(../../../ui/denim075.png) repeat;
     border-radius: 5px;
     box-shadow: 0 0 20px var(--color-shadow-dark);
-    border: 1px solid #000;
 }
 
 .hand-mini-bar-hand-name{
@@ -98,7 +97,7 @@ i.hand-mini-bar-hide-show.show:before{
     display:flex;
     cursor: pointer;
     flex-direction: column; 
-    height: 50px;
+    height: 52px;
 
 }
 
@@ -107,11 +106,10 @@ i.hand-mini-bar-hide-show.show:before{
     background-size: 20px;
     background-repeat: no-repeat;
     width: 23px;
-    height: 25px;
+    height: 27px;
     background-position-y: 1px;
     background-position-x: 0px;
-    border-bottom: 1px solid #000;
-    border-right: 1px solid #000;
+    border:1px solid #000;
     border-radius: 5px 0 0 0;
     color: #c9c7b8;
 }
@@ -120,9 +118,8 @@ i.hand-mini-bar-hide-show.show:before{
     background-size: 30px;
     background-repeat: no-repeat;
     width: 23px;
-    height: 25px;
-    border-top: 1px solid #000;
-    border-right: 1px solid #000;
+    height: 28px;
+    border:1px solid #000;
     border-radius:0 0 0 5px;
     color:#c9c7b8;
     font-size: 21px;
@@ -137,10 +134,9 @@ i.hand-mini-bar-hide-show.show:before{
 
 .hand-mini-bar-reset{
     width: 23px;
-    height: 25px;
+    height: 26px;
     background-position-y: 7px;
-    border-top: 1px solid #000;
-    border-left: 1px solid #000;
+    border:1px solid #000;
     border-radius:0 0 5px 0;
     color:#c9c7b8;
     padding-left: 2px;
@@ -154,10 +150,9 @@ i.hand-mini-bar-hide-show.show:before{
 
 .hand-mini-bar-pass{
     width: 23px;
-    height: 25px;
+    height: 26px;
     background-position-y: 7px;
-    border-top: 1px solid #000;
-    border-left: 1px solid #000;
+    border:1px solid #000;
     border-radius:0 0 5px 0;
     color:#c9c7b8;
     padding-left: 2px;
@@ -172,10 +167,9 @@ i.hand-mini-bar-hide-show.show:before{
 .hand-mini-bar-draw{
     display:block;
     width: 23px;
-    height:25px;
+    height:26px;
     color:#c9c7b8;
-    border-left: 1px solid #000;
-    border-bottom: 1px solid #000;
+    border:1px solid #000;
     border-radius:0 5px 0 0;
     padding-left:1px;
 }
@@ -202,10 +196,12 @@ i.hand-mini-bar-hide-show.show:before{
     flex-direction: row;
     max-width: 154px;
     min-width: 154px;
-    max-height: 50px;
+    max-height: 52px;
     /*To Overlap cards and tokens*/
     padding-left: 14px;
     padding-right: 14px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
 }
 
 .hand-mini-bar-card{

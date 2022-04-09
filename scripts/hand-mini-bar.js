@@ -12,6 +12,7 @@ let HandMiniBarOptions = {
 };
 
 let HandMiniBarConfig = {
+  moduleName:"hand-mini-bar",
   eventName:"module.hand-mini-bar",
   updatePostion:function(){
     let position = HandMiniBarOptions.position;
@@ -35,9 +36,14 @@ let HandMiniBarConfig = {
       //above players
     }
   },
-  reRender: function(){
+  rerender: function(){
     $(handMiniBarHandList).each(function(i, h){
       h.renderCards();
+    });
+  },
+  restore: function(){
+    $(handMiniBarHandList).each(function(i, h){
+      h.restore();
     });
   }
 }
@@ -54,6 +60,11 @@ class HandMiniBar{
     this.currentCards = undefined;
 
     /**
+     * current user used to identify they user associated with the hand for GMs
+     */
+     this.currentUser = undefined;
+
+    /**
      * Wether or not this object is re-rendering
      */
     this.updating = false;
@@ -68,7 +79,7 @@ class HandMiniBar{
         content => {
             content = $(content);
             content.find('.hand-mini-bar-settings-hand').click(function(e){t.openHand(e)});
-            content.find('.hand-mini-bar-settings-choose').click(function(e){t.chooseHandDialog(e)});
+            content.find('.hand-mini-bar-settings-choose').click(function(e){t.chooseDialog(e)});
             content.find('.hand-mini-bar-pass').click(function(e){t.passCards(e)});
             content.find('.hand-mini-bar-pass').contextmenu(function(e){t.resetHand(e)});
             content.find('.hand-mini-bar-draw').click(function(e){t.drawCard(e)});
@@ -92,6 +103,16 @@ class HandMiniBar{
     
     Hooks.on("passCards", function() {
       t.update();
+    });
+
+    Hooks.on("updateUser",function(target, data){
+      //GM informs others not informaed by players
+      if(data.flags !== undefined)
+      {
+        if(data.flags[HandMiniBarConfig.moduleName] !== undefined){
+          t.restore();
+        }
+      }
     });
   }
   //renders the cards within the hand template
@@ -130,7 +151,18 @@ class HandMiniBar{
             }
         )
       });
-      $("#hand-mini-bar-hand-name-" + t.id).html(this.currentCards.data.name);
+      let handTitle = this.currentCards.data.name;
+      /** Do Some Extra GM work here **/
+      if(game.user.isGM){
+        $("#hand-mini-bar-hand-" + this.id + " .hand-mini-bar-hand-inner").css("box-shadow","none");
+        let player = this.currentUser;
+        if(player !== undefined){
+          handTitle = player.data.name + " (" + handTitle + ")";
+          let color =  player.data.color;
+          $("#hand-mini-bar-hand-" + this.id + " .hand-mini-bar-hand-inner").css("box-shadow","0 0 10px " + color);
+        }
+      }
+      $("#hand-mini-bar-hand-name-" + t.id).html(handTitle);
       //Return for the promise if there is nothing to render
       if(length == 0){
         if (resolve){
@@ -236,11 +268,24 @@ class HandMiniBar{
     });
     dragDrop.bind(t.html[0]);
   }
+  /**@TODO do more work if isGM */
   //sets and renders the cards based on users choice
   setCardsOption(choice){
     this.currentCards = choice;
     this.storeCardsID(this.currentCards.data._id);
     this.update();
+    if(game.user.isGM && this.currentUser != undefined){
+      this.currentUser.setFlag(HandMiniBarConfig.moduleName,'CardsID-0' , this.currentCards.data._id);
+    }
+  }
+  //sets the user, only available to GMs
+  setUserOption(choice){
+    this.currentUser = choice;
+    this.storeUserID(this.currentUser.data._id);
+    this.update();
+    if(game.user.isGM && this.currentCards != undefined){
+      this.currentUser.setFlag(HandMiniBarConfig.moduleName,'CardsID-0', this.currentCards.data._id);
+    }
   }
   //sets and renders the cards based on the id
   setCardsID(id){
@@ -251,6 +296,54 @@ class HandMiniBar{
         this.update();
       }
     }
+  }
+  //sets and renders the cards based on the id
+  setUserID(id){
+    let user = game.users.get(id);
+    if(user != undefined){
+      this.currentUser = user;
+    }
+  }
+  async chooseDialog(){
+      if(game.user.isGM){
+        let t = this;
+        let d = new Dialog({
+          title: game.i18n.localize("HANDMINIBAR.ChooseForGMTitle"),
+          content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseForGMQuestion") + '</p>',
+          buttons: [{
+            label: "Player", 
+            callback:function(){
+              t.chooseUserDialog();
+          }},{
+            label:"Hand",
+            callback:function(){
+              t.chooseHandDialog();
+            }
+          }]
+        });
+        d.render(true);
+      }else{
+        this.chooseHandDialog();
+      }
+  }
+  async chooseUserDialog(){
+    let usersAvailable = {};
+    let t = this;
+    let userChosen = function(choice){
+      t.setUserOption(choice);
+    };
+    game.users.forEach(async function(c){
+          usersAvailable[c.name] = {
+            label: c.data.name,
+            callback: function(){userChosen(c)}
+          };
+    });
+    let d = new Dialog({
+      title: game.i18n.localize("HANDMINIBAR.UserList"),
+      content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseUser") + '</p>',
+      buttons: usersAvailable
+    });
+    d.render(true);
   }
   async chooseHandDialog(){
     let handsAvailable = {};
@@ -478,19 +571,35 @@ class HandMiniBar{
   //Gets any stored CardsID 
   restore(){
     this.setCardsID(this.getStoredCardsID());
+    this.setUserID(this.getStoredUserID());
+    this.update();
   }
   //stores the current cards ID
   storeCardsID(id){
-    game.user.setFlag('hand-mini-bar','CardsID-' + this.id, id);
+    game.user.setFlag(HandMiniBarConfig.moduleName,'CardsID-' + this.id, id);
   }
   //reset the current cards ID
   resetCardsID(){
-    game.user.setFlag('hand-mini-bar','CardsID-' + this.id, "");
+    game.user.setFlag(HandMiniBarConfig.moduleName,'CardsID-' + this.id, "");
   }
   //gets the previously selected cards ID
   getStoredCardsID(){
-    return game.user.getFlag('hand-mini-bar','CardsID-' + this.id);
+    return game.user.getFlag(HandMiniBarConfig.moduleName,'CardsID-' + this.id);
   }
+
+  //stores the User (for GMs)
+  storeUserID(id){
+    game.user.setFlag(HandMiniBarConfig.moduleName,'UserID-' + this.id, id);
+  }
+  //reset the User (for GMs)
+  resetUserID(){
+    game.user.setFlag(HandMiniBarConfig.moduleName,'UserID-' + this.id, "");
+  }
+  //gets the User (for GMs)
+  getStoredUserID(){
+    return game.user.getFlag(HandMiniBarConfig.moduleName,'UserID-' + this.id);
+  }
+
   //Removes the html element from the screen
   remove(){
     if(this.html){
@@ -502,7 +611,7 @@ const handMiniBarHandList = new Array();
 const handMiniBarHandMax = 10;
 
 Hooks.on("init", function() {
-  game.settings.register('hand-mini-bar', 'HandCount', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'HandCount', {
     name: game.i18n.localize("HANDMINIBAR.HandCountSetting"),
     hint: game.i18n.localize("HANDMINIBAR.HandCountSettingHint"),
     scope: 'client',     // "world" = sync to db, "client" = local storage
@@ -535,7 +644,7 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  game.settings.register('hand-mini-bar', 'DisplayHandName', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'DisplayHandName', {
     name: game.i18n.localize("HANDMINIBAR.DisplayHandNameSetting"),
     hint: game.i18n.localize("HANDMINIBAR.DisplayHandNameSettingHint"),
     scope: 'client',     // "world" = sync to db, "client" = local storage
@@ -547,7 +656,7 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  game.settings.register('hand-mini-bar', 'BetterChatMessages', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'BetterChatMessages', {
     name: game.i18n.localize("HANDMINIBAR.BetterChatMessagesSetting"),
     hint: game.i18n.localize("HANDMINIBAR.BetterChatMessagesSettingHint"),
     scope: 'world',     // "world" = sync to db, "client" = local storage
@@ -560,7 +669,7 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  game.settings.register('hand-mini-bar', 'HideMessages', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'HideMessages', {
     name: game.i18n.localize("HANDMINIBAR.HideMessagesSetting"),
     hint: game.i18n.localize("HANDMINIBAR.HideMessagesSettingHint"),
     scope: 'world',     // "world" = sync to db, "client" = local storage
@@ -572,7 +681,7 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  game.settings.register('hand-mini-bar', 'TokenOnlyMode', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'TokenOnlyMode', {
     name: game.i18n.localize("HANDMINIBAR.TokenModeSetting"),
     hint: game.i18n.localize("HANDMINIBAR.TokenModeSettingHint"),
     scope: 'world',     // "world" = sync to db, "client" = local storage
@@ -586,7 +695,7 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  game.settings.register('hand-mini-bar', 'BarPosition', {
+  game.settings.register(HandMiniBarConfig.moduleName, 'BarPosition', {
     name: game.i18n.localize("HANDMINIBAR.BarPositionSetting"),
     hint: game.i18n.localize("HANDMINIBAR.BarPositionSettingHint"),
     scope: 'world',     // "world" = sync to db, "client" = local storage
@@ -619,10 +728,10 @@ Hooks.on("ready", function() {
           content = $(content);
           $("#ui-bottom").append(content);
 
-          HandMiniBarOptions.position = game.settings.get("hand-mini-bar", "BarPosition");
+          HandMiniBarOptions.position = game.settings.get(HandMiniBarConfig.moduleName, "BarPosition");
           HandMiniBarConfig.updatePostion();
 
-          let count = game.settings.get("hand-mini-bar", "HandCount");
+          let count = game.settings.get(HandMiniBarConfig.moduleName, "HandCount");
           count = count ? count : 0;
           if (count > handMiniBarHandMax){
             count = handMiniBarHandMax;
@@ -630,7 +739,7 @@ Hooks.on("ready", function() {
           for(let i = 0; i < count; i++){
             handMiniBarHandList.push(new HandMiniBar(i));
           }
-          if(game.settings.get("hand-mini-bar", "DisplayHandName") == true){
+          if(game.settings.get(HandMiniBarConfig.moduleName, "DisplayHandName") == true){
             $("#hand-mini-bar-container").addClass("show-names");
           }
           $(".hand-mini-bar-hide-show").click(function(){
@@ -638,22 +747,25 @@ Hooks.on("ready", function() {
             $(".hand-mini-bar-hide-show").toggleClass("show");
           });
           //initialize Options from saved settings
-          if(game.settings.get("hand-mini-bar", "HideMessages") == true){
+          if(game.settings.get(HandMiniBarConfig.moduleName, "HideMessages") == true){
             HandMiniBarOptions.hideMessages = true;
           }
-          if(game.settings.get("hand-mini-bar", "BetterChatMessages") == true){
+          if(game.settings.get(HandMiniBarConfig.moduleName, "BetterChatMessages") == true){
             HandMiniBarOptions.betterChatMessages = true;
           }
-          if(game.settings.get("hand-mini-bar", "TokenOnlyMode") == true){
+          if(game.settings.get(HandMiniBarConfig.moduleName, "TokenOnlyMode") == true){
             HandMiniBarOptions.tokenMode = true;
           }
           socket.on(HandMiniBarConfig.eventName, data => {
             console.log(data)
             if(data.action === "rerender"){
-              HandMiniBarConfig.reRender();
+              HandMiniBarConfig.rerender();
             }
             else if(data.action === "reposition"){
               HandMiniBarConfig.updatePostion();
+            }
+            else if(data.action === "reload"){
+              HandMiniBarConfig.restore();
             }
           });
       }

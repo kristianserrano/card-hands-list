@@ -3,7 +3,7 @@
     "HANDMINIBAR.NoHandSelected":"You must first select a hand for this toolbar.",
     "HANDMINIBAR.NoHandMessageBefore":"Select the",
     "HANDMINIBAR.NoHandMessageAfter":"Icon to choose a hand",
-    "HANDMINIBAR.ChooseHand":"Select Hand",
+    "HANDMINIBAR.ChooseHand":"Select a Hand for the Toolbar",
     "HANDMINIBAR.NoAvailableHands":"This user does not have any available hands.",
     "HANDMINIBAR.CardBack":"Back",
     "HANDMINIBAR.CardHidden":"Hidden",
@@ -27,6 +27,10 @@
     "HANDMINIBAR.BarPositionSetting":"Bar Position",
     "HANDMINIBAR.BarPositionSettingHint":"Select the position of the bar for all players",
     "HANDMINIBAR.TokenModeSetting":"Token Mode",
-    "HANDMINIBAR.TokenModeSettingHint":"Disables the ability to flip when using the module for tokens"
+    "HANDMINIBAR.TokenModeSettingHint":"Disables the ability to flip when using the module for tokens",
+    "HANDMINIBAR.ChooseForGMTitle":"Assign User or Hand",
+    "HANDMINIBAR.ChooseForGMQuestion":"Choose to assign a User or Hand to this Toolbar",
+    "HANDMINIBAR.UserList":"User List",
+    "HANDMINIBAR.ChooseUser":"Select a Player for the Toolbar"
 
 }
