@@ -29,5 +29,5 @@
   ],  
   "socket": true,
   "manifest": "https://gitlab.com/pengrath/hand-mini-bar/-/raw/main/module.json",
-  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/main/hand-mini-bar-main.zip"
+  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.0.1/hand-mini-bar-v1.0.1.zip"
 }
