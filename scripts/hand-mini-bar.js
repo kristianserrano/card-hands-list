@@ -734,6 +734,11 @@ class HandMiniBar{
 const handMiniBarHandList = new Array();
 
 Hooks.on("init", function() {
+  Handlebars.registerHelper('breaklines', function(text) {
+      text = Handlebars.Utils.escapeExpression(text);
+      text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+      return new Handlebars.SafeString(text);
+  });
   game.settings.register(HandMiniBarConfig.moduleName, 'HandCount', {
     name: game.i18n.localize("HANDMINIBAR.HandCountSetting"),
     hint: game.i18n.localize("HANDMINIBAR.HandCountSettingHint"),
@@ -872,12 +877,14 @@ Hooks.on("ready", function() {
           //popup card image on message click
           $(document).on("click",".hand-mini-bar-message-card", function(e){
               let t = $(e.target);
-              let src = t.css("background-image").replace("url\(\"","").replace("\"\)","");
-              const ip = new ImagePopout(src, {
-                title: t.attr("title"),
-                shareable: true
-              });
-              ip.render(true);
+              let src = t.data("img");
+              if(!!src){
+                const ip = new ImagePopout(src, {
+                  title: t.attr("title"),
+                  shareable: true
+                });
+                ip.render(true);
+              }
           });
           //initialize Options from saved settings
           if(game.settings.get(HandMiniBarConfig.moduleName, "HideMessages") == true){
