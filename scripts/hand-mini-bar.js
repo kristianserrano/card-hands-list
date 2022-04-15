@@ -845,7 +845,7 @@ Hooks.on("ready", function() {
   loadTemplates(templatePaths).then(() => {
     console.log("Better Hand templates preloaded")
   });
-  // Creates the outer container above the players list area
+  // Creates the outer container
   renderTemplate('modules/hand-mini-bar/templates/hand-container.html', {}).then(
       content => {
           content = $(content);
@@ -868,6 +868,16 @@ Hooks.on("ready", function() {
           $(".hand-mini-bar-hide-show").click(function(){
             $("#hand-mini-bar-container").toggleClass("hidden");
             $(".hand-mini-bar-hide-show").toggleClass("show");
+          });
+          //popup card image on message click
+          $(document).on("click",".hand-mini-bar-message-card", function(e){
+              let t = $(e.target);
+              let src = t.css("background-image").replace("url\(\"","").replace("\"\)","");
+              const ip = new ImagePopout(src, {
+                title: t.attr("title"),
+                shareable: true
+              });
+              ip.render(true);
           });
           //initialize Options from saved settings
           if(game.settings.get(HandMiniBarConfig.moduleName, "HideMessages") == true){

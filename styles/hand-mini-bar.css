@@ -269,7 +269,7 @@ i.hand-mini-bar-hide-show.show:before{
     background-position: center;
     background-size: auto 50px;
     background-repeat:no-repeat;
-
+    cursor:pointer;
 }
 
 .empty-hand-message{
