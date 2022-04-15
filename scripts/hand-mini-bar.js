@@ -870,6 +870,7 @@ Hooks.on("ready", function() {
             $(".hand-mini-bar-hide-show").toggleClass("show");
           });
           //popup card image on message click
+	  /*
           $(document).on("click",".hand-mini-bar-message-card", function(e){
               let t = $(e.target);
               let src = t.css("background-image").replace("url\(\"","").replace("\"\)","");
@@ -879,6 +880,7 @@ Hooks.on("ready", function() {
               });
               ip.render(true);
           });
+	  */
           //initialize Options from saved settings
           if(game.settings.get(HandMiniBarConfig.moduleName, "HideMessages") == true){
             HandMiniBarOptions.hideMessages = true;
