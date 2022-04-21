@@ -219,9 +219,6 @@ i.hand-mini-bar-hide-show.show:before{
 .hand-mini-bar-card{
     height: 50px;
     width: 50px;
-    /*better for catds?
-     *width: calc(48px * 2 / 3);
-    */
     background-repeat: no-repeat;  
     background-size: auto 50px;
     cursor: pointer;
@@ -237,10 +234,8 @@ i.hand-mini-bar-hide-show.show:before{
     height: 100px;
     width: calc(100px * 2 / 3);
     background-size: calc(100px * 2 / 3) auto;
-    /*background-position: center;*/
     margin-top:-24px;
     flex: none;
-    /*margin-left:-24px;*/
     filter:drop-shadow(5px 5px 5px #000);
 }
 
