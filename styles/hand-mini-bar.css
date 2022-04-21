@@ -230,7 +230,7 @@ i.hand-mini-bar-hide-show.show:before{
     margin-right: -14px;    
     z-index:1000;
     filter: drop-shadow(0px 0px 1px #000);
-    transition: all 500ms;
+    transition: margin 500ms;
 }
 
 .hand-mini-bar-card:hover{
