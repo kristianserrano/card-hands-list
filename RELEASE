@@ -2,6 +2,7 @@ Update 1.0.2
 - Card image in the message is now clickable to popup artwork
 - descriptions can now have new lines
 - fixed camera boxes on smaller screens
+- fixed flipped card description should not show
 
 Update 1.0.1
 - 9.266 Support

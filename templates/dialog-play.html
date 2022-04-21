@@ -1,12 +1,14 @@
 <form class="cards-dialog">
     <figure>
-        <img class="thumbnail" src="{{card.img}}" height="480"/>
+        <img class="thumbnail" src="{{card.img}}" width="318"/>
         <figcaption>
             {{card.name}}
-            {{#if card.data.description}}
-                <p class="hand-mini-bar-play-dialog-description">
-                    {{breaklines card.data.description}}
-                </p>
+            {{#if card.face}}
+                {{#if card.data.description }}
+                    <p class="hand-mini-bar-play-dialog-description">
+                        {{breaklines card.data.description}}
+                    </p>
+                {{/if}}
             {{/if}}
         </figcaption>
     </figure>
