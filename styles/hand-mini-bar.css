@@ -74,7 +74,6 @@ i.hand-mini-bar-hide-show.show:before{
     display:flex;
     flex-direction: row;
     padding: 0;
-    background: url(../../../ui/denim075.png) repeat;
     border-radius: 5px;
     box-shadow: 0 0 20px var(--color-shadow-dark);
 }
@@ -99,7 +98,16 @@ i.hand-mini-bar-hide-show.show:before{
     cursor: pointer;
     flex-direction: column; 
     height: 52px;
+    background: url(../../../ui/denim075.png) repeat;
 
+}
+.hand-mini-bar-settings{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.hand-mini-bar-actions{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .hand-mini-bar-settings-hand{
@@ -203,6 +211,7 @@ i.hand-mini-bar-hide-show.show:before{
     padding-right: 14px;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .hand-mini-bar-card{
@@ -295,15 +304,21 @@ i.hand-mini-bar-hide-show.show:before{
     grid-template-columns: minmax(220px, 220px) minmax(auto, auto) ;
 }
 
-#ui-bottom div{
+.hand-mini-bar #camera-views .camera-view{
+    height:auto;
+}
+
+#ui-bottom.hand-mini-bar div{
     grid-row: 3;
 }
 
-#ui-bottom div#camera-views{
+#ui-bottom.hand-mini-bar div#camera-views{
     grid-row: 2;
+    display:flex;
+    flex-wrap: nowrap;
 }
 
-#ui-bottom div#hand-mini-bar-container{
+#ui-bottom.hand-mini-bar div#hand-mini-bar-container{
     grid-row: 1/4;
     grid-column: 2;
 }
