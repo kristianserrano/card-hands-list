@@ -1,4 +1,7 @@
 Update 1.0.2
+- Refactored to make it easier to extend
+    - CONFIG.HandMiniBar.documentClass
+    - separated out drag and drop methods so they can be customized
 - Card image in the message is now clickable to popup artwork
 - descriptions can now have new lines
 - fixed camera boxes on smaller screens

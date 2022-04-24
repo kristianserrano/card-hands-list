@@ -3,7 +3,8 @@
    * Card Hand Toolbar to show cards on the main display
    * Author: pengrath
    */
-let HandMiniBarOptions = {
+CONFIG.HandMiniBar = {};
+CONFIG.HandMiniBar.options = {
   betterChatMessages: false,
   hideMessages: false,
   faceUpMode: false,
@@ -11,12 +12,13 @@ let HandMiniBarOptions = {
   positionDefault:"right_bar"
 };
 
-let HandMiniBarConfig = {
+const HandMiniBarConfig = {
+  handMiniBarList: new Array(),
   moduleName:"hand-mini-bar",
   eventName:"module.hand-mini-bar",
   handMax: 10,
   updatePostion:function(){
-    let position = HandMiniBarOptions.position;
+    let position = CONFIG.HandMiniBar.options.position;
     let content = $("#hand-mini-bar-container ").detach();
     //reset classes
     $("#ui-bottom").removeClass("hand-mini-bar-left");
@@ -60,8 +62,8 @@ let HandMiniBarConfig = {
             changed=true;
           }
           if(changed){
-            if(handMiniBarHandList.length > i){
-              handMiniBarHandList[i].restore();
+            if(HandMiniBarConfig.handMiniBarList.length > i){
+              HandMiniBarConfig.handMiniBarList[i].restore();
             }
           }
         }
@@ -69,12 +71,12 @@ let HandMiniBarConfig = {
     }
   },
   rerender: function(){
-    $(handMiniBarHandList).each(function(i, h){
+    $(HandMiniBarConfig.handMiniBarList).each(function(i, h){
       h.renderCards();
     });
   },
   restore: function(){
-    $(handMiniBarHandList).each(function(i, h){
+    $(HandMiniBarConfig.handMiniBarList).each(function(i, h){
       h.restore();
     });
   }
@@ -156,6 +158,8 @@ class HandMiniBar{
         t.restore();
       }
     });
+    //auto register to listen for updates
+    HandMiniBarConfig.handMiniBarList.push(this);
   }
   //renders the cards within the hand template
   renderCards(resolve, reject){
@@ -163,7 +167,7 @@ class HandMiniBar{
     $('#hand-mini-bar-card-container-' + t.id).empty();
     if(typeof this.currentCards !== "undefined"){
       let length = this.currentCards.data.cards.contents.length;
-      if(HandMiniBarOptions.faceUpMode){
+      if(CONFIG.HandMiniBar.options.faceUpMode){
         // Check to make sure all the cards are flipped over to their face
         $(this.currentCards.data.cards.contents.sort(this.cardSort)).each(function(i,c){
           if(c.face == null){
@@ -269,57 +273,59 @@ class HandMiniBar{
       dropSelector: undefined,
       permissions: { dragstart: function(selector) {return true;}},
       callbacks: { 
-        dragstart:   function(event) {
-          const id = $(event.currentTarget).data("card-id");
-          const card = t.currentCards.data.cards.get(id);
-          if ( !card ) return;
-      
-          // Create drag data
-          const dragData = {
-            id: card.id,//id required
-            type: "Card",
-            cardsId: t.currentCards.data._id,
-            cardId: card.id
-          };
-      
-          // Set data transfer
-          event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
-        },
-
-        drop: function(event){
-          const data = TextEditor.getDragEventData(event);
-          if ( data.type !== "Card" ) return;
-          const source = game.cards.get(data.cardsId);
-          const card = source.cards.get(data.cardId);
-          //if the card does not already exist in this hand then pass it to it
-          let exists = t.currentCards.cards.filter(c => c.id === card.id);
-          //SORT
-          let sort = function(){
-            const closest = event.target.closest("[data-card-id]");
-            if(closest){
-              const siblings = t.currentCards.cards.filter(c => c.id !== card.id);
-              const target = t.currentCards.data.cards.get(closest.dataset.cardId);
-              const updateData = SortingHelpers.performIntegerSort(card, {target, siblings}).map(u => {
-                return {_id: u.target.id, sort: u.update.sort}
-              });
-              t.currentCards.updateEmbeddedDocuments("Card", updateData);
-            }
-          }
-          if(exists.length == 0){
-            return card.pass(t.currentCards, { chatNotification: !HandMiniBarOptions.hideMessages }).then(
-              function(){
-                sort();
-              },function(error){
-                ui.notifications.error(error);
-              }
-            );
-          }else{//already a part of the hand, just sort
-            sort();
-          }
-        }
-      } 
+        dragstart: t.drag.bind(t),
+        drop: t.drop.bind(t)
+      }
     });
     dragDrop.bind(t.html[0]);
+  }
+  drag(event) {
+    const id = $(event.currentTarget).data("card-id");
+    const card = this.currentCards.data.cards.get(id);
+    if ( !card ) return;
+
+    // Create drag data
+    const dragData = {
+      id: card.id,//id required
+      type: "Card",
+      cardsId: this.currentCards.data._id,
+      cardId: card.id
+    };
+
+    // Set data transfer
+    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+  }
+  drop(event){
+    let t = this;
+    const data = TextEditor.getDragEventData(event);
+    if ( data.type !== "Card" ) return;
+    const source = game.cards.get(data.cardsId);
+    const card = source.cards.get(data.cardId);
+    //if the card does not already exist in this hand then pass it to it
+    let exists = this.currentCards.cards.filter(c => c.id === card.id);
+    //SORT
+    let sort = function(){
+      const closest = event.target.closest("[data-card-id]");
+      if(closest){
+        const siblings = t.currentCards.cards.filter(c => c.id !== card.id);
+        const target = t.currentCards.data.cards.get(closest.dataset.cardId);
+        const updateData = SortingHelpers.performIntegerSort(card, {target, siblings}).map(u => {
+          return {_id: u.target.id, sort: u.update.sort}
+        });
+        t.currentCards.updateEmbeddedDocuments("Card", updateData);
+      }
+    }
+    if(exists.length == 0){
+      return card.pass(this.currentCards, { chatNotification: !CONFIG.HandMiniBar.options.hideMessages }).then(
+        function(){
+          sort();
+        },function(error){
+          ui.notifications.error(error);
+        }
+      );
+    }else{//already a part of the hand, just sort
+      sort();
+    }
   }
   //sets and renders the cards based on users choice
   setCardsOption(choice){
@@ -503,7 +509,7 @@ class HandMiniBar{
       if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
   
       // Construct the dialog HTML
-      const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !HandMiniBarOptions.faceUpMode});
+      const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !CONFIG.HandMiniBar.options.faceUpMode});
     
       const currentCards = this.currentCards;
       // Display the prompt
@@ -516,10 +522,10 @@ class HandMiniBar{
           const fd = new FormDataExtended(form).toObject();
           const to = game.cards.get(fd.to);
           //override chat notification here
-          const options = {action: "play", chatNotification:!HandMiniBarOptions.hideMessages, updateData: fd.down ? {face: null} : {}};
+          const options = {action: "play", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, updateData: fd.down ? {face: null} : {}};
 
            
-          if(HandMiniBarOptions.betterChatMessages){
+          if(CONFIG.HandMiniBar.options.betterChatMessages){
 
             let created = currentCards.pass(to, [card.id], options).catch(err => {
               return ui.notifications.error(err.message);
@@ -561,7 +567,7 @@ class HandMiniBar{
   }
   //Flip the card the player right clicked on
   async flipCard(e){
-    if(HandMiniBarOptions.faceUpMode){
+    if(CONFIG.HandMiniBar.options.faceUpMode){
       return;// do not flip when in token mode
     }
     if(this.currentCards == undefined){
@@ -604,7 +610,7 @@ class HandMiniBar{
         const form = html.querySelector("form.cards-dialog");
         const fd = new FormDataExtended(form).toObject();
         const from = game.cards.get(fd.from);
-        const options = { chatNotification: !HandMiniBarOptions.hideMessages, how: fd.how, updateData: fd.down ? {face: null} : {}};
+        const options = { chatNotification: !CONFIG.HandMiniBar.options.hideMessages, how: fd.how, updateData: fd.down ? {face: null} : {}};
         return currentCards.draw(from, fd.number, options).catch(err => {
           ui.notifications.error(err.message);
           return [];
@@ -623,7 +629,7 @@ class HandMiniBar{
     let d = Dialog.confirm({
      title: game.i18n.localize("HANDMINIBAR.ResetHandConfirmTitle"),
      content: "<p>" + game.i18n.localize("HANDMINIBAR.ResetHandConfirmQuestion") + "</p>",
-     yes: () => this.currentCards.reset({ chatNotification: !HandMiniBarOptions.hideMessages }),
+     yes: () => this.currentCards.reset({ chatNotification: !CONFIG.HandMiniBar.options.hideMessages }),
      no: function(){},//do nothing
      defaultYes: true
     });
@@ -659,7 +665,7 @@ class HandMiniBar{
         const form = html.querySelector("form.cards-dialog");
         const fd = new FormDataExtended(form).toObject();
         const to = game.cards.get(fd.to);
-        const options = {action: "pass", chatNotification:!HandMiniBarOptions.hideMessages, how: fd.how, updateData: fd.down ? {face: null} : {}};
+        const options = {action: "pass", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, how: fd.how, updateData: fd.down ? {face: null} : {}};
         return currentCards.deal([to], fd.number, options).catch(err => {
           ui.notifications.error(err.message);
           return currentCards;
@@ -731,7 +737,9 @@ class HandMiniBar{
     }
   }
 }
-const handMiniBarHandList = new Array();
+
+//Attach to Foundry's CONFIG
+CONFIG.HandMiniBar.documentClass = HandMiniBar;
 
 Hooks.on("init", function() {
   Handlebars.registerHelper('breaklines', function(text) {
@@ -756,17 +764,17 @@ Hooks.on("init", function() {
         value = HandMiniBarConfig.handMax;
       }
       //add more
-      if(value == handMiniBarHandList.length){
+      if(value == HandMiniBarConfig.handMiniBarList.length){
         //do nothing
-      }else if(value > handMiniBarHandList.length){
-        let more = value - handMiniBarHandList.length ;
+      }else if(value > HandMiniBarConfig.handMiniBarList.length){
+        let more = value - HandMiniBarConfig.handMiniBarList.length ;
         for(let i = 0; i < more; i++){
-          handMiniBarHandList.push(new HandMiniBar(handMiniBarHandList.length));
+          HandMiniBarConfig.handMiniBarList.push(new HandMiniBar(HandMiniBarConfig.handMiniBarList.length));
         }
       }else{//remove some may need additional cleanup
-        let less =  handMiniBarHandList.length - value;
+        let less =  handMiniBarList.length - value;
         for(let i = 0; i < less; i++){
-          handMiniBarHandList.pop().remove();
+          HandMiniBarConfig.handMiniBarList.pop().remove();
         }
       }
     },
@@ -792,7 +800,7 @@ Hooks.on("init", function() {
     type: Boolean,       // Number, Boolean, String,
     default: true,
     onChange: value => { // value is the new value of the setting
-      HandMiniBarOptions.betterChatMessages = value;
+      CONFIG.HandMiniBar.options.betterChatMessages = value;
       
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
@@ -805,7 +813,7 @@ Hooks.on("init", function() {
     type: Boolean,       // Number, Boolean, String,
     default: true,
     onChange: value => { // value is the new value of the setting
-      HandMiniBarOptions.hideMessages = value;
+      CONFIG.HandMiniBar.options.hideMessages = value;
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
@@ -817,7 +825,7 @@ Hooks.on("init", function() {
     type: Boolean,       // Number, Boolean, String,
     default: false,
     onChange: value => { // value is the new value of the setting
-      HandMiniBarOptions.faceupMode = value;
+      CONFIG.HandMiniBar.options.faceupMode = value;
       socket.emit(HandMiniBarConfig.eventName, {'action': 'rerender'});
       HandMiniBarConfig.reRender();
     },
@@ -836,7 +844,7 @@ Hooks.on("init", function() {
     },
     default: "right_bar",
     onChange: value => { // value is the new value of the setting
-      HandMiniBarOptions.position = value;
+      CONFIG.HandMiniBar.options.position = value;
       HandMiniBarConfig.updatePostion();
       socket.emit(HandMiniBarConfig.eventName, {'action': 'reposition'});
     },
@@ -856,7 +864,7 @@ Hooks.on("ready", function() {
           content = $(content);
           $("#ui-bottom").append(content);
 
-          HandMiniBarOptions.position = game.settings.get(HandMiniBarConfig.moduleName, "BarPosition");
+          CONFIG.HandMiniBar.options.position = game.settings.get(HandMiniBarConfig.moduleName, "BarPosition");
           HandMiniBarConfig.updatePostion();
 
           let count = game.settings.get(HandMiniBarConfig.moduleName, "HandCount");
@@ -865,7 +873,7 @@ Hooks.on("ready", function() {
             count = HandMiniBarConfig.handMax;
           }
           for(let i = 0; i < count; i++){
-            handMiniBarHandList.push(new HandMiniBar(i));
+            new HandMiniBar(i);
           }
           if(game.settings.get(HandMiniBarConfig.moduleName, "DisplayHandName") == true){
             $("#hand-mini-bar-container").addClass("show-names");
@@ -888,13 +896,13 @@ Hooks.on("ready", function() {
           });
           //initialize Options from saved settings
           if(game.settings.get(HandMiniBarConfig.moduleName, "HideMessages") == true){
-            HandMiniBarOptions.hideMessages = true;
+            CONFIG.HandMiniBar.options.hideMessages = true;
           }
           if(game.settings.get(HandMiniBarConfig.moduleName, "BetterChatMessages") == true){
-            HandMiniBarOptions.betterChatMessages = true;
+            CONFIG.HandMiniBar.options.betterChatMessages = true;
           }
           if(game.settings.get(HandMiniBarConfig.moduleName, "FaceUpMode") == true){
-            HandMiniBarOptions.faceUpMode = true;
+            CONFIG.HandMiniBar.options.faceUpMode = true;
           }
           socket.on(HandMiniBarConfig.eventName, data => {
             if(data.action === "rerender"){
