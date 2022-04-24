@@ -104,7 +104,7 @@ class HandMiniBar{
     this.updating = false;
 
     /**
-     * HTML hool for this hand
+     * HTML hook for this hand
      */
     this.html = undefined;
     
