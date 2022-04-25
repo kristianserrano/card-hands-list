@@ -1,7 +1,3 @@
-Update 1.0.3
-- fixed extending the module will be able to map GM to players toolbars
-- fixed the GM can have two of the same players and they will match each other when changed
-
 Update 1.0.2
 - Refactored to make it easier to extend
     - CONFIG.HandMiniBar.documentClass
@@ -10,6 +6,8 @@ Update 1.0.2
 - descriptions can now have new lines
 - fixed camera boxes on smaller screens
 - fixed flipped card description should not show
+- fixed extending the module will be able to map GM to players toolbars
+- fixed the GM can have two of the same players and they will match each other when changed
 
 Update 1.0.1
 - 9.266 Support
