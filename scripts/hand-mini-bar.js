@@ -49,16 +49,20 @@ const HandMiniBarModule = {
   updatePlayerHands: function(){
     if(game.user.isGM){
       let u = game.user;
-      for(let i = 0; i <= HandMiniBarModule.handMax; i++){
-        let uID = u.getFlag(HandMiniBarModule.moduleName,'UserID-' + i);
+      for(let i = 0; i <= HandMiniBarModule.handMiniBarList.length; i++){
+        let toolbar = HandMiniBarModule.handMiniBarList[i];
+        if(!toolbar){
+          break;
+        }
+        let uID = u.getFlag(HandMiniBarModule.moduleName,'UserID-' + toolbar.id);
         if(!!uID){
           let cardsID = game.users.get(uID).getFlag(HandMiniBarModule.moduleName,"CardsID-0");
           let changed = false;
           if(!!cardsID){
-            u.setFlag(HandMiniBarModule.moduleName,'CardsID-' + i, cardsID);
+            u.setFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id, cardsID);
             changed = true;
           }else{
-            u.unsetFlag(HandMiniBarModule.moduleName,'CardsID-' + i);
+            u.unsetFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id);
             changed=true;
           }
           if(changed){
@@ -346,6 +350,7 @@ class HandMiniBar{
     if(this.id == 0){
       socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
     }
+    HandMiniBarModule.updatePlayerHandsDelayed();
   }
   //sets the user, only available to GMs
   setUserOption(choice){
@@ -728,6 +733,7 @@ class HandMiniBar{
     if(t.id == 0){
       socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
     }
+    HandMiniBarModule.updatePlayerHandsDelayed();
   }
 
   //Removes the html element from the screen
