@@ -778,7 +778,7 @@ Hooks.on("init", function() {
           HandMiniBarModule.handMiniBarList.push(new HandMiniBar(HandMiniBarModule.handMiniBarList.length));
         }
       }else{//remove some may need additional cleanup
-        let less =  handMiniBarList.length - value;
+        let less =  HandMiniBarModule.handMiniBarList.length - value;
         for(let i = 0; i < less; i++){
           HandMiniBarModule.handMiniBarList.pop().remove();
         }
