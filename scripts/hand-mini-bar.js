@@ -139,13 +139,13 @@ class HandMiniBar{
     });
     
     Hooks.on("deleteCard", function(target) {
-      if(!!target && !!target.parent && target.parent.data._id == t.currentCards.data._id){
+      if(!!target && !!target.parent && (!!t.currentCards && target.parent.data._id == t.currentCards.data._id)){
         t.update();
       }
     });
     
     Hooks.on("passCards", function(target, data, from, hi) {
-      if(!!data.data && data.data._id == t.currentCards.data._id){
+      if(!!data.data && (!!t.currentCards && data.data._id == t.currentCards.data._id)){
         t.update();
       }
     });
