@@ -1,5 +1,7 @@
 Update 1.0.3
 - Japanese localization: thanks to Brother Sharp
+- Added Zoom on hover in chat
+- Other minor css tweaks
 - Fixed missing variable bug
 - Fixed unassigned decks cause error when updating
 
