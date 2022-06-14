@@ -1,3 +1,7 @@
+Update 1.0.4
+- Fixed bug when paired with WebRTC Tweaks module
+- only display single name when hand name is the same as player name
+
 Update 1.0.3
 - Japanese localization: thanks to Brother Sharp
 - Added Zoom on hover in chat

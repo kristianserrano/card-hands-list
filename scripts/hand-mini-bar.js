@@ -204,7 +204,7 @@ class HandMiniBar{
       let handTitle = this.currentCards.data.name;
       /** Do Some Extra GM work here **/
       if(game.user.isGM){
-        if(!!this.currentUser){
+        if(!!this.currentUser && this.currentUser.data.name != handTitle){
           handTitle = this.currentUser.data.name + " (" + handTitle + ")";
         }
       }

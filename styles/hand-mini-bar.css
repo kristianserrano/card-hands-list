@@ -1,3 +1,8 @@
+/* Fixes bug when combined with WebRTC Tweaks module */
+#ui-top{
+    min-height:0;
+}
+
 #hand-mini-bar-container{
     display:flex;
     flex-direction: column;
@@ -232,10 +237,10 @@ i.hand-mini-bar-hide-show.show:before{
 }
 
 .hand-mini-bar-card:hover{
-    height: 100px;
     margin-top:-24px;
+    height:100px;
     flex: none;
-    filter:drop-shadow(5px 5px 5px #000);
+    filter:drop-shadow(0px 0px 2px #FFF);
 }
 
 
