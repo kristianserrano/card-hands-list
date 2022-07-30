@@ -34,6 +34,17 @@
     "HANDMINIBAR.ChooseUser":"Select a Player for the Toolbar",
     "HANDMINIBAR.ResetToolbarDialogTitle":"Reset Toolbar",
     "HANDMINIBAR.ResetToolbarDialogQuestion":"Reset The Toolbar back to default?",
-    "HANDMINIBAR.NoHand":"No Hand"
+    "HANDMINIBAR.CardClickBehavior":"Card Click Behavior",
+    "HANDMINIBAR.CardClickBehaviorHint":"Select what happens when a card in the bar is clicked",
+    "HANDMINIBAR.CardClickPlayCard":"Play Card Dialog",
+    "HANDMINIBAR.CardClickOpenHand":"Open Hand",
+    "HANDMINIBAR.CardClickCardImage":"Display Card Image",
+    "HANDMINIBAR.RemoveBar":"Remove Bar",
+    "HANDMINIBAR.HideShow":"Hide/Show",
+    "HANDMINIBAR.AddBar":"Add Bar",
+    "HANDMINIBAR.NoHand":"No Hand",
+    "HANDMINIBAR.ResetBar":"Reset Bar",
+    "HANDMINIBAR.Player":"Player",
+    "HANDMINIBAR.Hand":"Hand"
 
 }

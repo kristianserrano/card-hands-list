@@ -9,7 +9,8 @@ CONFIG.HandMiniBar.options = {
   hideMessages: false,
   faceUpMode: false,
   position:"",
-  positionDefault:"right_bar"
+  positionDefault:"right_bar",
+  cardClick:"play_card"
 };
 
 const HandMiniBarModule = {
@@ -39,11 +40,30 @@ const HandMiniBarModule = {
       //above players
     }
   },
+  updateHandCount: function(value){ // value is the new value of the setting
+    if (value > HandMiniBarModule.handMax){
+      value = HandMiniBarModule.handMax;
+    }
+    //add more
+    if(value == HandMiniBarModule.handMiniBarList.length){
+      //do nothing
+    }else if(value > HandMiniBarModule.handMiniBarList.length){
+      let more = value - HandMiniBarModule.handMiniBarList.length ;
+      for(let i = 0; i < more; i++){
+        HandMiniBarModule.handMiniBarList.push(new HandMiniBar(HandMiniBarModule.handMiniBarList.length));
+      }
+    }else{//remove some may need additional cleanup
+      let less =  HandMiniBarModule.handMiniBarList.length - value;
+      for(let i = 0; i < less; i++){
+        HandMiniBarModule.handMiniBarList.pop().remove();
+      }
+    }
+  },
   //updates the player hands but with a delay so user flags are correctly set
   updatePlayerHandsDelayed: function(){
     setTimeout(function(){
       HandMiniBarModule.updatePlayerHands();
-    },500);
+    },3000);
   },
   //updates the player hands that are owned by other players (the DM)
   updatePlayerHands: function(){
@@ -168,9 +188,10 @@ class HandMiniBar{
   //renders the cards within the hand template
   renderCards(resolve, reject){
     let t = this;
-    $('#hand-mini-bar-card-container-' + t.id).empty();
+    let length = 0;
     if(typeof this.currentCards !== "undefined"){
-      let length = this.currentCards.data.cards.contents.length;
+      $('#hand-mini-bar-card-container-' + t.id).empty();
+      length = this.currentCards.data.cards.contents.length;
       if(CONFIG.HandMiniBar.options.faceUpMode){
         // Check to make sure all the cards are flipped over to their face
         $(this.currentCards.data.cards.contents.sort(this.cardSort)).each(function(i,c){
@@ -189,7 +210,7 @@ class HandMiniBar{
         renderTemplate('modules/hand-mini-bar/templates/card.html', renderData).then(
             content => {
                 content = $(content);
-                content.click(function(e){t.playCard(e)});
+                content.click(function(e){t.cardClicked(e)});
                 content.contextmenu(function(e){t.flipCard(e)});
                 $('#hand-mini-bar-card-container-' + t.id).append(content);
                 if(i == length - 1){
@@ -201,20 +222,14 @@ class HandMiniBar{
             }
         )
       });
-      let handTitle = this.currentCards.data.name;
-      /** Do Some Extra GM work here **/
-      if(game.user.isGM){
-        if(!!this.currentUser && this.currentUser.data.name != handTitle){
-          handTitle = this.currentUser.data.name + " (" + handTitle + ")";
-        }
-      }
-      this.updatePlayerColor();
-      $("#hand-mini-bar-hand-name-" + t.id).html(handTitle);
-      //Return for the promise if there is nothing to render
-      if(length == 0){
-        if (resolve){
-          resolve();
-        }
+    }
+
+    this.updateTitle();
+    this.updatePlayerColor();
+    //Return for the promise if there is nothing to render
+    if(length == 0){
+      if (resolve){
+        resolve();
       }
     }
   }
@@ -226,42 +241,32 @@ class HandMiniBar{
   update(){
     let t = this;
     if(!!t.currentCards){
-      /*let cards = game.cards.get(t.currentCards.data._id);
-      if(!!cards){
-        t.currentCards = cards;*/
-        if(!!t.currentCards){
-          if(!t.updating)
-          {
-            t.updating = true;
-            const myPromise = new Promise((resolve, reject) => {
-              t.renderCards(resolve, reject);
-            });
+      if(!t.updating)
+      {
+        t.updating = true;
+        const myPromise = new Promise((resolve, reject) => {
+          t.renderCards(resolve, reject);
+        });
 
-            myPromise
-            .then(t.attachDragDrop.bind(t))
-            .then(function(){
-              t.updating = false;
-              },function(){
-                t.updating = false;//even on error still finish updating
-            });
-          }
-          else{
-            setTimeout(function(){
-              //continue to try to update the hand
-              t.update();
-            },500);
-          }
-     /*   }*/
+        myPromise
+        .then(t.attachDragDrop.bind(t))
+        .then(function(){
+          t.updating = false;
+          },function(){
+            t.updating = false;//even on error still finish updating
+        });
+      }
+      else{
+        setTimeout(function(){
+          //continue to try to update the hand
+          t.update();
+        },500);
       }
     }
     else{
       //check if player is selected but not a hand yet then display color and player name
+      this.updateTitle();
       this.updatePlayerColor();
-      if(game.user.isGM){
-        if(!!this.currentUser){
-          $("#hand-mini-bar-hand-name-" + t.id).html(this.currentUser.data.name);
-        }
-      }
       renderTemplate('modules/hand-mini-bar/templates/empty-hand-message.html', {}).then(
           content => {
             $("#hand-mini-bar-card-container-" + t.id).html(content);
@@ -396,26 +401,42 @@ class HandMiniBar{
     }
   }
   async chooseDialog(){
-      if(game.user.isGM){
-        let t = this;
-        let d = new Dialog({
-          title: game.i18n.localize("HANDMINIBAR.ChooseForGMTitle"),
-          content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseForGMQuestion") + '</p>',
-          buttons: [{
-            label: "Player", 
-            callback:function(){
-              t.chooseUserDialog();
-          }},{
-            label:"Hand",
-            callback:function(){
-              t.chooseHandDialog();
-            }
-          }]
-        });
-        d.render(true);
-      }else{
-        this.chooseHandDialog();
+    let t = this;
+    //options based on state and GM status
+    let buttons = [{
+      label:game.i18n.localize("HANDMINIBAR.Hand"),
+      callback:function(){
+        t.chooseHandDialog();
       }
+    }];
+
+    if(game.user.isGM){
+      buttons.push({
+        label:game.i18n.localize("HANDMINIBAR.Player"),
+        callback:function(){
+          t.chooseUserDialog();
+      }});
+    }
+
+    if(this.currentCards != undefined || this.currentUser != undefined){
+      buttons.push({
+        label:game.i18n.localize("HANDMINIBAR.ResetBar"),
+        callback:function(){
+          t.reset();
+        }
+      });
+    }
+
+    if(buttons.length === 1){//if only 1 option then move along to the hand dialog no other options
+      this.chooseHandDialog();
+    }else{
+      let d = new Dialog({
+        title: game.i18n.localize("HANDMINIBAR.ChooseForGMTitle"),
+        content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseForGMQuestion") + '</p>',
+        buttons: buttons
+      });
+      d.render(true);
+    }
   }
   //The GM is a able to select a user for each Toolbar
   async chooseUserDialog(){
@@ -498,6 +519,28 @@ class HandMiniBar{
     } else {
       this.currentCards.sheet.render(true);
     }
+  }
+  //one of the cards was clicked, based on options pick what to do
+  async cardClicked(e){
+    let option = CONFIG.HandMiniBar.options.cardClick;
+    if(option === "play_card"){
+      this.playCard(e);
+    }else if(option === "open_hand"){
+      this.openHand();
+    } else if(option === "card_image"){
+      let id = $(e.target).data("card-id");
+      let card = this.currentCards.data.cards.get(id);
+      this.showCardImage(card);
+    }
+  }
+  //Shows the card image
+  async showCardImage(card){
+    const ip = new ImagePopout(card.img, {
+      title: card.name,
+      shareable: true,
+      uuid: card.uuid
+    });
+    ip.render(true);
   }
   //Plays the card the player clicked on
   async playCard(e){
@@ -680,6 +723,23 @@ class HandMiniBar{
       options: {jQuery: false}
     });
   }
+
+  //updates the title of the bar
+  updateTitle(){
+    let t = this;
+    let handTitle = "";
+    if(typeof this.currentCards !== "undefined"){
+      handTitle = this.currentCards.data.name;
+    }
+    /** Do Some Extra GM work here **/
+    if(game.user.isGM){
+      if(!!this.currentUser && this.currentUser.data.name != handTitle){
+        handTitle = this.currentUser.data.name + " (" + handTitle + ")";
+      }
+    }
+    $("#hand-mini-bar-hand-name-" + t.id).html(handTitle);
+  }
+
   //Only tries to update the player color if GM this may change in the future
   updatePlayerColor(){
     if(game.user.isGM){
@@ -729,7 +789,7 @@ class HandMiniBar{
     let t = this;
     this.resetCardsID();
     this.resetUserID();
-    //if this is the first hand then make sure it's updated for DMs
+    //if this is the first hand then make sure it's updated for GMs
     if(t.id == 0){
       socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
     }
@@ -765,25 +825,7 @@ Hooks.on("init", function() {
       max: 10,
       step: 1
     },
-    onChange: value => { // value is the new value of the setting
-      if (value > HandMiniBarModule.handMax){
-        value = HandMiniBarModule.handMax;
-      }
-      //add more
-      if(value == HandMiniBarModule.handMiniBarList.length){
-        //do nothing
-      }else if(value > HandMiniBarModule.handMiniBarList.length){
-        let more = value - HandMiniBarModule.handMiniBarList.length ;
-        for(let i = 0; i < more; i++){
-          HandMiniBarModule.handMiniBarList.push(new HandMiniBar(HandMiniBarModule.handMiniBarList.length));
-        }
-      }else{//remove some may need additional cleanup
-        let less =  HandMiniBarModule.handMiniBarList.length - value;
-        for(let i = 0; i < less; i++){
-          HandMiniBarModule.handMiniBarList.pop().remove();
-        }
-      }
-    },
+    onChange: HandMiniBarModule.updateHandCount,
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
   game.settings.register(HandMiniBarModule.moduleName, 'DisplayHandName', {
@@ -856,6 +898,23 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
+  game.settings.register(HandMiniBarModule.moduleName, 'CardClick', {
+    name: game.i18n.localize("HANDMINIBAR.CardClickBehavior"),
+    hint: game.i18n.localize("HANDMINIBAR.CardClickBehaviorHint"),
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: String,       // Number, Boolean, String,
+    choices: {
+      "play_card":  game.i18n.localize("HANDMINIBAR.CardClickPlayCard"),
+      "open_hand": game.i18n.localize("HANDMINIBAR.CardClickOpenHand"),
+      "card_image":  game.i18n.localize("HANDMINIBAR.CardClickCardImage")
+    },
+    default: "play_card",
+    onChange: value => { // value is the new value of the setting
+      CONFIG.HandMiniBar.options.cardClick = value;
+    },
+    filePicker: false,  // set true with a String `type` to use a file picker input
+  });
 });
 Hooks.on("ready", function() {
   // Pre Load templates.
@@ -888,6 +947,20 @@ Hooks.on("ready", function() {
             $("#hand-mini-bar-container").toggleClass("hidden");
             $(".hand-mini-bar-hide-show").toggleClass("show");
           });
+          $(".hand-mini-bar-add-bar").click(function(){
+            let value =game.settings.get(HandMiniBarModule.moduleName,'HandCount') + 1;
+            if(value < HandMiniBarModule.handMax + 1){
+              game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
+              HandMiniBarModule.updateHandCount(value);
+            }
+          });
+          $(".hand-mini-bar-subtract-bar").click(function(){
+            let value = game.settings.get(HandMiniBarModule.moduleName,'HandCount') - 1;
+            if(value > 0){
+              game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
+              HandMiniBarModule.updateHandCount(value);
+            }
+          });
           //popup card image on message click
           $(document).on("click",".hand-mini-bar-message-card", function(e){
               let t = $(e.target);
@@ -901,6 +974,7 @@ Hooks.on("ready", function() {
               }
           });
           //initialize Options from saved settings
+          CONFIG.HandMiniBar.options.cardClick = game.settings.get(HandMiniBarModule.moduleName, "CardClick");
           if(game.settings.get(HandMiniBarModule.moduleName, "HideMessages") == true){
             CONFIG.HandMiniBar.options.hideMessages = true;
           }

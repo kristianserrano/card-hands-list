@@ -28,42 +28,31 @@
 }
 
 .hand-mini-bar-buttons-container{
+    max-height:20px;
     max-width: 220px;
     min-width: 220px;
-    margin: 0px 0px 0px auto;
     display: flex;
     flex-grow: 1;
+    margin-bottom: -15px;
+    padding-left: 15px;
 }
 
-.hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
-  height: 24px;
-  align-self: self-end;
-}
-
-i.hand-mini-bar-hide-show{
-    margin-left:109px;
+.hand-mini-bar-buttons-container *{
     color:#c9c7b8;
     padding:2px;
     cursor:pointer;
     pointer-events: all;
-    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-width: .5px;
     -webkit-text-stroke-color: black;    
-    font-size: 17px;
-    /*margin-top:-24px;*/
-    margin: 0px auto -24px auto;
+    font-size: 22px;
+    margin: auto;
+    text-align: center;
+    line-height: 22px;
+    height: 22px;
 }
 
-
-i.hand-mini-bar-hide-show:before{
-    content: "\f107";
-}
-
-i.hand-mini-bar-hide-show.show{
-    line-height: 18px;
-}
-
-i.hand-mini-bar-hide-show.show:before{
-    content: "\f106";
+.hand-mini-bar-hide-show.show{
+    transform: rotate(180deg);;
 }
 
 .hand-mini-bar-hand{
@@ -190,6 +179,9 @@ i.hand-mini-bar-hide-show.show:before{
     padding-left:1px;
 }
 
+.hand-mini-bar-buttons-container *:hover{
+    filter: drop-shadow(0px 0px 2px var(--color-shadow-highlight));
+}
 
 .hand-mini-bar-settings-choose:hover,
 .hand-mini-bar-pass:hover,
@@ -327,6 +319,10 @@ i.hand-mini-bar-hide-show.show:before{
     flex-wrap: nowrap;
 }
 
+div#hand-mini-bar-container{
+    justify-content: end;
+}
+
 #ui-bottom.hand-mini-bar div#hand-mini-bar-container{
     grid-row: 1/4;
     grid-column: 2;
@@ -356,6 +352,11 @@ i.hand-mini-bar-hide-show.show:before{
     #ui-bottom div#hand-mini-bar-container div#hand-mini-bar-hands-container{
         margin-left:24px;
     }
+
+    .hand-mini-bar-buttons-container{
+        margin-left: 15px;
+    }
+
     #ui-bottom{
       grid-template-columns: minmax(auto, auto) minmax(244px, 244px);
     }

@@ -1,3 +1,11 @@
+Update 1.0.5
+- Added 'Reset Bar' button to settings menu
+- Added options to change behavior on card click
+- Added quick add/remove Bars buttons
+- English words in menu added to translation (Bug)
+- Increased update Delay to 3 seconds for slower internet connections (Bug)
+- Title renders correctly when bar reset (Bug)
+
 Update 1.0.4
 - Fixed bug when paired with WebRTC Tweaks module
 - only display single name when hand name is the same as player name
