@@ -63,7 +63,7 @@ const HandMiniBarModule = {
   updatePlayerHandsDelayed: function(){
     setTimeout(function(){
       HandMiniBarModule.updatePlayerHands();
-    },3000);
+    },500);
   },
   //updates the player hands that are owned by other players (the DM)
   updatePlayerHands: function(){
@@ -163,9 +163,9 @@ class HandMiniBar{
         t.update();
       }
     });
-    
-    Hooks.on("passCards", function(target, data, from, hi) {
-      if(!!data.data && (!!t.currentCards && data.data._id == t.currentCards.data._id)){
+
+    Hooks.on("createCard", function(target) {
+      if(!!target && !!target.parent && (!!t.currentCards && target.parent.data._id == t.currentCards.data._id)){
         t.update();
       }
     });
