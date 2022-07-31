@@ -363,15 +363,11 @@ class HandMiniBar{
     this.storeUserID(this.currentUser.data._id);
     this.update();
     if(game.user.isGM){
-      if(this.currentCards != undefined){
-        this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-0', this.currentCards.data._id);
-      }else{
-        //check to see if user has a hand selected already
-        let id = this.currentUser.getFlag(HandMiniBarModule.moduleName,'CardsID-0');
-        if(!!id){
-          this.storeCardsID(id);
-          this.setCardsID(id)
-        }
+      //check to see if user has a hand selected already
+      let id = this.currentUser.getFlag(HandMiniBarModule.moduleName,'CardsID-0');
+      if(!!id){
+        this.storeCardsID(id);
+        this.setCardsID(id)
       }
     }
   }

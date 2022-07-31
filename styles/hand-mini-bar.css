@@ -33,7 +33,7 @@
     min-width: 220px;
     display: flex;
     flex-grow: 1;
-    margin-bottom: -15px;
+    margin-bottom: -14px;
     padding-left: 15px;
 }
 
@@ -44,15 +44,20 @@
     pointer-events: all;
     -webkit-text-stroke-width: .5px;
     -webkit-text-stroke-color: black;    
-    font-size: 22px;
+    font-size: 26px;
     margin: auto;
     text-align: center;
     line-height: 22px;
     height: 22px;
 }
 
-.hand-mini-bar-hide-show.show{
-    transform: rotate(180deg);;
+.hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
+    font-size:18px;
+}
+
+.hand-mini-bar-buttons-container .hand-mini-bar-hide-show.show{
+    transform: rotate(180deg);
+    margin-bottom: -8px;
 }
 
 .hand-mini-bar-hand{

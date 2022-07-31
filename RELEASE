@@ -2,6 +2,7 @@ Update 1.0.5
 - Added 'Reset Bar' button to settings menu
 - Added options to change behavior on card click
 - Added quick add/remove Bars buttons
+- Changed Selecting Player Will not change the users hand
 - English words in menu added to translation (Bug)
 - Title renders correctly when bar reset (Bug)
 - Updates correctly now from piles (Bug)
