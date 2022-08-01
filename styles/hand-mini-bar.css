@@ -339,6 +339,30 @@ div#hand-mini-bar-container{
 #ui-bottom.hand-mini-bar-right div#hand-mini-bar-container{
     grid-column: 2;
 }
+/* Window popup css*/
+.hand-mini-bar-window{
+    height:100%;
+}
+
+.hand-mini-bar-window-cards{
+    height:100%;
+    display: flex;
+    width:20000px;
+
+}
+
+.hand-mini-bar-window-card:first{
+    margin-left:0px;
+}
+
+.hand-mini-bar-window-card{
+    height:100%;
+    cursor:pointer;
+}
+
+.hand-mini-bar-window-card img{
+    height: 100%;
+}
 
 /* Shrink macro bar sooner*/
 @media (max-width: 1316px)

@@ -1,11 +1,15 @@
+Update 1.0.6
+- Cards Button (top left) now opens a Window for a larger view of the cards
+- Fixed empy hand name "()" when dm has player and no cards selected
+
 Update 1.0.5
 - Added 'Reset Bar' button to settings menu
 - Added options to change behavior on card click
 - Added quick add/remove Bars buttons
 - Changed Selecting Player Will not change the users hand
-- English words in menu added to translation (Bug)
-- Title renders correctly when bar reset (Bug)
-- Updates correctly now from piles (Bug)
+- Fixed English words in menu added to translation
+- Fixed Title renders correctly when bar reset
+- Fixed Updates correctly now from piles
 
 Update 1.0.4
 - Fixed bug when paired with WebRTC Tweaks module

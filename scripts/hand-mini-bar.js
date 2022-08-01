@@ -13,6 +13,64 @@ CONFIG.HandMiniBar.options = {
   cardClick:"play_card"
 };
 
+class HandWindow extends FormApplication {
+  constructor(minibar) {
+    super(cards, {});
+    this.cards = minibar.currentCards;
+    this.minibar = minibar;
+    console.log(cards);
+  }
+
+  /** @override */
+  static get defaultOptions() {
+      return foundry.utils.mergeObject(super.defaultOptions, {
+      template: "modules/hand-mini-bar/templates/window-hand.html",
+      classes: ["image-popout", "dark"],
+      editable: false,
+      resizable: true,
+      shareable: false,
+      uuid: null,
+      width:800,
+      height:350
+    });
+  }
+
+  /** @override */
+  get title() {
+    return this.cards.data.name;
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  async getData(options) {
+    return {
+      cards: this.cards.data.cards,
+      options: this.options,
+      title: this.title
+    }
+  }
+
+  activateListeners(html){
+    let minibar = this.minibar;
+    html.find('.hand-mini-bar-window-card').click(function(e){minibar.cardClicked(e)});
+    
+  }
+
+  /** @override */
+  _getHeaderButtons() {
+    let buttons = super._getHeaderButtons();
+    buttons.unshift({
+      label: "HANDMINIBAR.OpenCardStack",
+      class: "open-stack",
+      icon: "fas fa-id-badge",
+      onclick: ev => this.minibar.openHand()
+    });
+    return buttons
+  }
+  
+}
+
 const HandMiniBarModule = {
   handMiniBarList: new Array(),
   moduleName:"hand-mini-bar",
@@ -136,7 +194,7 @@ class HandMiniBar{
     renderTemplate('modules/hand-mini-bar/templates/hand.html', {id: this.id}).then(
         content => {
             content = $(content);
-            content.find('.hand-mini-bar-settings-hand').click(function(e){t.openHand(e)});
+            content.find('.hand-mini-bar-settings-hand').click(function(e){t.openHandWindow(e)});
             content.find('.hand-mini-bar-settings-choose').click(function(e){t.chooseDialog(e)});
             content.find('.hand-mini-bar-settings-choose').contextmenu(function(e){t.resetToolbarDialog(e)});
             content.find('.hand-mini-bar-pass').click(function(e){t.passCards(e)});
@@ -504,6 +562,10 @@ class HandMiniBar{
     });
     d.render(true);
   }
+  //Opens a Window with larger cards
+  async openHandWindow(){
+    new HandWindow(this).render(true);
+  }
   //Opens the hand for any additional options
   async openHand(){
     if(this.currentCards == undefined){
@@ -730,7 +792,11 @@ class HandMiniBar{
     /** Do Some Extra GM work here **/
     if(game.user.isGM){
       if(!!this.currentUser && this.currentUser.data.name != handTitle){
-        handTitle = this.currentUser.data.name + " (" + handTitle + ")";
+        if(handTitle != ""){
+          handTitle = this.currentUser.data.name + " (" + handTitle + ")";
+        }else{
+          handTitle = this.currentUser.data.name;
+        }
       }
     }
     $("#hand-mini-bar-hand-name-" + t.id).html(handTitle);
