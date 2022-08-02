@@ -355,7 +355,9 @@ div#hand-mini-bar-container{
 .hand-mini-bar-window-card{
     max-height:300px;
     height:100%;
-    cursor:pointer;
+    cursor:pointer;    margin: 6px;
+    filter: drop-shadow(0px 0px 6px #000);
+    border: none;
 }
 
 /* Shrink macro bar sooner*/
