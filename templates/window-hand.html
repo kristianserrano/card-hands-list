@@ -1,9 +1,7 @@
 <form class="hand-mini-bar-window" autocomplete="off">
   <div class="hand-mini-bar-window-cards">
     {{#each cards}}
-        <div class="hand-mini-bar-window-card card" title="{{this.name}}" data-card-id="{{this.id}}" data-img="{{this.img}}" draggable="true">
-            <img src="{{this.img}}" data-card-id="{{this.id}}" data-img="{{this.img}}" draggable="true"/>
-        </div>
+      <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-img="{{this.img}}" draggable="true"/>
     {{/each}}
   </div>
 </form>

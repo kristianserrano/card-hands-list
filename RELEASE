@@ -1,4 +1,5 @@
 Update 1.0.6
+- Code overhaul ES6
 - Cards Button (top left) now opens a Window for a larger view of the cards
 - Fixed empy hand name "()" when dm has player and no cards selected
 

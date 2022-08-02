@@ -346,22 +346,16 @@ div#hand-mini-bar-container{
 
 .hand-mini-bar-window-cards{
     height:100%;
+    width:100%;
     display: flex;
-    width:20000px;
+    flex-wrap: wrap;
 
-}
-
-.hand-mini-bar-window-card:first{
-    margin-left:0px;
 }
 
 .hand-mini-bar-window-card{
+    max-height:300px;
     height:100%;
     cursor:pointer;
-}
-
-.hand-mini-bar-window-card img{
-    height: 100%;
 }
 
 /* Shrink macro bar sooner*/

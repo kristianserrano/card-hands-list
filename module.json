@@ -26,8 +26,8 @@
       "url": "https://www.pengrath.com"
     }
   ],
-  "scripts": [
-    "scripts/hand-mini-bar.js"
+  "esmodules": [
+    "scripts/hand-mini-bar-module.js"
   ],
   "styles": [
     "styles/hand-mini-bar.css"
