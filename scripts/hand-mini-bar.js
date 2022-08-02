@@ -1,10 +1,7 @@
-
   import HandWindow from './hand-window.js';
-  import CardListener from './card-listener.js';
 
-  export default class HandMiniBar extends CardListener{
+  export default class HandMiniBar{
     constructor(id) {
-      super();
       /**
        * an integer to identify this hand so we can have multiple on the screen
        */
@@ -92,13 +89,13 @@
         length = this.currentCards.data.cards.contents.length;
         if(CONFIG.HandMiniBar.options.faceUpMode){
           // Check to make sure all the cards are flipped over to their face
-          $(this.currentCards.data.cards.contents.sort(this.cardSort)).each(function(i,c){
+          $(this.currentCards.data.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
             if(c.face == null){
               c.flip();
             }
           });
         }
-        $(this.currentCards.data.cards.contents.sort(this.cardSort)).each(function(i,c){
+        $(this.currentCards.data.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
           let renderData = {
             id: c.data._id,
             back: (c.face == null),
@@ -131,11 +128,6 @@
         }
       }
     }
-    cardSort(a, b){
-      if(a.data.sort < b.data.sort) return 1;
-      if(a.data.sort > b.data.sort) return -1;
-      return 0;
-    }
     update(){
       let t = this;
       if(!!t.currentCards){
@@ -147,7 +139,7 @@
           });
   
           myPromise
-          .then(function(){t.attachDragDrop(t.html[0])}.bind(t))
+          .then(function(){HandMiniBarModule.attachDragDrop(t.html[0], t.currentCards)}.bind(t))
           .then(function(){
             t.updating = false;
             },function(){
@@ -344,70 +336,13 @@
 
     //Opens a Window with larger cards
     async openHandWindow(){
-      new HandWindow(this).render(true);
+      if(this.currentCards == undefined){
+        ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
+        return;
+      }
+      new HandWindow(this.currentCards).render(true);
     }
 
-    async playDialog(card){
-        const cards = game.cards.filter(c => (c !== this.currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
-        if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
-    
-        // Construct the dialog HTML
-        const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !CONFIG.HandMiniBar.options.faceUpMode});
-      
-        const currentCards = this.currentCards;
-        // Display the prompt
-        Dialog.prompt({
-          title: game.i18n.localize("CARD.Play"),
-          label: game.i18n.localize("CARD.Play"),
-          content: html,
-          callback: html => {
-            const form = html.querySelector("form.cards-dialog");
-            const fd = new FormDataExtended(form).toObject();
-            const to = game.cards.get(fd.to);
-            //override chat notification here
-            const options = {action: "play", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, updateData: fd.down ? {face: null} : {}};
-  
-             
-            if(CONFIG.HandMiniBar.options.betterChatMessages){
-  
-              let created = currentCards.pass(to, [card.id], options).catch(err => {
-                return ui.notifications.error(err.message);
-              });
-              let renderData = {
-                id: card.data._id,
-                back: (card.face == null),
-                img: (card.face !== null) ? card.face.img : card.back.img,
-                name:(card.face !== null) ? card.data.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
-                description: (card.face !== null) ? card.data.description : null,
-                action: "Played"
-              };
-              renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
-                content => {
-                  const messageData = {
-                      speaker: {
-                          scene: game.scenes?.active?.id,
-                          actor: game.userId,
-                          token: null,
-                          alias: null,
-                      },
-                      content: content,
-                  };
-                  ChatMessage.create(messageData);
-  
-              });
-              return created;
-            }
-            else{
-              return card.pass(to, [card.id], options).catch(err => {
-                ui.notifications.error(err.message);
-                return card;
-              });
-            }
-          },
-          rejectClose: false,
-          options: {jQuery: false}
-        });
-    }
     //Draws a card into this hand
     async drawCard(e){
       if(this.currentCards == undefined){
@@ -537,27 +472,14 @@
       }
     }
 
-    /** Card Listeners **/
-    attachDragDrop(html){
-      this._attachDragDrop(html);
-    }
-
-    drag(event) {
-      this._drag(event)
-    }
-
-    drop(event){
-      this._drop(event)
-    }
-
     //one of the cards was clicked, based on options pick what to do
     async cardClicked(e){
-      this._cardClicked(e);
+      HandMiniBarModule.cardClicked(e);
     }
 
     //Flip the card the player right clicked on
     async flipCard(e){
-      this._flipCard(e);
+      HandMiniBarModule.flipCard(e);
     }
 
     //Gets any stored CardsID 

@@ -105,6 +105,221 @@ window.HandMiniBarModule = {
     $(HandMiniBarModule.handMiniBarList).each(function(i, h){
       h.restore();
     });
+  },
+
+  //Attach for dragging cards from the toolbar
+  attachDragDrop: function(html, cards){
+    let c = {cards:cards};
+    let t = this;
+    let dragDrop = new DragDrop({
+      dragSelector: ".hand-mini-bar-card, .hand-mini-bar-window-card",
+      dropSelector: undefined,
+      permissions: { dragstart: function(selector) {return true;}},
+      callbacks: { 
+        dragstart: t.drag.bind(c),
+        drop: t.drop.bind(c)
+      }
+    });
+    dragDrop.bind(html);
+  },
+  
+  drag: function(event) {
+    const id = $(event.currentTarget).data("card-id");
+    const card = HandMiniBarModule.getCardByID(id);
+    if ( !card ) return;
+
+    // Create drag data
+    const dragData = {
+      id: card.id,//id required
+      type: "Card",
+      cardsId: this.cards.data._id,
+      cardId: card.id
+    };
+
+    // Set data transfer
+    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+  },
+
+  drop: function(event){
+    let t = this;
+    const data = TextEditor.getDragEventData(event);
+    if ( data.type !== "Card" ) return;
+    const source = game.cards.get(data.cardsId);
+    const card = source.cards.get(data.cardId);
+    //if the card does not already exist in this hand then pass it to it
+    let exists = t.cards.cards.filter(c => c.id === card.id);
+    //SORT
+    let sort = function(){
+      const closest = event.target.closest("[data-card-id]");
+      if(closest){
+        const siblings = t.cards.cards.filter(c => c.id !== card.id);
+        const target = t.cards.data.cards.get(closest.dataset.cardId);
+        const updateData = SortingHelpers.performIntegerSort(card, {target, siblings}).map(u => {
+          return {_id: u.target.id, sort: u.update.sort}
+        });
+        t.cards.updateEmbeddedDocuments("Card", updateData);
+      }
+    }
+    if(exists.length == 0){
+      return card.pass(this.cards, { chatNotification: !CONFIG.HandMiniBar.options.hideMessages }).then(
+        function(){
+          sort();
+        },function(error){
+          ui.notifications.error(error);
+        }
+      );
+    }else{//already a part of the hand, just sort
+      sort();
+    }
+  },
+
+
+  //one of the cards was clicked, based on options pick what to do
+  cardClicked: async function(e){
+    let id = $(e.target).data("card-id");
+    let option = CONFIG.HandMiniBar.options.cardClick;
+    if(option === "play_card"){
+      let card = this.getCardByID(id);
+      this.playCard(card);
+    }else if(option === "open_hand"){
+      let hand = getHandByID(id);
+      this.openHand(hand);
+    } else if(option === "card_image"){
+      let card = this.getCardByID(id);
+      this.showCardImage(card);
+    }
+  },
+
+  //Flip the card the player right clicked on
+  flipCard: async function(e){
+    if(CONFIG.HandMiniBar.options.faceUpMode){
+      return;// do not flip when in token mode
+    }
+    let id = $(e.target).data("card-id");
+    let card = this.getCardByID(id);
+    card.flip();
+    
+  },
+
+  //Plays the card the player clicked on
+  playCard: async function(card){
+    this.playDialog(card);
+  },
+
+  async playDialog(card){
+    const cards = game.cards.filter(c => (c !== this.currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
+    if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
+
+    // Construct the dialog HTML
+    const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !CONFIG.HandMiniBar.options.faceUpMode});
+  
+    const currentCards = this.currentCards;
+    // Display the prompt
+    Dialog.prompt({
+      title: game.i18n.localize("CARD.Play"),
+      label: game.i18n.localize("CARD.Play"),
+      content: html,
+      callback: html => {
+        const form = html.querySelector("form.cards-dialog");
+        const fd = new FormDataExtended(form).toObject();
+        const to = game.cards.get(fd.to);
+        //override chat notification here
+        const options = {action: "play", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, updateData: fd.down ? {face: null} : {}};
+
+        
+        if(CONFIG.HandMiniBar.options.betterChatMessages){
+
+          let created = currentCards.pass(to, [card.id], options).catch(err => {
+            return ui.notifications.error(err.message);
+          });
+          let renderData = {
+            id: card.data._id,
+            back: (card.face == null),
+            img: (card.face !== null) ? card.face.img : card.back.img,
+            name:(card.face !== null) ? card.data.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
+            description: (card.face !== null) ? card.data.description : null,
+            action: "Played"
+          };
+          renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
+            content => {
+              const messageData = {
+                  speaker: {
+                      scene: game.scenes?.active?.id,
+                      actor: game.userId,
+                      token: null,
+                      alias: null,
+                  },
+                  content: content,
+              };
+              ChatMessage.create(messageData);
+
+          });
+          return created;
+        }
+        else{
+          return card.pass(to, [card.id], options).catch(err => {
+            ui.notifications.error(err.message);
+            return card;
+          });
+        }
+      },
+      rejectClose: false,
+      options: {jQuery: false}
+    });
+  },
+
+  //Shows the card image
+  showCardImage: async function(card){
+    const ip = new ImagePopout(card.img, {
+      title: card.name,
+      shareable: true,
+      uuid: card.uuid
+    });
+    ip.render(true);
+  },
+
+  //Opens the hand for any additional options
+  openHand: async function(hand){
+    if(this.currentCards == undefined){
+      ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
+      return;
+    }
+    if (this.currentCards.sheet.rendered) {
+      this.currentCards.sheet.close();
+    } else {
+      this.currentCards.sheet.render(true);
+    }
+  },
+  /** Loop Through the hands to grab the card out 
+   * protects against missing hand references **/
+  getCardByID: function(id){
+    let card = undefined;
+    game.cards.forEach(function(cards){
+      if(!card && cards.data.type === "hand"){
+        card = cards.data.cards.get(id);
+      }
+    });
+    return card;
+  },
+  
+  /** Loop Through the hands to grab the card out 
+   * protects against missing hand references **/
+  getHandByCardID: function(id){
+    let hand = undefined;
+    game.cards.forEach(function(cards){
+      if(!card && cards.data.type === "hand"){
+        if(!!cards.data.cards.get(id)){
+          hand = cards;
+        }
+      }
+    });
+    return hand;
+  },
+
+  cardSort(a, b){
+    if(a.data.sort < b.data.sort) return 1;
+    if(a.data.sort > b.data.sort) return -1;
+    return 0;
   }
 }
 

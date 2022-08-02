@@ -1,12 +1,7 @@
-
-import CardListeners from './card-listener.js';
-
 export class HandWindow extends FormApplication {
-    constructor(minibar) {
+    constructor(cards) {
       super(cards, {});
-      this.cards = minibar.currentCards;
-      this.currentCards = minibar.currentCards;
-      this.minibar = minibar;
+      this.cards = cards;
       let t = this;
       /**
        * Hooks to listen to changes in this hand
@@ -19,13 +14,13 @@ export class HandWindow extends FormApplication {
       });
       
       Hooks.on("deleteCard", function(target) {
-        if(!!target && !!target.parent && (!!t.currentCards && target.parent.data._id == t.currentCards.data._id)){
+        if(!!target && !!target.parent && (!!t.cards && target.parent.data._id == t.cards.data._id)){
           t.render();
         }
       });
   
       Hooks.on("createCard", function(target) {
-        if(!!target && !!target.parent && (!!t.currentCards && target.parent.data._id == t.currentCards.data._id)){
+        if(!!target && !!target.parent && (!!t.cards && target.parent.data._id == t.cards.data._id)){
           t.render();
         }
       });
@@ -52,8 +47,10 @@ export class HandWindow extends FormApplication {
   
     /** @override */
     async getData(options) {
+      let cards = this.cards.data.cards.contents;
+      cards.sort(HandMiniBarModule.cardSort);
       return {
-        cards: this.cards.data.cards,
+        cards: cards,
         options: this.options,
         title: this.title
       }
@@ -61,9 +58,9 @@ export class HandWindow extends FormApplication {
   
     activateListeners(html){
       let t = this;
-      html.find('.hand-mini-bar-window-card').click(function(e){t.minibar.cardClicked(e)});
-      html.find('.hand-mini-bar-window-card').contextmenu(function(e){t.minibar.flipCard(e)});
-      this.minibar.attachDragDrop(html[0]);
+      html.find('.hand-mini-bar-window-card').click(function(e){HandMiniBarModule.cardClicked(e)});
+      html.find('.hand-mini-bar-window-card').contextmenu(function(e){HandMiniBarModule.flipCard(e)});
+      HandMiniBarModule.attachDragDrop(html[0], this.cards);
     }
   
     /** @override */
@@ -74,7 +71,7 @@ export class HandWindow extends FormApplication {
         label: "HANDMINIBAR.OpenCardStack",
         class: "open-stack",
         icon: "fas fa-id-badge",
-        onclick: ev => this.minibar.openHand(t.currentCards)
+        onclick: ev => this.minibar.openHand(t.cards)
       });
       return buttons
     }
