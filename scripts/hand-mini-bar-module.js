@@ -1,5 +1,6 @@
 
 import HandMiniBar from './hand-mini-bar.js';
+import HandMiniBarWindow from './hand-window.js';
 
 /**
  * Card Hand Toolbar to show cards on the main display
@@ -108,16 +109,15 @@ window.HandMiniBarModule = {
   },
 
   //Attach for dragging cards from the toolbar
-  attachDragDrop: function(html, cards){
-    let c = {cards:cards};
+  attachDragDrop: function(html){
     let t = this;
     let dragDrop = new DragDrop({
       dragSelector: ".hand-mini-bar-card, .hand-mini-bar-window-card",
       dropSelector: undefined,
       permissions: { dragstart: function(selector) {return true;}},
       callbacks: { 
-        dragstart: t.drag.bind(c),
-        drop: t.drop.bind(c)
+        dragstart: t.drag.bind(t),
+        drop: t.drop.bind(t)
       }
     });
     dragDrop.bind(html);
@@ -126,13 +126,14 @@ window.HandMiniBarModule = {
   drag: function(event) {
     const id = $(event.currentTarget).data("card-id");
     const card = HandMiniBarModule.getCardByID(id);
+    let cards = this.getCards();
     if ( !card ) return;
 
     // Create drag data
     const dragData = {
       id: card.id,//id required
       type: "Card",
-      cardsId: this.cards.data._id,
+      cardsId: cards.data._id,
       cardId: card.id
     };
 
@@ -141,27 +142,27 @@ window.HandMiniBarModule = {
   },
 
   drop: function(event){
-    let t = this;
+    let cards = this.getCards();
     const data = TextEditor.getDragEventData(event);
     if ( data.type !== "Card" ) return;
     const source = game.cards.get(data.cardsId);
     const card = source.cards.get(data.cardId);
     //if the card does not already exist in this hand then pass it to it
-    let exists = t.cards.cards.filter(c => c.id === card.id);
+    let exists = cards.cards.filter(c => c.id === card.id);
     //SORT
     let sort = function(){
       const closest = event.target.closest("[data-card-id]");
       if(closest){
-        const siblings = t.cards.cards.filter(c => c.id !== card.id);
-        const target = t.cards.data.cards.get(closest.dataset.cardId);
+        const siblings = cards.cards.filter(c => c.id !== card.id);
+        const target = cards.data.cards.get(closest.dataset.cardId);
         const updateData = SortingHelpers.performIntegerSort(card, {target, siblings}).map(u => {
           return {_id: u.target.id, sort: u.update.sort}
         });
-        t.cards.updateEmbeddedDocuments("Card", updateData);
+        cards.updateEmbeddedDocuments("Card", updateData);
       }
     }
     if(exists.length == 0){
-      return card.pass(this.cards, { chatNotification: !CONFIG.HandMiniBar.options.hideMessages }).then(
+      return card.pass(cards, { chatNotification: !CONFIG.HandMiniBar.options.hideMessages }).then(
         function(){
           sort();
         },function(error){
@@ -280,16 +281,17 @@ window.HandMiniBarModule = {
 
   //Opens the hand for any additional options
   openHand: async function(hand){
-    if(this.currentCards == undefined){
+    if(hand == undefined){
       ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
       return;
     }
-    if (this.currentCards.sheet.rendered) {
-      this.currentCards.sheet.close();
+    if (hand.sheet.rendered) {
+      hand.sheet.close();
     } else {
-      this.currentCards.sheet.render(true);
+      hand.sheet.render(true);
     }
   },
+
   /** Loop Through the hands to grab the card out 
    * protects against missing hand references **/
   getCardByID: function(id){
@@ -323,9 +325,9 @@ window.HandMiniBarModule = {
   }
 }
 
-
 //Attach to Foundry's CONFIG
 CONFIG.HandMiniBar.documentClass = HandMiniBar;
+CONFIG.HandMiniBar.documentClass = HandMiniBarWindow;
 
 Hooks.on("init", function() {
   Handlebars.registerHelper('breaklines', function(text) {
@@ -445,80 +447,80 @@ Hooks.on("ready", function() {
   });
   // Creates the outer container
   renderTemplate('modules/hand-mini-bar/templates/hand-container.html', {}).then(
-      content => {
-          content = $(content);
-          $("#ui-bottom").append(content);
+    content => {
+      content = $(content);
+      $("#ui-bottom").append(content);
 
-          CONFIG.HandMiniBar.options.position = game.settings.get(HandMiniBarModule.moduleName, "BarPosition");
-          HandMiniBarModule.updatePostion();
+      CONFIG.HandMiniBar.options.position = game.settings.get(HandMiniBarModule.moduleName, "BarPosition");
+      HandMiniBarModule.updatePostion();
 
-          let count = game.settings.get(HandMiniBarModule.moduleName, "HandCount");
-          count = count ? count : 0;
-          if (count > HandMiniBarModule.handMax){
-            count = HandMiniBarModule.handMax;
-          }
-          for(let i = 0; i < count; i++){
-            new HandMiniBar(i);
-          }
-          if(game.settings.get(HandMiniBarModule.moduleName, "DisplayHandName") == true){
-            $("#hand-mini-bar-container").addClass("show-names");
-          }
-          $(".hand-mini-bar-hide-show").click(function(){
-            $("#hand-mini-bar-container").toggleClass("hidden");
-            $(".hand-mini-bar-hide-show").toggleClass("show");
-          });
-          $(".hand-mini-bar-add-bar").click(function(){
-            let value =game.settings.get(HandMiniBarModule.moduleName,'HandCount') + 1;
-            if(value < HandMiniBarModule.handMax + 1){
-              game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
-              HandMiniBarModule.updateHandCount(value);
-            }
-          });
-          $(".hand-mini-bar-subtract-bar").click(function(){
-            let value = game.settings.get(HandMiniBarModule.moduleName,'HandCount') - 1;
-            if(value > 0){
-              game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
-              HandMiniBarModule.updateHandCount(value);
-            }
-          });
-          //popup card image on message click
-          $(document).on("click",".hand-mini-bar-message-card", function(e){
-              let t = $(e.target);
-              let src = t.data("img");
-              if(!!src){
-                const ip = new ImagePopout(src, {
-                  title: t.attr("title"),
-                  shareable: true
-                });
-                ip.render(true);
-              }
-          });
-          //initialize Options from saved settings
-          CONFIG.HandMiniBar.options.cardClick = game.settings.get(HandMiniBarModule.moduleName, "CardClick");
-          if(game.settings.get(HandMiniBarModule.moduleName, "HideMessages") == true){
-            CONFIG.HandMiniBar.options.hideMessages = true;
-          }
-          if(game.settings.get(HandMiniBarModule.moduleName, "BetterChatMessages") == true){
-            CONFIG.HandMiniBar.options.betterChatMessages = true;
-          }
-          if(game.settings.get(HandMiniBarModule.moduleName, "FaceUpMode") == true){
-            CONFIG.HandMiniBar.options.faceUpMode = true;
-          }
-          socket.on(HandMiniBarModule.eventName, data => {
-            if(data.action === "rerender"){
-              HandMiniBarModule.rerender();
-            }
-            else if(data.action === "reposition"){
-              HandMiniBarModule.updatePostion();
-            }
-            else if(data.action === "reload"){
-              HandMiniBarModule.restore();
-            }
-            else if(data.action === "updatePlayers"){
-              HandMiniBarModule.updatePlayerHandsDelayed();
-            }
-          });
-          HandMiniBarModule.updatePlayerHands();
+      let count = game.settings.get(HandMiniBarModule.moduleName, "HandCount");
+      count = count ? count : 0;
+      if (count > HandMiniBarModule.handMax){
+        count = HandMiniBarModule.handMax;
       }
+      for(let i = 0; i < count; i++){
+        new HandMiniBar(i);
+      }
+      if(game.settings.get(HandMiniBarModule.moduleName, "DisplayHandName") == true){
+        $("#hand-mini-bar-container").addClass("show-names");
+      }
+      $(".hand-mini-bar-hide-show").click(function(){
+        $("#hand-mini-bar-container").toggleClass("hidden");
+        $(".hand-mini-bar-hide-show").toggleClass("show");
+      });
+      $(".hand-mini-bar-add-bar").click(function(){
+        let value =game.settings.get(HandMiniBarModule.moduleName,'HandCount') + 1;
+        if(value < HandMiniBarModule.handMax + 1){
+          game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
+          HandMiniBarModule.updateHandCount(value);
+        }
+      });
+      $(".hand-mini-bar-subtract-bar").click(function(){
+        let value = game.settings.get(HandMiniBarModule.moduleName,'HandCount') - 1;
+        if(value > 0){
+          game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
+          HandMiniBarModule.updateHandCount(value);
+        }
+      });
+      //popup card image on message click
+      $(document).on("click",".hand-mini-bar-message-card", function(e){
+        let t = $(e.target);
+        let src = t.data("img");
+        if(!!src){
+          const ip = new ImagePopout(src, {
+            title: t.attr("title"),
+            shareable: true
+          });
+          ip.render(true);
+        }
+      });
+      //initialize Options from saved settings
+      CONFIG.HandMiniBar.options.cardClick = game.settings.get(HandMiniBarModule.moduleName, "CardClick");
+      if(game.settings.get(HandMiniBarModule.moduleName, "HideMessages") == true){
+        CONFIG.HandMiniBar.options.hideMessages = true;
+      }
+      if(game.settings.get(HandMiniBarModule.moduleName, "BetterChatMessages") == true){
+        CONFIG.HandMiniBar.options.betterChatMessages = true;
+      }
+      if(game.settings.get(HandMiniBarModule.moduleName, "FaceUpMode") == true){
+        CONFIG.HandMiniBar.options.faceUpMode = true;
+      }
+      socket.on(HandMiniBarModule.eventName, data => {
+        if(data.action === "rerender"){
+          HandMiniBarModule.rerender();
+        }
+        else if(data.action === "reposition"){
+          HandMiniBarModule.updatePostion();
+        }
+        else if(data.action === "reload"){
+          HandMiniBarModule.restore();
+        }
+        else if(data.action === "updatePlayers"){
+          HandMiniBarModule.updatePlayerHandsDelayed();
+        }
+      });
+      HandMiniBarModule.updatePlayerHands();
+    }
   )
 });

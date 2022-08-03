@@ -57,10 +57,9 @@ export class HandWindow extends FormApplication {
     }
   
     activateListeners(html){
-      let t = this;
       html.find('.hand-mini-bar-window-card').click(function(e){HandMiniBarModule.cardClicked(e)});
       html.find('.hand-mini-bar-window-card').contextmenu(function(e){HandMiniBarModule.flipCard(e)});
-      HandMiniBarModule.attachDragDrop(html[0], this.cards);
+      HandMiniBarModule.attachDragDrop.call(this, html[0]);
     }
   
     /** @override */
@@ -71,11 +70,22 @@ export class HandWindow extends FormApplication {
         label: "HANDMINIBAR.OpenCardStack",
         class: "open-stack",
         icon: "fas fa-id-badge",
-        onclick: ev => this.minibar.openHand(t.cards)
+        onclick: ev => HandMiniBarModule.openHand(t.cards)
       });
       return buttons
     }
-    
+
+    drag(event){
+      HandMiniBarModule.drag.call(this, event);
+    }
+
+    drop(event){
+      HandMiniBarModule.drop.call(this, event);
+    }
+
+    getCards(){
+      return this.cards;
+    }
   }
 
   export default HandWindow;

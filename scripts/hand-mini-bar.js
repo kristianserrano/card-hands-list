@@ -139,7 +139,7 @@
           });
   
           myPromise
-          .then(function(){HandMiniBarModule.attachDragDrop(t.html[0], t.currentCards)}.bind(t))
+          .then(function(){HandMiniBarModule.attachDragDrop.bind(t)(t.html[0])})
           .then(function(){
             t.updating = false;
             },function(){
@@ -163,6 +163,14 @@
               t.updatePlayerColor();
         });
       }
+    }
+
+    drag(event){
+      HandMiniBarModule.drag.call(this, event);
+    }
+
+    drop(event){
+      HandMiniBarModule.drop.call(this, event);
     }
 
     //sets and renders the cards based on users choice
@@ -532,5 +540,9 @@
       if(this.html){
         this.html.remove();
       }
+    }
+
+    getCards(){
+      return this.currentCards;
     }
   }
