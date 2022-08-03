@@ -183,7 +183,7 @@ window.HandMiniBarModule = {
       let card = this.getCardByID(id);
       this.playCard(card);
     }else if(option === "open_hand"){
-      let hand = getHandByID(id);
+      let hand = this.getHandByID(id);
       this.openHand(hand);
     } else if(option === "card_image"){
       let card = this.getCardByID(id);

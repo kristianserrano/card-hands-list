@@ -1,3 +1,6 @@
+Update 1.1.1
+-Fixed 'Open Hand' when card clicked bug
+
 Update 1.1.0
 - Code overhaul ES6
 - Cards Button (top left) now opens a Window for a larger view of the cards
