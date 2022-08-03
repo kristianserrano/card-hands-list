@@ -309,7 +309,7 @@ window.HandMiniBarModule = {
   getHandByCardID: function(id){
     let hand = undefined;
     game.cards.forEach(function(cards){
-      if(!card && cards.data.type === "hand"){
+      if(cards.data.type === "hand"){
         if(!!cards.data.cards.get(id)){
           hand = cards;
         }
