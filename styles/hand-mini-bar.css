@@ -59,7 +59,7 @@
 
 .hand-mini-bar-buttons-container .hand-mini-bar-hide-show.show{
     transform: rotate(0deg);
-    margin-bottom: -4px;
+    margin-bottom: 0px;
 }
 
 .hand-mini-bar-hand{
