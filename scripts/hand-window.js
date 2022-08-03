@@ -3,6 +3,10 @@ export class HandWindow extends FormApplication {
       super(cards, {});
       this.cards = cards;
       let t = this;
+      
+      if(this.cards.data.cards.size > 3){
+        this.position.height = 700;
+      }
       /**
        * Hooks to listen to changes in this hand
        * Useful: CONFIG.debug.hooks = true
@@ -35,7 +39,7 @@ export class HandWindow extends FormApplication {
         resizable: true,
         shareable: false,
         uuid: null,
-        width:800,
+        width:750,
         height:350
       });
     }

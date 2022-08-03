@@ -1,7 +1,8 @@
-Update 1.0.6
+Update 1.1.0
 - Code overhaul ES6
 - Cards Button (top left) now opens a Window for a larger view of the cards
 - Fixed empy hand name "()" when dm has player and no cards selected
+- Resize window based on number of cards
 
 Update 1.0.5
 - Added 'Reset Bar' button to settings menu
