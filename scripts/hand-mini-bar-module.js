@@ -181,7 +181,7 @@ window.HandMiniBarModule = {
     let option = CONFIG.HandMiniBar.options.cardClick;
     if(option === "play_card"){
       let card = this.getCardByID(id);
-      this.playCard(card);
+      this.playDialog(card);
     }else if(option === "open_hand"){
       let hand = this.getHandByCardID(id);
       this.openHand(hand);
@@ -200,11 +200,6 @@ window.HandMiniBarModule = {
     let card = this.getCardByID(id);
     card.flip();
     
-  },
-
-  //Plays the card the player clicked on
-  playCard: async function(card){
-    this.playDialog(card);
   },
 
   async playDialog(card){
