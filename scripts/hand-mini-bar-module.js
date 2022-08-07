@@ -208,13 +208,13 @@ window.HandMiniBarModule = {
   },
 
   async playDialog(card){
-    const cards = game.cards.filter(c => (c !== this.currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
+    const currentCards = this.getHandByCardID(card.data._id);
+    const cards = game.cards.filter(c => (c !== currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
     if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
 
     // Construct the dialog HTML
     const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !CONFIG.HandMiniBar.options.faceUpMode});
   
-    const currentCards = this.currentCards;
     // Display the prompt
     Dialog.prompt({
       title: game.i18n.localize("CARD.Play"),
