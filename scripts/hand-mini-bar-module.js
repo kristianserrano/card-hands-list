@@ -145,7 +145,7 @@ window.HandMiniBarModule = {
     let cards = this.getCards();
     const data = TextEditor.getDragEventData(event);
     if ( data.type !== "Card" ) return;
-    const source = game.cards.get(data.cardId);
+    const source = game.cards.get(data.cardsId);
     const card = source.cards.get(data.cardId);
     //if the card does not already exist in this hand then pass it to it
     let exists = cards.cards.filter(c => c.id === card.id);
@@ -233,10 +233,21 @@ window.HandMiniBarModule = {
           let created = currentCards.pass(to, [card.id], options).catch(err => {
             return ui.notifications.error(err.message);
           });
+          let img = c.back.img;
+          if(c.face != null){
+            if(!c.faces){
+              img = undefined;
+            }else{
+              img =  c.faces[c.face].img;
+            }
+          }
+          if(c.face && !img){
+            img = c.data.faces[c.data.face].img;
+          }
           let renderData = {
             id: card._id ? card._id: card.data._id,
             back: (card.face == null),
-            img: (card.face !== null) ? card.faces[card.face].img : card.back.img,
+            img: img,
             name:(card.face !== null) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
             description: (card.face !== null) ? card.description : null,
             action: "Played"
