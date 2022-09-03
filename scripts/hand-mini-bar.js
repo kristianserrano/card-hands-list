@@ -96,10 +96,21 @@
           });
         }
         $(this.currentCards.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
+          let img = c.back.img;
+          if(c.face != null){
+            if(!c.faces){
+              img = undefined;
+            }else{
+              img =  c.faces[c.face].img;
+            }
+          }
+          if(c.face && !img){
+            img = c.data.faces[c.data.face].img;
+          }
           let renderData = {
             id: c._id ? c._id: c.data._id,
             back: (c.face == null),
-            img: (c.face !== null) ? c.faces[c.face].img : c.back.img,
+            img: img,
             name:(c.face !== null) ? c.name : game.i18n.localize("HANDMINIBAR.CardBack"),
           };
           renderTemplate('modules/hand-mini-bar/templates/card.html', renderData).then(
