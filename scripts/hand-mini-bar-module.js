@@ -133,7 +133,7 @@ window.HandMiniBarModule = {
     const dragData = {
       id: card.id,//id required
       type: "Card",
-      cardsId: cards._id,
+      cardsId: cards._id ? cards._id: cards.data._id,
       cardId: card.id
     };
 
@@ -145,7 +145,7 @@ window.HandMiniBarModule = {
     let cards = this.getCards();
     const data = TextEditor.getDragEventData(event);
     if ( data.type !== "Card" ) return;
-    const source = game.cards.get(data.cardsId);
+    const source = game.cards.get(data.cardId);
     const card = source.cards.get(data.cardId);
     //if the card does not already exist in this hand then pass it to it
     let exists = cards.cards.filter(c => c.id === card.id);
@@ -203,7 +203,8 @@ window.HandMiniBarModule = {
   },
 
   async playDialog(card){
-    const currentCards = this.getHandByCardID(card._id);
+    let id =  card._id ? card._id: card.data._id;
+    const currentCards = this.getHandByCardID(id);
     const cards = game.cards.filter(c => (c !== currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
     if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
 
@@ -217,7 +218,11 @@ window.HandMiniBarModule = {
       content: html,
       callback: html => {
         const form = html.querySelector("form.cards-dialog");
-        const fd = new FormDataExtended(form).toObject();
+        let fde = new FormDataExtended(form);
+        let fd = fde.object;
+        if(!fd){
+          fd = fde.toObject();
+        }
         const to = game.cards.get(fd.to);
         //override chat notification here
         const options = {action: "play", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, updateData: fd.down ? {face: null} : {}};
@@ -229,9 +234,9 @@ window.HandMiniBarModule = {
             return ui.notifications.error(err.message);
           });
           let renderData = {
-            id: card._id,
+            id: card._id ? card._id: card.data._id,
             back: (card.face == null),
-            img: (card.face !== null) ? card.face.img : card.back.img,
+            img: (card.face !== null) ? card.faces[card.face].img : card.back.img,
             name:(card.face !== null) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
             description: (card.face !== null) ? card.description : null,
             action: "Played"

@@ -18,13 +18,13 @@ export class HandWindow extends FormApplication {
       });
       
       Hooks.on("deleteCard", function(target) {
-        if(!!target && !!target.parent && (!!t.cards && target.parent._id == t.cards._id)){
+        if(!!target && !!target.parent && (!!t.cards && (target.parent._id ? target.parent._id : target.parent.data._id) == (t.cards._id ? t.cards._id : t.cards.data._id))){
           t.render();
         }
       });
   
       Hooks.on("createCard", function(target) {
-        if(!!target && !!target.parent && (!!t.cards && target.parent._id == t.cards._id)){
+        if(!!target && !!target.parent && (!!t.cards && (target.parent._id ? target.parent._id : target.parent.data._id) == (t.cards._id ? t.cards._id : t.cards.data._id))){
           t.render();
         }
       });

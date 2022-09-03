@@ -54,13 +54,13 @@
       });
       
       Hooks.on("deleteCard", function(target) {
-        if(!!target && !!target.parent && (!!t.currentCards && target.parent._id == t.currentCards._id)){
+        if(!!target && !!target.parent && (!!t.currentCards && (target.parent._id ? target.parent._id : target.parent.data._id)  == (t.currentCards._id ? t.currentCards._id : t.currentCards.data._id))){
           t.update();
         }
       });
   
       Hooks.on("createCard", function(target) {
-        if(!!target && !!target.parent && (!!t.currentCards && target.parent._id == t.currentCards._id)){
+        if(!!target && !!target.parent && (!!t.currentCards && (target.parent._id ? target.parent._id : target.parent.data._id) == (t.currentCards._id ? t.currentCards._id : t.currentCards.data._id))){
           t.update();
         }
       });
@@ -97,7 +97,7 @@
         }
         $(this.currentCards.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
           let renderData = {
-            id: c._id,
+            id: c._id ? c._id: c.data._id,
             back: (c.face == null),
             img: (c.face !== null) ? c.faces[c.face].img : c.back.img,
             name:(c.face !== null) ? c.name : game.i18n.localize("HANDMINIBAR.CardBack"),
@@ -182,9 +182,9 @@
           this.currentUser.unsetFlag(HandMiniBarModule.moduleName,'CardsID-0');
         }
       }else{
-        this.storeCardsID(this.currentCards._id);
+        this.storeCardsID(this.currentCards._id ? this.currentCards._id : this.currentCards.data._id);
         if(game.user.isGM && this.currentUser != undefined){
-          this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-0' , this.currentCards._id);
+          this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-0', this.currentCards._id ? this.currentCards._id : this.currentCards.data._id);
         }
       }
       this.update();
@@ -197,7 +197,7 @@
     //sets the user, only available to GMs
     setUserOption(choice){
       this.currentUser = choice;
-      this.storeUserID(this.currentUser._id);
+      this.storeUserID(this.currentUser._id ? this.currentUser._id : this.currentUser.data._id);
       this.update();
       if(game.user.isGM){
         //check to see if user has a hand selected already
