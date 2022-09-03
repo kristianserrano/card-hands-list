@@ -54,13 +54,13 @@
       });
       
       Hooks.on("deleteCard", function(target) {
-        if(!!target && !!target.parent && (!!t.currentCards && target.parent.data._id == t.currentCards.data._id)){
+        if(!!target && !!target.parent && (!!t.currentCards && target.parent._id == t.currentCards._id)){
           t.update();
         }
       });
   
       Hooks.on("createCard", function(target) {
-        if(!!target && !!target.parent && (!!t.currentCards && target.parent.data._id == t.currentCards.data._id)){
+        if(!!target && !!target.parent && (!!t.currentCards && target.parent._id == t.currentCards._id)){
           t.update();
         }
       });
@@ -86,21 +86,21 @@
       let length = 0;
       if(typeof this.currentCards !== "undefined"){
         $('#hand-mini-bar-card-container-' + t.id).empty();
-        length = this.currentCards.data.cards.contents.length;
+        length = this.currentCards.cards.contents.length;
         if(CONFIG.HandMiniBar.options.faceUpMode){
           // Check to make sure all the cards are flipped over to their face
-          $(this.currentCards.data.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
+          $(this.currentCards.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
             if(c.face == null){
               c.flip();
             }
           });
         }
-        $(this.currentCards.data.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
+        $(this.currentCards.cards.contents.sort(HandMiniBarModule.cardSort)).each(function(i,c){
           let renderData = {
-            id: c.data._id,
+            id: c._id,
             back: (c.face == null),
-            img: (c.face !== null) ? c.face.img : c.back.img,
-            name:(c.face !== null) ? c.data.name : game.i18n.localize("HANDMINIBAR.CardBack"),
+            img: (c.face !== null) ? c.faces[c.face].img : c.back.img,
+            name:(c.face !== null) ? c.name : game.i18n.localize("HANDMINIBAR.CardBack"),
           };
           renderTemplate('modules/hand-mini-bar/templates/card.html', renderData).then(
               content => {
@@ -182,9 +182,9 @@
           this.currentUser.unsetFlag(HandMiniBarModule.moduleName,'CardsID-0');
         }
       }else{
-        this.storeCardsID(this.currentCards.data._id);
+        this.storeCardsID(this.currentCards._id);
         if(game.user.isGM && this.currentUser != undefined){
-          this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-0' , this.currentCards.data._id);
+          this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-0' , this.currentCards._id);
         }
       }
       this.update();
@@ -197,7 +197,7 @@
     //sets the user, only available to GMs
     setUserOption(choice){
       this.currentUser = choice;
-      this.storeUserID(this.currentUser.data._id);
+      this.storeUserID(this.currentUser._id);
       this.update();
       if(game.user.isGM){
         //check to see if user has a hand selected already
@@ -280,7 +280,7 @@
       };
       game.users.forEach(async function(c){
             usersAvailable[c.name] = {
-              label: c.data.name,
+              label: c.name,
               callback: function(){userChosen(c)}
             };
       });
@@ -453,15 +453,15 @@
       let t = this;
       let handTitle = "";
       if(typeof this.currentCards !== "undefined"){
-        handTitle = this.currentCards.data.name;
+        handTitle = this.currentCards.name;
       }
       /** Do Some Extra GM work here **/
       if(game.user.isGM){
-        if(!!this.currentUser && this.currentUser.data.name != handTitle){
+        if(!!this.currentUser && this.currentUser.name != handTitle){
           if(handTitle != ""){
-            handTitle = this.currentUser.data.name + " (" + handTitle + ")";
+            handTitle = this.currentUser.name + " (" + handTitle + ")";
           }else{
-            handTitle = this.currentUser.data.name;
+            handTitle = this.currentUser.name;
           }
         }
       }
@@ -472,7 +472,7 @@
     updatePlayerColor(){
       if(game.user.isGM){
         if(!!this.currentUser){
-          let color =  this.currentUser.data.color;
+          let color =  this.currentUser.color;
           $("#hand-mini-bar-hand-" + this.id + " .hand-mini-bar-hand-inner").css("box-shadow","0 0 10px " + color);
         }else{
           $("#hand-mini-bar-hand-" + this.id + " .hand-mini-bar-hand-inner").css("box-shadow","none");

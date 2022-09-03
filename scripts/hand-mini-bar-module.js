@@ -133,7 +133,7 @@ window.HandMiniBarModule = {
     const dragData = {
       id: card.id,//id required
       type: "Card",
-      cardsId: cards.data._id,
+      cardsId: cards._id,
       cardId: card.id
     };
 
@@ -154,7 +154,7 @@ window.HandMiniBarModule = {
       const closest = event.target.closest("[data-card-id]");
       if(closest){
         const siblings = cards.cards.filter(c => c.id !== card.id);
-        const target = cards.data.cards.get(closest.dataset.cardId);
+        const target = cards.cards.get(closest.dataset.cardId);
         const updateData = SortingHelpers.performIntegerSort(card, {target, siblings}).map(u => {
           return {_id: u.target.id, sort: u.update.sort}
         });
@@ -203,7 +203,7 @@ window.HandMiniBarModule = {
   },
 
   async playDialog(card){
-    const currentCards = this.getHandByCardID(card.data._id);
+    const currentCards = this.getHandByCardID(card._id);
     const cards = game.cards.filter(c => (c !== currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
     if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
 
@@ -229,11 +229,11 @@ window.HandMiniBarModule = {
             return ui.notifications.error(err.message);
           });
           let renderData = {
-            id: card.data._id,
+            id: card._id,
             back: (card.face == null),
             img: (card.face !== null) ? card.face.img : card.back.img,
-            name:(card.face !== null) ? card.data.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
-            description: (card.face !== null) ? card.data.description : null,
+            name:(card.face !== null) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
+            description: (card.face !== null) ? card.description : null,
             action: "Played"
           };
           renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
@@ -292,8 +292,8 @@ window.HandMiniBarModule = {
   getCardByID: function(id){
     let card = undefined;
     game.cards.forEach(function(cards){
-      if(!card && cards.data.type === "hand"){
-        card = cards.data.cards.get(id);
+      if(!card && cards.type === "hand"){
+        card = cards.cards.get(id);
       }
     });
     return card;
@@ -304,8 +304,8 @@ window.HandMiniBarModule = {
   getHandByCardID: function(id){
     let hand = undefined;
     game.cards.forEach(function(cards){
-      if(cards.data.type === "hand"){
-        if(!!cards.data.cards.get(id)){
+      if(cards.type === "hand"){
+        if(!!cards.cards.get(id)){
           hand = cards;
         }
       }
@@ -314,8 +314,8 @@ window.HandMiniBarModule = {
   },
 
   cardSort(a, b){
-    if(a.data.sort < b.data.sort) return 1;
-    if(a.data.sort > b.data.sort) return -1;
+    if(a.sort < b.sort) return 1;
+    if(a.sort > b.sort) return -1;
     return 0;
   }
 }
@@ -391,7 +391,7 @@ Hooks.on("init", function() {
     default: false,
     onChange: value => { // value is the new value of the setting
       CONFIG.HandMiniBar.options.faceupMode = value;
-      socket.emit(HandMiniBarModule.eventName, {'action': 'rerender'});
+      game.socket.emit(HandMiniBarModule.eventName, {'action': 'rerender'});
       HandMiniBarModule.reRender();
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
@@ -411,7 +411,7 @@ Hooks.on("init", function() {
     onChange: value => { // value is the new value of the setting
       CONFIG.HandMiniBar.options.position = value;
       HandMiniBarModule.updatePostion();
-      socket.emit(HandMiniBarModule.eventName, {'action': 'reposition'});
+      game.socket.emit(HandMiniBarModule.eventName, {'action': 'reposition'});
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
@@ -501,7 +501,7 @@ Hooks.on("ready", function() {
       if(game.settings.get(HandMiniBarModule.moduleName, "FaceUpMode") == true){
         CONFIG.HandMiniBar.options.faceUpMode = true;
       }
-      socket.on(HandMiniBarModule.eventName, data => {
+      game.socket.on(HandMiniBarModule.eventName, data => {
         if(data.action === "rerender"){
           HandMiniBarModule.rerender();
         }

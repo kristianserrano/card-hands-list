@@ -1,8 +1,11 @@
+Update 1.2.0
+- Updated code for Foundry version 10
+
 Update 1.1.2
--Fixed bug when passing card from the play dialog
+- Fixed bug when passing card from the play dialog
 
 Update 1.1.1
--Fixed 'Open Hand' when card clicked bug
+- Fixed 'Open Hand' when card clicked bug
 
 Update 1.1.0
 - Code overhaul ES6

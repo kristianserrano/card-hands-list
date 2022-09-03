@@ -15,9 +15,8 @@
     max-height:900px;
     /*ransition: max-height 500ms ease-in-out;*/
     transition: all 500ms ease-in-out;
-
-    padding-top: 18px;
-    padding-bottom: 12px;
+    padding-top:8px;
+    padding-bottom: 2px;
     overflow: hidden;    
     margin: 0px 0px 0px auto;
 }
@@ -33,7 +32,6 @@
     min-width: 220px;
     display: flex;
     flex-grow: 1;
-    margin-bottom: -14px;
     padding-left: 15px;
 }
 
@@ -47,14 +45,12 @@
     font-size: 26px;
     margin: auto;
     text-align: center;
-    line-height: 22px;
+    line-height: 16px;
     height: 22px;
 }
 
 .hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
     transform: rotate(180deg);
-    font-size:18px;
-    margin-bottom: -9px;
 }
 
 .hand-mini-bar-buttons-container .hand-mini-bar-hide-show.show{

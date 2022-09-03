@@ -4,7 +4,7 @@ export class HandWindow extends FormApplication {
       this.cards = cards;
       let t = this;
       
-      if(this.cards.data.cards.size > 3){
+      if(this.cards.cards.size > 3){
         this.position.height = 700;
       }
       /**
@@ -18,13 +18,13 @@ export class HandWindow extends FormApplication {
       });
       
       Hooks.on("deleteCard", function(target) {
-        if(!!target && !!target.parent && (!!t.cards && target.parent.data._id == t.cards.data._id)){
+        if(!!target && !!target.parent && (!!t.cards && target.parent._id == t.cards._id)){
           t.render();
         }
       });
   
       Hooks.on("createCard", function(target) {
-        if(!!target && !!target.parent && (!!t.cards && target.parent.data._id == t.cards.data._id)){
+        if(!!target && !!target.parent && (!!t.cards && target.parent._id == t.cards._id)){
           t.render();
         }
       });
@@ -46,12 +46,12 @@ export class HandWindow extends FormApplication {
   
     /** @override */
     get title() {
-      return this.cards.data.name;
+      return this.cards.name;
     }
   
     /** @override */
     async getData(options) {
-      let cards = this.cards.data.cards.contents;
+      let cards = this.cards.cards.contents;
       cards.sort(HandMiniBarModule.cardSort);
       return {
         cards: cards,
@@ -73,7 +73,7 @@ export class HandWindow extends FormApplication {
       buttons.unshift({
         label: "HANDMINIBAR.OpenCardStack",
         class: "open-stack",
-        icon: "fas fa-id-badge",
+        icon: "fas fa-cards",
         onclick: ev => HandMiniBarModule.openHand(t.cards)
       });
       return buttons
