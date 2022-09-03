@@ -483,7 +483,7 @@
     updatePlayerColor(){
       if(game.user.isGM){
         if(!!this.currentUser){
-          let color =  this.currentUser.color;
+          let color =  this.currentUser.color ? this.currentUser.color : this.currentUser.data.color;
           $("#hand-mini-bar-hand-" + this.id + " .hand-mini-bar-hand-inner").css("box-shadow","0 0 10px " + color);
         }else{
           $("#hand-mini-bar-hand-" + this.id + " .hand-mini-bar-hand-inner").css("box-shadow","none");
