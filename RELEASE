@@ -3,6 +3,7 @@ Update 1.2.1
 
 Update 1.2.0
 - Updated code for Foundry version 10
+- Moved buttons to the bottom of the bars
 
 Update 1.1.2
 - Fixed bug when passing card from the play dialog
