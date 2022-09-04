@@ -233,16 +233,16 @@ window.HandMiniBarModule = {
           let created = currentCards.pass(to, [card.id], options).catch(err => {
             return ui.notifications.error(err.message);
           });
-          let img = c.back.img;
-          if(c.face != null){
-            if(!c.faces){
+          let img = card.back.img;
+          if(card.face != null){
+            if(!card.faces){
               img = undefined;
             }else{
-              img =  c.faces[c.face].img;
+              img =  card.faces[card.face].img;
             }
           }
-          if(c.face && !img){
-            img = c.data.faces[c.data.face].img;
+          if(card.face && !img){
+            img = card.data.faces[card.data.face].img;
           }
           let renderData = {
             id: card._id ? card._id: card.data._id,
