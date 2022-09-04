@@ -201,7 +201,7 @@
       this.update();
       //if this is the first hand then make sure it's updated for DMs
       if(this.id == 0){
-        socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
+        game.socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
       }
       HandMiniBarModule.updatePlayerHandsDelayed();
     }
@@ -343,14 +343,13 @@
         ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
         return;
       }
-      let d = Dialog.confirm({
+      Dialog.confirm({
        title: game.i18n.localize("HANDMINIBAR.ResetToolbarDialogTitle"),
        content: "<p>" + game.i18n.localize("HANDMINIBAR.ResetToolbarDialogQuestion") + "</p>",
        yes: () => this.reset(),
        no: function(){},//do nothing
        defaultYes: true
       });
-      d.render(true);
     }
 
     //Opens a Window with larger cards
@@ -446,7 +445,10 @@
         content: html,
         callback: html => {
           const form = html.querySelector("form.cards-dialog");
-          const fd = new FormDataExtended(form).toObject();
+          let fd = new FormDataExtended(form).object;
+          if(!fd){
+            fd = new FormDataExtended(form).toObject();
+          }
           const to = game.cards.get(fd.to);
           const options = {action: "pass", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, how: fd.how, updateData: fd.down ? {face: null} : {}};
           return currentCards.deal([to], fd.number, options).catch(err => {
@@ -541,7 +543,7 @@
       this.resetUserID();
       //if this is the first hand then make sure it's updated for GMs
       if(t.id == 0){
-        socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
+        game.socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
       }
       HandMiniBarModule.updatePlayerHandsDelayed();
     }

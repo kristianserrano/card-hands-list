@@ -1,3 +1,8 @@
+Update 1.2.2
+- Fixed Play Dialog not working
+- Fixed Pass Dialog Deprecated method
+- Fixed undefined socket Errors 
+
 Update 1.2.1
 - Fixed Player Colors
 
