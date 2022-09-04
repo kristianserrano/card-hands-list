@@ -245,7 +245,7 @@ window.HandMiniBarModule = {
             img = card.data.faces[card.data.face].img;
           }
           let desc = card.description;
-          if(!desc){
+          if(desc == undefined){
             desc = card.data.description;
           }
           let renderData = {
