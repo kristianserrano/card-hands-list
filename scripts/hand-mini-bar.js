@@ -390,7 +390,10 @@
         content: html,
         callback: html => {
           const form = html.querySelector("form.cards-dialog");
-          const fd = new FormDataExtended(form).toObject();
+          let fd = new FormDataExtended(form).object;
+          if(!fd){
+            fd = new FormDataExtended(form).toObject();
+          }
           const from = game.cards.get(fd.from);
           const options = { chatNotification: !CONFIG.HandMiniBar.options.hideMessages, how: fd.how, updateData: fd.down ? {face: null} : {}};
           return currentCards.draw(from, fd.number, options).catch(err => {
