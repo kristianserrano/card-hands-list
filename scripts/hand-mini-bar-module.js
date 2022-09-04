@@ -244,12 +244,16 @@ window.HandMiniBarModule = {
           if(card.face && !img){
             img = card.data.faces[card.data.face].img;
           }
+          let desc = card.description;
+          if(!desc){
+            desc = card.data.description;
+          }
           let renderData = {
             id: card._id ? card._id: card.data._id,
             back: (card.face == null),
             img: img,
             name:(card.face !== null) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
-            description: (card.face !== null) ? card.description : null,
+            description: (card.face !== null) ? desc : null,
             action: "Played"
           };
           renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
