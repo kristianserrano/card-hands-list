@@ -72,28 +72,30 @@ window.HandMiniBarModule = {
   updatePlayerHands: function(){
     if(game.user.isGM){
       let u = game.user;
+      let changed = false;
       for(let i = 0; i <= HandMiniBarModule.handMiniBarList.length; i++){
         let toolbar = HandMiniBarModule.handMiniBarList[i];
         if(!toolbar){
           break;
         }
+        toolbar.updatePlayerBarCount();
         let uID = u.getFlag(HandMiniBarModule.moduleName,'UserID-' + toolbar.id);
         if(!!uID){
-          let cardsID = game.users.get(uID).getFlag(HandMiniBarModule.moduleName,"CardsID-0");
-          let changed = false;
-          if(!!cardsID){
-            u.setFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id, cardsID);
-            changed = true;
-          }else{
-            u.unsetFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id);
-            changed=true;
-          }
-          if(changed){
-            if(HandMiniBarModule.handMiniBarList.length > i){
-              HandMiniBarModule.handMiniBarList[i].restore();
+          let cardsID = game.users.get(uID).getFlag(HandMiniBarModule.moduleName,"CardsID-" + toolbar.playerBarCount);
+          let userCards = u.getFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id);
+          if(userCards !== cardsID){
+            if(!!cardsID){
+              u.setFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id, cardsID);
+              changed = true;
+            }else{
+              u.unsetFlag(HandMiniBarModule.moduleName,'CardsID-' + toolbar.id);
+              changed=true;
             }
           }
         }
+      }
+      if(changed){
+        HandMiniBarModule.restore();
       }
     }
   },
@@ -105,6 +107,11 @@ window.HandMiniBarModule = {
   restore: function(){
     $(HandMiniBarModule.handMiniBarList).each(function(i, h){
       h.restore();
+    });
+  },
+  updatePlayerBarCounts(){
+    $(HandMiniBarModule.handMiniBarList).each(function(i, h){
+      h.updatePlayerBarCount();
     });
   },
 
@@ -535,6 +542,7 @@ Hooks.on("ready", function() {
           HandMiniBarModule.updatePlayerHandsDelayed();
         }
       });
+      HandMiniBarModule.restore();
       HandMiniBarModule.updatePlayerHands();
     }
   )

@@ -26,6 +26,11 @@
        * HTML hook for this hand
        */
       this.html = undefined;
+
+      /**
+       * GMs can have multiple hands for each player matching the bar on the players side
+       */
+      this.playerBarCount = 0;
       
       let t = this;
       renderTemplate('modules/hand-mini-bar/templates/hand.html', {id: this.id}).then(
@@ -73,9 +78,9 @@
             t.restore();
           }
         }
-        if(game.user.isGM && data != undefined && data.color != undefined){
-          t.restore();
-        }
+        //if(game.user.isGM && data != undefined && data.color != undefined){
+        //  t.restore();
+        //}
       });
       //auto register to listen for updates
       HandMiniBarModule.handMiniBarList.push(this);
@@ -190,20 +195,20 @@
       if(!choice){
         this.resetCardsID();
         if(game.user.isGM && this.currentUser != undefined){
-          this.currentUser.unsetFlag(HandMiniBarModule.moduleName,'CardsID-0');
+          this.currentUser.unsetFlag(HandMiniBarModule.moduleName,'CardsID-' + this.playerBarCount);
         }
       }else{
         this.storeCardsID(this.currentCards._id ? this.currentCards._id : this.currentCards.data._id);
         if(game.user.isGM && this.currentUser != undefined){
-          this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-0', this.currentCards._id ? this.currentCards._id : this.currentCards.data._id);
+          this.currentUser.setFlag(HandMiniBarModule.moduleName,'CardsID-' + this.playerBarCount, this.currentCards._id ? this.currentCards._id : this.currentCards.data._id);
         }
       }
       this.update();
-      //if this is the first hand then make sure it's updated for DMs
-      if(this.id == 0){
+      if(!game.user.isGM){
         game.socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
+      }else{
+        HandMiniBarModule.updatePlayerHandsDelayed();
       }
-      HandMiniBarModule.updatePlayerHandsDelayed();
     }
     //sets the user, only available to GMs
     setUserOption(choice){
@@ -212,11 +217,17 @@
       this.update();
       if(game.user.isGM){
         //check to see if user has a hand selected already
-        let id = this.currentUser.getFlag(HandMiniBarModule.moduleName,'CardsID-0');
+        if(game.user.isGM){
+          HandMiniBarModule.updatePlayerBarCounts();
+        }
+        let id = this.currentUser.getFlag(HandMiniBarModule.moduleName,'CardsID-' + this.playerBarCount);
         if(!!id){
           this.storeCardsID(id);
-          this.setCardsID(id)
+          this.setCardsID(id);
+        }else{
+          this.resetCardsID();
         }
+        HandMiniBarModule.updatePlayerHandsDelayed();
       }
     }
     //sets and renders the cards based on the id
@@ -479,9 +490,31 @@
           }else{
             handTitle = this.currentUser.name;
           }
+          if(this.playerBarCount !== 0){
+            handTitle += " bar " + (this.playerBarCount + 1);
+          }
         }
       }
       $("#hand-mini-bar-hand-name-" + t.id).html(handTitle);
+    }
+
+    updatePlayerBarCount(){
+      let count = 0;
+      if(this.currentUser){
+        this.id;
+        let list = HandMiniBarModule.handMiniBarList;
+        let userId = this.currentUser._id ? this.currentUser._id : this.currentUser.data._id;
+        for(let i = 0; i < list.length && i < this.id; i++){
+          let bar = list[i];
+          if(bar.currentUser){
+            let barUserId = bar.currentUser._id ? bar.currentUser._id : bar.currentUser.data._id;
+            if(barUserId === userId){
+              count++;
+            }
+          }
+        }
+      }
+      this.playerBarCount = count;
     }
   
     //Only tries to update the player color if GM this may change in the future
@@ -544,10 +577,8 @@
       let t = this;
       this.resetCardsID();
       this.resetUserID();
-      //if this is the first hand then make sure it's updated for GMs
-      if(t.id == 0){
-        game.socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
-      }
+      //updated for GMs
+      game.socket.emit(HandMiniBarModule.eventName, {'action': 'updatePlayers'});
       HandMiniBarModule.updatePlayerHandsDelayed();
     }
   
