@@ -1,6 +1,7 @@
 {
     "HANDMINIBAR.ModuleName":"Hand Mini Bar",
     "HANDMINIBAR.NoHandSelected":"You must first select a hand for this toolbar.",
+    "HANDMINIBAR.NoPermission":"You do not have sufficient permission to do that.",
     "HANDMINIBAR.NoHandMessageBefore":"Select the",
     "HANDMINIBAR.NoHandMessageAfter":"Icon to choose a hand",
     "HANDMINIBAR.ChooseHand":"Select a Hand for the Toolbar",
@@ -46,6 +47,7 @@
     "HANDMINIBAR.NoHand":"No Hand",
     "HANDMINIBAR.ResetBar":"Reset Bar",
     "HANDMINIBAR.Player":"Player",
-    "HANDMINIBAR.Hand":"Hand"
+    "HANDMINIBAR.Hand":"Hand",
+    "HANDMINIBAR.Bar":"bar"
 
 }

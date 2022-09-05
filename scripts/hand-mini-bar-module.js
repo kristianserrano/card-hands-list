@@ -205,6 +205,9 @@ window.HandMiniBarModule = {
     }
     let id = $(e.target).data("card-id");
     let card = this.getCardByID(id);
+    if(card.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
+      return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
+    }
     card.flip();
     
   },
@@ -214,6 +217,9 @@ window.HandMiniBarModule = {
     const currentCards = this.getHandByCardID(id);
     const cards = game.cards.filter(c => (c !== currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
     if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
+    if(currentCards.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
+      return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
+    }
 
     // Construct the dialog HTML
     const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !CONFIG.HandMiniBar.options.faceUpMode});
@@ -233,8 +239,7 @@ window.HandMiniBarModule = {
         const to = game.cards.get(fd.to);
         //override chat notification here
         const options = {action: "play", chatNotification:!CONFIG.HandMiniBar.options.hideMessages, updateData: fd.down ? {face: null} : {}};
-
-        
+               
         if(CONFIG.HandMiniBar.options.betterChatMessages){
 
           let created = currentCards.pass(to, [card.id], options).catch(err => {

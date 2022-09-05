@@ -441,6 +441,9 @@
     async passDialog() {
       const cards = game.cards.filter(c => (c !== this) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
       if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
+      if(cards.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
+        return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
+      }
   
       // Construct the dialog HTML
       const html = await renderTemplate("templates/cards/dialog-pass.html", {
@@ -491,7 +494,7 @@
             handTitle = this.currentUser.name;
           }
           if(this.playerBarCount !== 0){
-            handTitle += " bar " + (this.playerBarCount + 1);
+            handTitle += " " + game.i18n.localize("HANDMINIBAR.Bar") + " " + (this.playerBarCount + 1);
           }
         }
       }

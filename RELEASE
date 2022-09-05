@@ -1,5 +1,6 @@
 Update 1.2.3
 - Added Multiple player bar control on the GM side
+- Added better messaging for lack of permission
 
 Update 1.2.2
 - Fixed Play Dialog not working
