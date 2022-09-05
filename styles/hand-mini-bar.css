@@ -63,7 +63,7 @@
     flex-direction: column;
     max-width:200px;
     max-height: 65px;
-    margin: 5px 5px 0px 15px;
+    margin: 5px 5px 2px 15px;
     color: var(--color-text-light-highlight);
     z-index: var(--z-index-ui);
     pointer-events: all;
