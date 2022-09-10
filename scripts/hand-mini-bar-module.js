@@ -494,7 +494,11 @@ Hooks.on("ready", function() {
       }
       $(".hand-mini-bar-hide-show").click(function(){
         $("#hand-mini-bar-container").toggleClass("hidden");
-        $(".hand-mini-bar-hide-show").toggleClass("show");
+        if($("#hand-mini-bar-container").hasClass("hidden")){
+          $(".hand-mini-bar-buttons-container").addClass("hidden-expanded");
+        }else{
+          $(".hand-mini-bar-buttons-container").removeClass("hidden-expanded");
+        }
       });
       $(".hand-mini-bar-add-bar").click(function(){
         let value =game.settings.get(HandMiniBarModule.moduleName,'HandCount') + 1;
@@ -521,6 +525,13 @@ Hooks.on("ready", function() {
           });
           ip.render(true);
         }
+      });
+      //buttons
+      $(document).on("mouseover",".hand-mini-bar-buttons-container", function(e){
+        $(".hand-mini-bar-buttons-container").addClass("expanded");
+      });
+      $(document).on("mouseout",".hand-mini-bar-buttons-container", function(e){
+        $(".hand-mini-bar-buttons-container").removeClass("expanded");
       });
       //initialize Options from saved settings
       CONFIG.HandMiniBar.options.cardClick = game.settings.get(HandMiniBarModule.moduleName, "CardClick");

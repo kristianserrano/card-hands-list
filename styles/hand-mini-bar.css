@@ -27,12 +27,48 @@
 }
 
 .hand-mini-bar-buttons-container{
-    max-height:20px;
+    max-height:8px;
     max-width: 220px;
     min-width: 220px;
     display: flex;
     flex-grow: 1;
     padding-left: 15px;
+    filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.5));
+    transition: transform 0.2s ease-in, z-index 0.2s step-start;
+}
+
+.hand-mini-bar-buttons-container.expanded,
+.hand-mini-bar-buttons-container.hidden-expanded{
+    max-height:22px;
+}
+
+.hand-mini-bar-hidden-buttons{
+    display:none;
+}
+
+.hand-mini-bar-buttons-container.expanded .hand-mini-bar-hidden-buttons,
+.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-hidden-buttons{
+    display:flex;
+    flex-grow: 1;
+}
+
+.hand-mini-bar-buttons-container.expanded .hand-mini-bar-show-buttons,
+.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-show-buttons{
+    display:none;
+}
+
+.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-add-bar,
+.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-subtract-bar{
+    display:none;
+}
+
+.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-hide-show{
+    transform: rotate(0deg);
+    margin-bottom: 0px;
+}
+
+.hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
+    transform: rotate(180deg);
 }
 
 .hand-mini-bar-buttons-container *{
@@ -49,13 +85,14 @@
     height: 22px;
 }
 
-.hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
-    transform: rotate(180deg);
+.hand-mini-bar-show-buttons{
+    line-height: 0px;
+    max-height: 10px;
+    font-size: 12px;
+    width: 100%;
 }
-
-.hand-mini-bar-buttons-container .hand-mini-bar-hide-show.show{
-    transform: rotate(0deg);
-    margin-bottom: 0px;
+.hand-mini-bar-show-buttons.hide{
+    display:none;
 }
 
 .hand-mini-bar-hand{
@@ -100,6 +137,7 @@
     background: url(../../../ui/denim075.png) repeat;
 
 }
+
 .hand-mini-bar-settings{
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
