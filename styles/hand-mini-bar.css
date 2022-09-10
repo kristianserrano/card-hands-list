@@ -27,7 +27,7 @@
 }
 
 .hand-mini-bar-buttons-container{
-    max-height:8px;
+    max-height:7px;
     max-width: 220px;
     min-width: 220px;
     display: flex;
@@ -90,7 +90,7 @@
     max-height: 10px;
     font-size: 18px;
     width: 100%;
-    margin-top:-2px;
+    margin-top:-3px;
 }
 .hand-mini-bar-show-buttons.hide{
     display:none;
@@ -100,8 +100,8 @@
     display:flex;
     flex-direction: column;
     max-width:200px;
-    max-height: 65px;
-    margin: 5px 5px 2px 15px;
+    max-height: 68px;
+    margin: 5px 5px 1px 15px;
     color: var(--color-text-light-highlight);
     z-index: var(--z-index-ui);
     pointer-events: all;
