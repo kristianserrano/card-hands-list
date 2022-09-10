@@ -88,8 +88,9 @@
 .hand-mini-bar-show-buttons{
     line-height: 0px;
     max-height: 10px;
-    font-size: 12px;
+    font-size: 18px;
     width: 100%;
+    margin-top:-2px;
 }
 .hand-mini-bar-show-buttons.hide{
     display:none;
