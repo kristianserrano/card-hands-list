@@ -15,7 +15,7 @@
     max-height:900px;
     /*ransition: max-height 500ms ease-in-out;*/
     transition: all 500ms ease-in-out;
-    padding-top:8px;
+    padding-top:22px;
     padding-bottom: 2px;
     overflow: hidden;    
     margin: 0px 0px 0px auto;
@@ -42,29 +42,31 @@
     max-height:22px;
 }
 
-.hand-mini-bar-hidden-buttons{
-    display:none;
-}
-
 .hand-mini-bar-buttons-container.expanded .hand-mini-bar-hidden-buttons,
 .hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-hidden-buttons{
     display:flex;
     flex-grow: 1;
 }
 
+.hand-mini-bar-hidden-buttons,
 .hand-mini-bar-buttons-container.expanded .hand-mini-bar-show-buttons,
-.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-show-buttons{
-    display:none;
-}
-
+.hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-show-buttons,
 .hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-add-bar,
 .hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-subtract-bar{
     display:none;
 }
 
+.hand-mini-bar-buttons-container .hand-mini-bar-add-bar,
+.hand-mini-bar-buttons-container .hand-mini-bar-subtract-bar{
+    line-height:14px;
+}
+
 .hand-mini-bar-buttons-container.hidden-expanded .hand-mini-bar-hide-show{
     transform: rotate(0deg);
     margin-bottom: 0px;
+}
+.hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
+    line-height:22px;
 }
 
 .hand-mini-bar-buttons-container .hand-mini-bar-hide-show{
@@ -76,7 +78,7 @@
     padding:2px;
     cursor:pointer;
     pointer-events: all;
-    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;    
     font-size: 26px;
     margin: auto;
@@ -88,10 +90,14 @@
 .hand-mini-bar-show-buttons{
     line-height: 0px;
     max-height: 10px;
-    font-size: 18px;
     width: 100%;
     margin-top:-3px;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+    padding:0px;
+    font-size: 26px;
 }
+
 .hand-mini-bar-show-buttons.hide{
     display:none;
 }
