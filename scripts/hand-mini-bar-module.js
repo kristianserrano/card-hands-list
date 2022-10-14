@@ -242,11 +242,14 @@ window.HandMiniBarModule = {
                
         if(CONFIG.HandMiniBar.options.betterChatMessages){
 
+          if(fd.down && card.face != null){
+            card.flip();
+          }
           let created = currentCards.pass(to, [card.id], options).catch(err => {
             return ui.notifications.error(err.message);
           });
           let img = card.back.img;
-          if(card.face != null){
+          if(card.face != null && !fd.down){
             if(!card.faces){
               img = undefined;
             }else{
@@ -262,9 +265,9 @@ window.HandMiniBarModule = {
           }
           let renderData = {
             id: card._id ? card._id: card.data._id,
-            back: (card.face == null),
+            back: (card.face == null || fd.down),
             img: img,
-            name:(card.face !== null) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
+            name:(card.face !== null && !fd.down) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
             description: (card.face !== null) ? desc : null,
             action: "Played"
           };
