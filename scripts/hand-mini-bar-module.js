@@ -141,7 +141,8 @@ window.HandMiniBarModule = {
       id: card.id,//id required
       type: "Card",
       cardsId: cards._id ? cards._id: cards.data._id,
-      cardId: card.id
+      cardId: card.id,
+      uuid: card.uuid
     };
 
     // Set data transfer
