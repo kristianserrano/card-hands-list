@@ -23,7 +23,7 @@
       "name": "Pengrath",
       "email": "pengrath@gmail.com",
       "discord": "pengrath#6083",
-      "url": "https://www.pengrath.com"
+      "url": "https://gitlab.com/pengrath"
     }
   ],
   "esmodules": [
@@ -33,6 +33,7 @@
     "styles/hand-mini-bar.css"
   ],  
   "socket": true,
+  "url": "https://gitlab.com/pengrath/hand-mini-bar",
   "manifest": "https://gitlab.com/pengrath/hand-mini-bar/-/raw/main/module.json",
   "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.2.7/hand-mini-bar-v1.2.7.zip"
 }

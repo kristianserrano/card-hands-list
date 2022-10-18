@@ -383,6 +383,10 @@ div#hand-mini-bar-container{
     grid-column: 2;
 }
 /* Window popup css*/
+.hand-mini-bar-hand-popout .window-content{
+    background: transparent;
+}
+
 .hand-mini-bar-window{
     height:100%;
 }

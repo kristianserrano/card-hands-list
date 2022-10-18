@@ -34,7 +34,7 @@ export class HandWindow extends FormApplication {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
         template: "modules/hand-mini-bar/templates/window-hand.html",
-        classes: ["image-popout", "dark"],
+        classes: ["hand-mini-bar-hand-popout"],
         editable: false,
         resizable: true,
         shareable: false,

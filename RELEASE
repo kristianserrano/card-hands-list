@@ -1,3 +1,7 @@
+Update 1.2.8
+- Fixed generic popout class name for custom themeing
+- added url prop in the manifest pointing to the git location
+
 Update 1.2.7
 - Fixed Face Down check box now works when playing a card
 - Fixed Drag Drop with version 10
