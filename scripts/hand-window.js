@@ -1,3 +1,6 @@
+/**
+ * Displays a window with all the cards from the hand or pile in a larger view
+ */
 export class HandWindow extends FormApplication {
     constructor(cards) {
       super(cards, {});
