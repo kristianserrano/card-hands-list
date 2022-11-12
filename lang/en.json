@@ -51,6 +51,13 @@
     "HANDMINIBAR.Bar":"bar",
     "HANDMINIBAR.DragDropError":"Unable to Drag Drop",
     "HANDMINIBAR.DragDropUUIDError":"Cannot Drop Missing UUID",
-    "HANDMINIBAR.DragDropObjectError":"Cannot Drop that Type of Object Here"
+    "HANDMINIBAR.DragDropObjectError":"Cannot Drop that Type of Object Here",
+    "HANDMINIBAR.ActionShow":"Show Players",
+    "HANDMINIBAR.FoundryVersionSupport":"Your Version of Foundry Does not support this feature please upgrade",
+    "HANDMINIBAR.ShowStackError":"Problem showing Stack to player",
+    "HANDMINIBAR.ShowStackUUIDError":"Problem showing Stack Missing UUID",
+    "HANDMINIBAR.StackShowSuccess":"Stack Shown to ",
+    "HANDMINIBAR.allPlayers": " all players",
+    "HANDMINIBAR.selectedPlayers": " selected players"
 
 }

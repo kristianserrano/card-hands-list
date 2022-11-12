@@ -1,4 +1,4 @@
-import HandWindow from './hand-window.js';
+import HandMiniBarWindow from './hand-window.js';
 
 /**
  * Each instance of a Mini Bar
@@ -39,7 +39,7 @@ export default class HandMiniBar{
     renderTemplate('modules/hand-mini-bar/templates/hand.html', {id: this.id}).then(
         content => {
             content = $(content);
-            content.find('.hand-mini-bar-settings-hand').click(function(e){t.openHandWindow(e)});
+            content.find('.hand-mini-bar-settings-hand').click(function(e){t.openStackWindow(e)});
             content.find('.hand-mini-bar-settings-choose').click(function(e){t.chooseDialog(e)});
             content.find('.hand-mini-bar-settings-choose').contextmenu(function(e){t.resetToolbarDialog(e)});
             content.find('.hand-mini-bar-pass').click(function(e){t.passCards(e)});
@@ -367,12 +367,12 @@ export default class HandMiniBar{
   }
 
   //Opens a Window with larger cards
-  async openHandWindow(){
+  async openStackWindow(){
     if(this.currentCards == undefined){
       ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
       return;
     }
-    new HandWindow(this.currentCards).render(true);
+    new HandMiniBarWindow(this.currentCards).render(true);
   }
 
   //Draws a card into this hand

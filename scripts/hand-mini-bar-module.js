@@ -99,6 +99,24 @@ window.HandMiniBarModule = {
       }
     }
   },
+  showStackWindow(data){
+    if(!data.uuid){
+      return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.ShowStackUUIDError"));
+    }
+    if(!data.users){
+      return;
+    }
+
+    if(data.users.includes(game.userId)){
+      fromUuid(data.uuid).then(
+        function(cards){
+          new HandMiniBarWindow(cards).render(true);
+        }
+      ).catch(function(err){
+        ui.notifications.warn( game.i18n.localize("HANDMINIBAR.ShowStackError"));
+      });
+    }
+  },
   rerender: function(){
     $(HandMiniBarModule.handMiniBarList).each(function(i, h){
       h.renderCards();
@@ -598,6 +616,8 @@ Hooks.on("ready", function() {
         }
         else if(data.action === "updatePlayers"){
           HandMiniBarModule.updatePlayerHandsDelayed();
+        }else if(data.action === "showStackWindow"){
+          HandMiniBarModule.showStackWindow(data)
         }
       });
       HandMiniBarModule.restore();

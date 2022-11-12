@@ -1,0 +1,52 @@
+<form class="journal-show-dialog">
+    <div class="form-group-stacked">
+        <div class="checkbox-label">
+            <span>{{localize "JOURNAL.ShowTo"}}</span>
+            <label class="checkbox">
+                {{localize "OWNERSHIP.AllPlayers"}}
+                <input type="checkbox" name="allPlayers" checked>
+            </label>
+        </div>
+        <div class="form-fields">
+            {{#each users}}
+            <label class="checkbox">
+                {{name}}
+                <input type="checkbox" name="players" value="{{id}}" checked disabled>
+            </label>
+            {{/each}}
+        </div>
+    </div>
+
+    {{#if isImage}}
+    <div class="form-group">
+        <label>{{localize "JOURNALENTRYPAGE.ShowImageOnly"}}</label>
+        <div class="form-fields">
+            <input type="checkbox" name="imageOnly" checked>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>{{localize "JOURNALENTRYPAGE.ShowImageTitle"}}</label>
+        <div class="form-fields">
+            <input type="checkbox" name="showImageTitle">
+        </div>
+    </div>
+    <div class="form-group">
+        <label>{{localize "JOURNALENTRYPAGE.ShowImageCaption"}}</label>
+        <div class="form-fields">
+            <input type="checkbox" name="showImageCaption">
+        </div>
+    </div>
+    {{/if}}
+
+    <hr>
+    <p class="notes">{{localize "JOURNAL.ShowOwnershipHint"}}</p>
+
+    <div class="form-group">
+        <label>{{localize "OWNERSHIP.Configure"}}</label>
+        <div class="form-fields">
+            <select name="ownership" data-dtype="Number">
+                {{selectOptions levels nameAttr="level" labelAttr="label" localize=true}}
+            </select>
+        </div>
+    </div>
+</form>

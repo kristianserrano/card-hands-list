@@ -1,7 +1,7 @@
 /**
  * Displays a window with all the cards from the hand or pile in a larger view
  */
-export class HandWindow extends FormApplication {
+export class HandMiniBarWindow extends FormApplication {
     constructor(cards) {
       super(cards, {});
       this.cards = cards;
@@ -78,10 +78,78 @@ export class HandWindow extends FormApplication {
         class: "open-stack",
         icon: "fas fa-cards",
         onclick: ev => HandMiniBarModule.openHand(t.cards)
-      });
+      });    
+      //this feature is only supported in version 10
+      if ( game.user.isGM && game.version.match(/^10/)) {
+        buttons.unshift({
+          label: "HANDMINIBAR.ActionShow",
+          class: "share-stack",
+          icon: "fas fa-eye",
+          onclick: () => t.showStack()
+        });
+      } 
+      
       return buttons
     }
 
+    async showStack() {
+      let t = this;
+      const users = game.users.filter(u => u.id !== game.userId);
+      const ownership = Object.entries(CONST.DOCUMENT_OWNERSHIP_LEVELS);
+      const levels = [
+        {level: CONST.DOCUMENT_META_OWNERSHIP_LEVELS.NOCHANGE, label: "OWNERSHIP.NOCHANGE"},
+        ...ownership.map(([name, level]) => ({level, label: `OWNERSHIP.${name}`}))
+      ];
+      const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-show.html", {users, levels, isImage:false});
+  
+      return Dialog.prompt({
+        title: game.i18n.format("JOURNAL.ShowEntry", {name: this.cards.title}),
+        label: game.i18n.localize("JOURNAL.ActionShow"),
+        content: html,
+        render: html => {
+          const form = html.querySelector("form");
+          form.elements.allPlayers.addEventListener("change", event => {
+            const checked = event.currentTarget.checked;
+            form.querySelectorAll('[name="players"]').forEach(i => {
+              i.checked = checked;
+              i.disabled = checked;
+            });
+          });
+        },
+        callback: async html => {
+          const form = html.querySelector("form");
+          const fd = new FormDataExtended(form).object;
+          const users = fd.allPlayers ? game.users.filter(u => !u.isSelf) : fd.players.reduce((arr, id) => {
+            const u = game.users.get(id);
+            if ( u && !u.isSelf ) arr.push(u);
+            return arr;
+          }, []);
+          if ( !users.length ) return;
+          const userIds = users.map(u => u.id);
+          if ( fd.ownership > -2 ) {
+            const ownership = this.cards.ownership;
+            for ( const id of userIds ) {
+              if ( ownership[id] === CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE ) ownership[id] = fd.ownership;
+              ownership[id] = Math.max(ownership[id] ?? -Infinity, fd.ownership);
+            }
+            await doc.update({ownership});
+          }
+          return t.showStackToPlayers({
+            users: userIds,
+            all: fd.allPlayers
+          });
+        },
+        rejectClose: false,
+        options: {jQuery: false}
+      });
+    }
+
+    async showStackToPlayers({users=[], ...options}={}) {
+      game.socket.emit(HandMiniBarModule.eventName, {action:"showStackWindow",uuid: this.cards.uuid, users, ...options});
+      let players = options.all ? game.i18n.format("HANDMINIBAR.allPlayers") : game.i18n.format("HANDMINIBAR.selectedPlayers");
+      ui.notifications.info(game.i18n.format("HANDMINIBAR.StackShowSuccess") + players);
+    }
+     
     drag(event){
       HandMiniBarModule.drag.call(this, event);
     }
@@ -95,4 +163,4 @@ export class HandWindow extends FormApplication {
     }
   }
 
-  export default HandWindow;
+  export default HandMiniBarWindow;
