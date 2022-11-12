@@ -302,11 +302,19 @@
     margin-bottom: 2px;
 }
 
-.hand-mini-bar-play-dialog-description{
+.hand-mini-bar-play-dialog-description,
+.hand-mini-bar-play-dialog-face-description{
     text-align:center;
     margin: 0px;
     font-weight: normal;
     font-size: 12px;
+}
+
+div.separator{
+    margin: 3px auto 0px auto;
+    width: 30px;
+    height: 6px;
+    border-top: solid 1px #000;
 }
 
 .hand-mini-bar-message-description{

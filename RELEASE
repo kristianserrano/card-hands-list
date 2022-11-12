@@ -1,3 +1,7 @@
+Update 1.3.0
+- Fixed Descriptions and Added Face Descriptions
+- Fixed Drag Drop using UUID in newer Foundry Versions
+
 Update 1.2.8
 - Fixed generic popout class name for custom themeing
 - added url prop in the manifest pointing to the git location

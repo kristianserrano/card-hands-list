@@ -153,15 +153,12 @@ window.HandMiniBarModule = {
     let cards = this.getCards();
     const data = TextEditor.getDragEventData(event);
     if ( data.type !== "Card" ) return;
-    const source = game.cards.get(data.cardsId);
-    const card = source.cards.get(data.cardId);
-    //if the card does not already exist in this hand then pass it to it
-    let exists = cards.cards.filter(c => c.id === card.id);
+
     //SORT
-    let sort = function(){
+    let sort = function(card){
       const closest = event.target.closest("[data-card-id]");
       if(closest){
-        const siblings = cards.cards.filter(c => c.id !== card.id);
+        const siblings = cards.cards.filter(c => c.id ? c.id : c._id !== card.id);
         const target = cards.cards.get(closest.dataset.cardId);
         const updateData = SortingHelpers.performIntegerSort(card, {target, siblings}).map(u => {
           return {_id: u.target.id, sort: u.update.sort}
@@ -169,16 +166,51 @@ window.HandMiniBarModule = {
         cards.updateEmbeddedDocuments("Card", updateData);
       }
     }
-    if(exists.length == 0){
-      return card.pass(cards, { chatNotification: !CONFIG.HandMiniBar.options.hideMessages }).then(
-        function(){
-          sort();
-        },function(error){
-          ui.notifications.error(error);
+
+    if(data.uuid){
+      fromUuid(data.uuid).then(
+        function(card){
+          if(!card){
+            ui.notifications.warn( game.i18n.localize("HANDMINIBAR.DragDropUUIDError"));
+          }
+          let cardList = [];
+          cardList.push(card._id);
+
+          let exists = cards.cards.filter(c => c._id  === card._id);
+          if(exists.length == 0){
+            card.parent.pass(cards, cardList,{ chatNotification: !CONFIG.HandMiniBar.options.hideMessages })
+            .then(function(){
+              sort(card);
+            }).catch(function(error){
+              ui.notifications.warn( game.i18n.localize("HANDMINIBAR.DragDropError"));
+            });
+          }
+          else{
+            sort(card);
+          }
         }
-      );
-    }else{//already a part of the hand, just sort
-      sort();
+      ).catch(function(err){
+        ui.notifications.warn( game.i18n.localize("HANDMINIBAR.DragDropError"));
+      });
+    }else{
+      const source = game.cards.get(data.cardsId);
+      const card = source.cards.get(data.cardId);
+      if(typeof card == "Card"){
+        ui.notifications.warn( game.i18n.localize("HANDMINIBAR.DragDropObjectError"));
+      }
+      //if the card does not already exist in this hand then pass it to it
+      let exists = cards.cards.filter(c =>  c.id === card.id );
+      if(exists.length == 0){
+        return card.pass(cards, { chatNotification: !CONFIG.HandMiniBar.options.hideMessages }).then(
+          function(){
+            sort(card);
+          },function(error){
+            ui.notifications.error(error);
+          }
+        );
+      }else{//already a part of the hand, just sort
+        sort();
+      }
     }
   },
 
@@ -221,9 +253,15 @@ window.HandMiniBarModule = {
     if(currentCards.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
       return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
     }
-
+    let faceUp = card.face !== null && card.face !== undefined;
+    let faceDesc = undefined;
+    let description = undefined;
+    if(faceUp){
+      faceDesc = (card.face == null || !card.faces) ? "" : card.faces[card.face].text;
+      description = card.description ? card.description :card.data.description;
+    }
     // Construct the dialog HTML
-    const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, notFaceUpMode: !CONFIG.HandMiniBar.options.faceUpMode});
+    const html = await renderTemplate("modules/hand-mini-bar/templates/dialog-play.html", {card, cards, description, faceDesc, faceUp, notFaceUpMode : !CONFIG.HandMiniBar.options.faceUpMode});
   
     // Display the prompt
     Dialog.prompt({

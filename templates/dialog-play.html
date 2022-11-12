@@ -2,11 +2,29 @@
     <figure>
         <img class="thumbnail" src="{{card.img}}" width="318"/>
         <figcaption>
-            {{card.name}}
-            {{#if card.face}}
-                {{#if card.data.description }}
+            {{#if faceUp}}
+                {{card.name}}
+            {{/if}}
+            {{#if faceUp}}
+                {{#if faceDesc}}
+                    <p class="hand-mini-bar-play-dialog-face-description">
+                        {{breaklines faceDesc}}
+                    </p>
+                {{/if}}
+            {{/if}}
+
+            {{#if faceUp}}
+                {{#if faceDesc}}
+                    {{#if description}}
+                        <div class="separator"> </div>
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+
+            {{#if faceUp}}
+                {{#if description}}
                     <p class="hand-mini-bar-play-dialog-description">
-                        {{breaklines card.data.description}}
+                        {{breaklines description}}
                     </p>
                 {{/if}}
             {{/if}}

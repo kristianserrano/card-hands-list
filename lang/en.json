@@ -48,6 +48,9 @@
     "HANDMINIBAR.ResetBar":"Reset Bar",
     "HANDMINIBAR.Player":"Player",
     "HANDMINIBAR.Hand":"Hand",
-    "HANDMINIBAR.Bar":"bar"
+    "HANDMINIBAR.Bar":"bar",
+    "HANDMINIBAR.DragDropError":"Unable to Drag Drop",
+    "HANDMINIBAR.DragDropUUIDError":"Cannot Drop Missing UUID",
+    "HANDMINIBAR.DragDropObjectError":"Cannot Drop that Type of Object Here"
 
 }
