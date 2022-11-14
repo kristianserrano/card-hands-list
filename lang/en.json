@@ -12,7 +12,7 @@
     "HANDMINIBAR.ResetHandConfirmTitle":"Reset Hand",
     "HANDMINIBAR.ResetHandConfirmQuestion":"Place all cards back in their original Deck?",
     "HANDMINIBAR.DeckList":"List of Hands",
-    "HANDMINIBAR.OpenHand":"Hand Window",
+    "HANDMINIBAR.OpenHand":"Stack Window",
     "HANDMINIBAR.OpenCardStack":"Card Stack",
     "HANDMINIBAR.Pass":"Pass Cards",
     "HANDMINIBAR.HandCountSetting":"Hand Count",

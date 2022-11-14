@@ -415,6 +415,17 @@ div#hand-mini-bar-container{
     border: none;
 }
 
+.fa-hand-mini-bar-open-hand{    
+    background-image: url(/modules/hand-mini-bar/artwork/cards.png);
+    width: 15px;
+    height: 15px;
+    background-size: contain;
+    display: block;
+    margin-top: 6px;
+    background-repeat: no-repeat;
+    float: left;
+}
+
 /* Shrink macro bar sooner*/
 @media (max-width: 1316px)
 {

@@ -133,6 +133,11 @@ window.HandMiniBarModule = {
     });
   },
 
+  //Opens a Window with larger cards
+  async openStackWindow(cards){
+    new HandMiniBarWindow(cards).render(true);
+  },
+
   //Attach for dragging cards from the toolbar
   attachDragDrop: function(html){
     let t = this;
@@ -231,8 +236,7 @@ window.HandMiniBarModule = {
       }
     }
   },
-
-
+  
   //one of the cards was clicked, based on options pick what to do
   cardClicked: async function(e){
     let id = $(e.target).data("card-id");
@@ -379,29 +383,49 @@ window.HandMiniBarModule = {
     }
   },
 
-  /** Loop Through the hands to grab the card out 
+  /** Loop Through the hands and pilesto grab the card out 
    * protects against missing hand references **/
   getCardByID: function(id){
     let card = undefined;
     game.cards.forEach(function(cards){
-      if(!card && cards.type === "hand"){
+      if(!card && (cards.type === "hand" || cards.type === "pile")){
         card = cards.cards.get(id);
       }
     });
+    /**if the card is not found in a hand or pile first then search the 
+    decks it has not been played yet **/
+    if(!card){
+      game.cards.forEach(function(cards){
+        if(!card && cards.type === "deck"){
+          card = cards.cards.get(id);
+        }
+      });
+    }
     return card;
   },
-  
+
   /** Loop Through the hands to grab the card out 
    * protects against missing hand references **/
   getHandByCardID: function(id){
     let hand = undefined;
     game.cards.forEach(function(cards){
-      if(cards.type === "hand"){
+      if(cards.type === "hand" || cards.type === "pile"){
         if(!!cards.cards.get(id)){
           hand = cards;
         }
       }
     });
+    /**if the card is not found in a hand or pile first then search the 
+    decks it has not been played yet **/
+    if(!hand){
+      game.cards.forEach(function(cards){
+        if(cards.type === "deck"){
+          if(!!cards.cards.get(id)){
+            hand = cards;
+          }
+        }
+      });
+    }
     return hand;
   },
 
@@ -416,12 +440,26 @@ window.HandMiniBarModule = {
 CONFIG.HandMiniBar.documentClass = HandMiniBar;
 CONFIG.HandMiniBar.documentClass = HandMiniBarWindow;
 
+//Add a button to all the card windows to open the Larger card stack view
+Hooks.on("getCardsConfigHeaderButtons", function(config, buttons){
+  //when A card pile is rendered add a button to hook into the hand mini bar window
+  if(config.object){
+    buttons.unshift({
+      label: "HANDMINIBAR.OpenHand",
+      class: "open-stack",
+      icon: "fas fa-hand-mini-bar-open-hand",
+      onclick: ev => HandMiniBarModule.openStackWindow(config.object)
+    });
+  }
+  return true;
+});
+
 Hooks.on("init", function() {
   Handlebars.registerHelper('breaklines', function(text) {
-      text = Handlebars.Utils.escapeExpression(text);
-      text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-      return new Handlebars.SafeString(text);
-  });
+    text = Handlebars.Utils.escapeExpression(text);
+    text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+    return new Handlebars.SafeString(text);
+  });  
   game.settings.register(HandMiniBarModule.moduleName, 'HandCount', {
     name: game.i18n.localize("HANDMINIBAR.HandCountSetting"),
     hint: game.i18n.localize("HANDMINIBAR.HandCountSettingHint"),
@@ -524,6 +562,20 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
+  let cardOverrides = {
+    _getHeaderButtons: function(){
+      console.log("Hello World");
+      console.log(parent);
+    },
+    render:function(){
+      console.log("RENDER");
+    },
+    _getHeaderButtons: function(){
+      console.log("Hello World");
+      console.log(parent);
+    }
+  }
+  new Proxy(BaseCards,cardOverrides);
 });
 Hooks.on("ready", function() {
   // Pre Load templates.

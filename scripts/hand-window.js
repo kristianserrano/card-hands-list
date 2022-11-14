@@ -58,6 +58,7 @@ export class HandMiniBarWindow extends FormApplication {
       cards.sort(HandMiniBarModule.cardSort);
       return {
         cards: cards,
+        isDeck: cards.type === "deck",
         options: this.options,
         title: this.title
       }
