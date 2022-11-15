@@ -58,6 +58,7 @@ export class HandMiniBarWindow extends FormApplication {
       cards.sort(HandMiniBarModule.cardSort);
       return {
         cards: cards,
+        cardsid: this.cards._id ? this.cards._id: this.cards.data._id,
         isDeck: this.cards.type === "deck",
         isFaceUpMode: CONFIG.HandMiniBar.options.faceUpMode,
         options: this.options,
@@ -67,8 +68,16 @@ export class HandMiniBarWindow extends FormApplication {
   
     activateListeners(html){
       let t = this;
-      html.find('.hand-mini-bar-window-card').click(function(e){HandMiniBarModule.cardClicked(e)});
-      html.find('.hand-mini-bar-window-card').contextmenu(function(e){HandMiniBarModule.flipCard(e)});
+      html.find('.hand-mini-bar-window-card').click(function(e){
+        let id = $(e.target).data("card-id");
+        let card = t.cards.cards.get(id);
+        HandMiniBarModule.cardClicked(t.cards, card);
+      });
+      html.find('.hand-mini-bar-window-card').contextmenu(function(e){
+        let id = $(e.target).data("card-id");
+        let card = t.cards.cards.get(id);
+        HandMiniBarModule.flipCard(card)
+      });
       html.find('.hand-mini-bar-flip-all-cards').click(function(e){HandMiniBarModule.flipAllCards(t.cards)});
       html.find('.hand-mini-bar-flip-all-deal').click(function(e){HandMiniBarModule.flipAllCards(t.cards.dealDialog())});
       html.find('.hand-mini-bar-flip-all-pass').click(function(e){HandMiniBarModule.flipAllCards(t.cards.passDialog())});

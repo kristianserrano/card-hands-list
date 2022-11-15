@@ -155,17 +155,16 @@ window.HandMiniBarModule = {
   
   drag: function(event) {
     const id = $(event.currentTarget).data("card-id");
-    const card = HandMiniBarModule.getCardByID(id);
-    let cards = this.getCards();
-    if ( !card ) return;
+    const cardsid = $(event.currentTarget).data("cards-id");
+    const uuid = $(event.currentTarget).data("card-uuid");
 
     // Create drag data
     const dragData = {
-      id: card.id,//id required
+      id: id,//id required
       type: "Card",
-      cardsId: cards._id ? cards._id: cards.data._id,
-      cardId: card.id,
-      uuid: card.uuid
+      cardsId: cardsid,
+      cardId: id,
+      uuid: uuid
     };
 
     // Set data transfer
@@ -238,25 +237,19 @@ window.HandMiniBarModule = {
   },
   
   //one of the cards was clicked, based on options pick what to do
-  cardClicked: async function(e){
-    let id = $(e.target).data("card-id");
+  cardClicked: async function(cards, card){
     let option = CONFIG.HandMiniBar.options.cardClick;
     if(option === "play_card"){
-      let card = this.getCardByID(id);
-      this.playDialog(card);
+      this.playDialog(cards, card);
     }else if(option === "open_hand"){
-      let hand = this.getHandByCardID(id);
-      this.openHand(hand);
+      this.openHand(cards);
     } else if(option === "card_image"){
-      let card = this.getCardByID(id);
       this.showCardImage(card);
     }
   },
 
   //Flip the card the player right clicked on
-  flipCard: async function(e){
-    let id = $(e.target).data("card-id");
-    let card = this.getCardByID(id);
+  flipCard: async function(card){
     if(card.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
       return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
     }
@@ -274,9 +267,8 @@ window.HandMiniBarModule = {
     
   },
 
-  async playDialog(card){
-    let id =  card._id ? card._id: card.data._id;
-    const currentCards = this.getHandByCardID(id);
+  async playDialog(currentCards, card){
+    //list of cards that can be passed to
     const cards = game.cards.filter(c => (c !== currentCards) && (c.type !== "deck") && c.testUserPermission(game.user, "LIMITED"));
     if ( !cards.length ) return ui.notifications.warn("CARDS.PassWarnNoTargets", {localize: true});
     if(currentCards.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
@@ -388,52 +380,6 @@ window.HandMiniBarModule = {
     } else {
       hand.sheet.render(true);
     }
-  },
-
-  /** Loop Through the hands and pilesto grab the card out 
-   * protects against missing hand references **/
-  getCardByID: function(id){
-    let card = undefined;
-    game.cards.forEach(function(cards){
-      if(!card && (cards.type === "hand" || cards.type === "pile")){
-        card = cards.cards.get(id);
-      }
-    });
-    /**if the card is not found in a hand or pile first then search the 
-    decks it has not been played yet **/
-    if(!card){
-      game.cards.forEach(function(cards){
-        if(!card && cards.type === "deck"){
-          card = cards.cards.get(id);
-        }
-      });
-    }
-    return card;
-  },
-
-  /** Loop Through the hands to grab the card out 
-   * protects against missing hand references **/
-  getHandByCardID: function(id){
-    let hand = undefined;
-    game.cards.forEach(function(cards){
-      if(cards.type === "hand" || cards.type === "pile"){
-        if(!!cards.cards.get(id)){
-          hand = cards;
-        }
-      }
-    });
-    /**if the card is not found in a hand or pile first then search the 
-    decks it has not been played yet **/
-    if(!hand){
-      game.cards.forEach(function(cards){
-        if(cards.type === "deck"){
-          if(!!cards.cards.get(id)){
-            hand = cards;
-          }
-        }
-      });
-    }
-    return hand;
   },
 
   cardSort(a, b){
@@ -569,25 +515,18 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
-  let cardOverrides = {
-    _getHeaderButtons: function(){
-      console.log("Hello World");
-      console.log(parent);
-    },
-    render:function(){
-      console.log("RENDER");
-    },
-    _getHeaderButtons: function(){
-      console.log("Hello World");
-      console.log(parent);
-    }
-  }
-  new Proxy(BaseCards,cardOverrides);
 });
 Hooks.on("ready", function() {
   // Pre Load templates.
-  const templatePaths = ['modules/hand-mini-bar/templates/hand.html',
-  'modules/hand-mini-bar/templates/card.html'];
+  const templatePaths = [
+    'modules/hand-mini-bar/templates/card.html',
+    'modules/hand-mini-bar/templates/chat-message.html',
+    'modules/hand-mini-bar/templates/dialog-play.html',
+    'modules/hand-mini-bar/templates/dialog-show.html',
+    'modules/hand-mini-bar/templates/empty-hand-message.html',
+    'modules/hand-mini-bar/templates/hand-container.html',
+    'modules/hand-mini-bar/templates/hand.html',
+  'modules/hand-mini-bar/templates/window-hand.html'];
   loadTemplates(templatePaths).then(() => {
     console.log("Better Hand templates preloaded")
   });

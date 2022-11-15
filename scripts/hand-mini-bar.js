@@ -117,6 +117,8 @@ export default class HandMiniBar{
         }
         let renderData = {
           id: c._id ? c._id: c.data._id,
+          cardsid: t.currentCards._id ? t.currentCards._id: t.currentCards.data._id,
+          uuid: c.uuid,
           back: (c.face == null),
           img: img,
           name:(c.face !== null) ? c.name : game.i18n.localize("HANDMINIBAR.CardBack"),
@@ -534,12 +536,16 @@ export default class HandMiniBar{
 
   //one of the cards was clicked, based on options pick what to do
   async cardClicked(e){
-    HandMiniBarModule.cardClicked(e);
+    let id = $(e.target).data("card-id");
+    let card = this.currentCards.cards.get(id);
+    HandMiniBarModule.cardClicked(this.currentCards, card);
   }
 
   //Flip the card the player right clicked on
   async flipCard(e){
-    HandMiniBarModule.flipCard(e);
+    let id = $(e.target).data("card-id");
+    let card = this.currentCards.cards.get(id);
+    HandMiniBarModule.flipCard(card);
   }
 
   //Gets any stored CardsID 

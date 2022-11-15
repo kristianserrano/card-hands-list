@@ -22,12 +22,12 @@
     {{#if isDeck}}
       {{#each cards}}
         {{#unless this.drawn}}
-          <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-img="{{this.img}}" draggable="true"/>
+          <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
         {{/unless}}
       {{/each}}
     {{else}}
       {{#each cards}}
-        <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-img="{{this.img}}" draggable="true"/>
+        <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
       {{/each}}
     {{/if}}
   </div>
