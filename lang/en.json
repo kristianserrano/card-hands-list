@@ -58,6 +58,9 @@
     "HANDMINIBAR.ShowStackUUIDError":"Problem showing Stack Missing UUID",
     "HANDMINIBAR.StackShowSuccess":"Stack Shown to ",
     "HANDMINIBAR.allPlayers": " all players",
-    "HANDMINIBAR.selectedPlayers": " selected players"
+    "HANDMINIBAR.selectedPlayers": " selected players",
+    "HANDMINIBAR.Deal": " Deal Cards",
+    "HANDMINIBAR.Reset": " Reset Pile",
+    "HANDMINIBAR.FlipAllCards": "Flip All"
 
 }

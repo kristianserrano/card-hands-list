@@ -255,15 +255,22 @@ window.HandMiniBarModule = {
 
   //Flip the card the player right clicked on
   flipCard: async function(e){
-    if(CONFIG.HandMiniBar.options.faceUpMode){
-      return;// do not flip when in token mode
-    }
     let id = $(e.target).data("card-id");
     let card = this.getCardByID(id);
     if(card.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
       return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
     }
     card.flip();
+  },
+
+  //Flip all cards in hand, deck or pile
+  flipAllCards: async function(cards){
+    if(cards.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
+      return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
+    }
+    cards.cards.forEach(function(card){
+      card.flip();
+    });
     
   },
 

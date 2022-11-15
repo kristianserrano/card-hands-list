@@ -8,7 +8,7 @@ export class HandMiniBarWindow extends FormApplication {
       let t = this;
       
       if(this.cards.cards.size > 3){
-        this.position.height = 700;
+        this.position.height = 730;
       }
       /**
        * Hooks to listen to changes in this hand
@@ -43,7 +43,7 @@ export class HandMiniBarWindow extends FormApplication {
         shareable: false,
         uuid: null,
         width:750,
-        height:350
+        height:380
       });
     }
   
@@ -58,15 +58,21 @@ export class HandMiniBarWindow extends FormApplication {
       cards.sort(HandMiniBarModule.cardSort);
       return {
         cards: cards,
-        isDeck: cards.type === "deck",
+        isDeck: this.cards.type === "deck",
+        isFaceUpMode: CONFIG.HandMiniBar.options.faceUpMode,
         options: this.options,
         title: this.title
       }
     }
   
     activateListeners(html){
+      let t = this;
       html.find('.hand-mini-bar-window-card').click(function(e){HandMiniBarModule.cardClicked(e)});
       html.find('.hand-mini-bar-window-card').contextmenu(function(e){HandMiniBarModule.flipCard(e)});
+      html.find('.hand-mini-bar-flip-all-cards').click(function(e){HandMiniBarModule.flipAllCards(t.cards)});
+      html.find('.hand-mini-bar-flip-all-deal').click(function(e){HandMiniBarModule.flipAllCards(t.cards.dealDialog())});
+      html.find('.hand-mini-bar-flip-all-pass').click(function(e){HandMiniBarModule.flipAllCards(t.cards.passDialog())});
+      html.find('.hand-mini-bar-flip-all-reset').click(function(e){HandMiniBarModule.flipAllCards(t.cards.resetDialog())});
       HandMiniBarModule.attachDragDrop.call(this, html[0]);
     }
   

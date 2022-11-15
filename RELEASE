@@ -1,6 +1,7 @@
 Update 1.3.0
 - Added Deck and Pile Window header buttons to show window for any type
 - Added Share Stack Window to players
+- Added Flip Cards, Deal and Pass Buttons to Window view
 - Fixed Descriptions and Added Face Descriptions
 - Fixed Drag Drop using UUID in newer Foundry Versions
 
