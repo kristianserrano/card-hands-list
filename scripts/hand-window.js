@@ -79,9 +79,9 @@ export class HandMiniBarWindow extends FormApplication {
         HandMiniBarModule.flipCard(card)
       });
       html.find('.hand-mini-bar-flip-all-cards').click(function(e){HandMiniBarModule.flipAllCards(t.cards)});
-      html.find('.hand-mini-bar-flip-all-deal').click(function(e){HandMiniBarModule.flipAllCards(t.cards.dealDialog())});
-      html.find('.hand-mini-bar-flip-all-pass').click(function(e){HandMiniBarModule.flipAllCards(t.cards.passDialog())});
-      html.find('.hand-mini-bar-flip-all-reset').click(function(e){HandMiniBarModule.flipAllCards(t.cards.resetDialog())});
+      html.find('.hand-mini-bar-flip-all-deal').click(function(e){t.cards.dealDialog()});
+      html.find('.hand-mini-bar-flip-all-pass').click(function(e){t.cards.passDialog()});
+      html.find('.hand-mini-bar-flip-all-reset').click(function(e){t.cards.resetDialog()});
       HandMiniBarModule.attachDragDrop.call(this, html[0]);
     }
   
