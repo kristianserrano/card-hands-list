@@ -473,9 +473,9 @@ Hooks.on("init", function() {
     type: Boolean,       // Number, Boolean, String,
     default: false,
     onChange: value => { // value is the new value of the setting
-      CONFIG.HandMiniBar.options.faceupMode = value;
+      CONFIG.HandMiniBar.options.faceUpMode = value;
       game.socket.emit(HandMiniBarModule.eventName, {'action': 'rerender'});
-      HandMiniBarModule.reRender();
+      HandMiniBarModule.rerender();
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
