@@ -59,8 +59,10 @@
     "HANDMINIBAR.StackShowSuccess":"Stack Shown to ",
     "HANDMINIBAR.allPlayers": " all players",
     "HANDMINIBAR.selectedPlayers": " selected players",
-    "HANDMINIBAR.Deal": " Deal Cards",
-    "HANDMINIBAR.Reset": " Reset Pile",
+    "HANDMINIBAR.Deal": "Deal",
+    "HANDMINIBAR.Reset": "Reset",
+    "HANDMINIBAR.Shuffle": "Shuffle",
+    "HANDMINIBAR.Draw": "Draw",
     "HANDMINIBAR.FlipAllCards": "Flip All"
 
 }

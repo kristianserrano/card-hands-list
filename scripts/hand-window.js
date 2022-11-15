@@ -60,6 +60,8 @@ export class HandMiniBarWindow extends FormApplication {
         cards: cards,
         cardsid: this.cards._id ? this.cards._id: this.cards.data._id,
         isDeck: this.cards.type === "deck",
+        isHand: this.cards.type === "hand",
+        isPile: this.cards.type === "pile",
         isFaceUpMode: CONFIG.HandMiniBar.options.faceUpMode,
         options: this.options,
         title: this.title
@@ -82,6 +84,8 @@ export class HandMiniBarWindow extends FormApplication {
       html.find('.hand-mini-bar-flip-all-deal').click(function(e){t.cards.dealDialog()});
       html.find('.hand-mini-bar-flip-all-pass').click(function(e){t.cards.passDialog()});
       html.find('.hand-mini-bar-flip-all-reset').click(function(e){t.cards.resetDialog()});
+      html.find('.hand-mini-bar-flip-all-shuffle').click(function(e){t.cards.shuffle()});
+      html.find('.hand-mini-bar-flip-all-draw').click(function(e){t.cards.drawDialog()});
       HandMiniBarModule.attachDragDrop.call(this, html[0]);
     }
   

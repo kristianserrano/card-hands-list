@@ -452,6 +452,10 @@ div#hand-mini-bar-container{
     box-shadow: 0 0 5px var(--color-shadow-primary);
 }
 
+.hand-mini-bar-flip-icon:before{
+    content: "\f064";
+}
+
 /* Shrink macro bar sooner*/
 @media (max-width: 1316px)
 {
