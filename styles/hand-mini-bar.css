@@ -456,6 +456,14 @@ div#hand-mini-bar-container{
     content: "\f064";
 }
 
+.hand-mini-bar-window-player-container{
+    border: 1px solid var(--color-border-light-primary);
+}
+.hand-mini-bar-window-player-container-name{
+    color:var(--color-border-light-primary);
+    border-bottom: 1px solid var(--color-border-light-primary);
+}
+
 /* Shrink macro bar sooner*/
 @media (max-width: 1316px)
 {

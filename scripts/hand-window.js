@@ -8,7 +8,7 @@ export class HandMiniBarWindow extends FormApplication {
       let t = this;
       
       if(this.cards.cards.size > 3){
-        this.position.height = 730;
+        this.position.height = 750;
       }
       /**
        * Hooks to listen to changes in this hand
@@ -43,7 +43,7 @@ export class HandMiniBarWindow extends FormApplication {
         shareable: false,
         uuid: null,
         width:750,
-        height:380
+        height:400
       });
     }
   
@@ -54,11 +54,42 @@ export class HandMiniBarWindow extends FormApplication {
   
     /** @override */
     async getData(options) {
+      let t = this;
       let cards = this.cards.cards.contents;
       cards.sort(HandMiniBarModule.cardSort);
+      let showPlayerNames = false;
+      //Sort the cards each player has played into lists
+      if(CONFIG.HandMiniBar.options.showPlayedPlayerNames && this.cards.type === "pile"){
+        showPlayerNames = true;
+        let data = {"":[]};
+        //create a has for every user
+        game.users.forEach(function (u, i){
+          data[u._id ? u._id: u.data._id] = [];
+        });
+        cards.forEach(function (c, i){
+          let cardId = c._id ? c._id: c.data._id;
+          let playerId = t.cards.getFlag(HandMiniBarModule.moduleName, cardId);
+          if(playerId === undefined){
+            data[""].push(c);
+          }else{
+            data[playerId].push(c);
+          }
+        });
+        //replace the player id with the player name
+        //and remove empty card lists
+        Object.keys(data).forEach(function(id) {
+          if(data[id].length > 0){
+            let name = game.users.get(id)?.name;
+            data[name] = data[id];
+          }
+          delete data[id];
+        });
+        cards = data;
+      }
       return {
         cards: cards,
         cardsid: this.cards._id ? this.cards._id: this.cards.data._id,
+        showPlayers: showPlayerNames,
         isDeck: this.cards.type === "deck",
         isHand: this.cards.type === "hand",
         isPile: this.cards.type === "pile",

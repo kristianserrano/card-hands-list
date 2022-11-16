@@ -23,6 +23,8 @@
     "HANDMINIBAR.HideMessagesSettingHint":"Disables Messages when cards are moved to and from the mini bar",
     "HANDMINIBAR.BetterChatMessagesSetting":"Better Chat Messages",
     "HANDMINIBAR.BetterChatMessagesSettingHint":"Messages in Chat are displayed with card images and descriptions",
+    "HANDMINIBAR.ShowPlayedPlayerNames":"Show Player Names in Pile",
+    "HANDMINIBAR.ShowPlayedPlayerNamesHint":"When active this will show who played the cards in the Pile (Window View)",
     "HANDMINIBAR.BarPositionAbovePlayersSetting":"Above Player List",
     "HANDMINIBAR.BarPositionRightMacroSetting":"Right of Macro Bar",
     "HANDMINIBAR.BarPositionLeftMacroSetting":"Left of Macro Bar",

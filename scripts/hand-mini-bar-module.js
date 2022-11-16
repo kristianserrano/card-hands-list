@@ -11,6 +11,7 @@ CONFIG.HandMiniBar.options = {
   betterChatMessages: false,
   hideMessages: false,
   faceUpMode: false,
+  showPlayedPlayerNames: false,
   position:"",
   positionDefault:"right_bar",
   cardClick:"play_card"
@@ -20,6 +21,7 @@ window.HandMiniBarModule = {
   handMiniBarList: new Array(),
   moduleName:"hand-mini-bar",
   eventName:"module.hand-mini-bar",
+  playerProp:"player-played",
   handMax: 10,
   updatePostion:function(){
     let position = CONFIG.HandMiniBar.options.position;
@@ -323,14 +325,28 @@ window.HandMiniBarModule = {
           if(desc == undefined){
             desc = card.data.description;
           }
+          let cardID = card._id ? card._id: card.data._id;
+          
+          //record who passed the card to the pile
+          try{
+            to.setFlag(HandMiniBarModule.moduleName, cardID, game.userId);
+          }catch(err){
+            console.warn("hand-mini-bar Module: Unable to Track player on deck.")
+          }
+          try{
+            card.setFlag(HandMiniBarModule.moduleName, HandMiniBarModule.playerProp, game.userId);
+          }catch(err){
+            console.warn("hand-mini-bar Module: Unable to Track player on card.")
+          }
           let renderData = {
-            id: card._id ? card._id: card.data._id,
+            id: cardID,
             back: (card.face == null || fd.down),
             img: img,
             name:(card.face !== null && !fd.down) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
             description: (card.face !== null && !fd.down) ? desc : null,
             action: "Played"
           };
+
           renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(
             content => {
               const messageData = {
@@ -479,6 +495,20 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
+  game.settings.register(HandMiniBarModule.moduleName, 'ShowPlayedPlayerNames', {
+    name: game.i18n.localize("HANDMINIBAR.ShowPlayedPlayerNames"),
+    hint: game.i18n.localize("HANDMINIBAR.ShowPlayedPlayerNamesHint"),
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: Boolean,       // Number, Boolean, String,
+    default: false,
+    onChange: value => { // value is the new value of the setting
+      CONFIG.HandMiniBar.options.showPlayedPlayerNames = value;
+      game.socket.emit(HandMiniBarModule.eventName, {'action': 'rerender'});
+      HandMiniBarModule.rerender();
+    },
+    filePicker: false,  // set true with a String `type` to use a file picker input
+  });
   game.settings.register(HandMiniBarModule.moduleName, 'BarPosition', {
     name: game.i18n.localize("HANDMINIBAR.BarPositionSetting"),
     hint: game.i18n.localize("HANDMINIBAR.BarPositionSettingHint"),
@@ -601,6 +631,9 @@ Hooks.on("ready", function() {
       }
       if(game.settings.get(HandMiniBarModule.moduleName, "FaceUpMode") == true){
         CONFIG.HandMiniBar.options.faceUpMode = true;
+      }
+      if(game.settings.get(HandMiniBarModule.moduleName, "ShowPlayedPlayerNames") == true){
+        CONFIG.HandMiniBar.options.showPlayedPlayerNames = true;
       }
       game.socket.on(HandMiniBarModule.eventName, data => {
         if(data.action === "rerender"){

@@ -41,6 +41,15 @@
           <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
         {{/unless}}
       {{/each}}
+    {{else if showPlayers}}
+      {{#each cards}}
+        <div class="hand-mini-bar-window-player-container">
+          <h3 class="hand-mini-bar-window-player-container-name">{{@key}}</h3>
+          {{#each this}}
+            <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
+          {{/each}}
+        </div>
+      {{/each}}
     {{else}}
       {{#each cards}}
         <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
