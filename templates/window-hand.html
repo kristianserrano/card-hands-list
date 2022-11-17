@@ -34,25 +34,31 @@
       {{localize "HANDMINIBAR.Reset"}}
     </div>
   </div>
-  <div class="hand-mini-bar-window-cards">
-    {{#if isDeck}}
-      {{#each cards}}
-        {{#unless this.drawn}}
-          <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
-        {{/unless}}
-      {{/each}}
-    {{else if showPlayers}}
+  <div class="hand-mini-bar-window-cards {{pileType}} {{#if showPlayers}}show-players{{/if}}">
+    <!-- If a deck only show cards that aren't played yet -->
+    <!-- if show players is set then the cards are separated into player lists -->
+    {{#if showPlayers}}
       {{#each cards}}
         <div class="hand-mini-bar-window-player-container">
           <h3 class="hand-mini-bar-window-player-container-name">{{@key}}</h3>
-          {{#each this}}
-            <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
-          {{/each}}
+          <div class="hand-mini-bar-window-player-container-cards">
+            {{#each this}}
+              <div class="hand-mini-bar-window-card card" style="background-image:url('{{this.img}}')" title="{{this.name}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true">
+              </div>
+            {{/each}}
+          </div>
         </div>
       {{/each}}
+    {{else if isHand}}
+      {{#each cards}}
+        <div class="hand-mini-bar-window-card card" style="background-image:url('{{this.img}}')" title="{{this.name}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true">
+        </div>
+      {{/each}}
+    <!-- If a pile or Deck show all cards in grid-->
     {{else}}
       {{#each cards}}
-        <img class="hand-mini-bar-window-card card" src="{{this.img}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true"/>
+        <div class="hand-mini-bar-window-card card" style="background-image:url('{{this.img}}')" title="{{this.name}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true">
+        </div>
       {{/each}}
     {{/if}}
   </div>

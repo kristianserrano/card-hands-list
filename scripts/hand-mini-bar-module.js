@@ -21,7 +21,6 @@ window.HandMiniBarModule = {
   handMiniBarList: new Array(),
   moduleName:"hand-mini-bar",
   eventName:"module.hand-mini-bar",
-  playerProp:"player-played",
   handMax: 10,
   updatePostion:function(){
     let position = CONFIG.HandMiniBar.options.position;
@@ -327,17 +326,6 @@ window.HandMiniBarModule = {
           }
           let cardID = card._id ? card._id: card.data._id;
           
-          //record who passed the card to the pile
-          try{
-            to.setFlag(HandMiniBarModule.moduleName, cardID, game.userId);
-          }catch(err){
-            console.warn("hand-mini-bar Module: Unable to Track player on deck.")
-          }
-          try{
-            card.setFlag(HandMiniBarModule.moduleName, HandMiniBarModule.playerProp, game.userId);
-          }catch(err){
-            console.warn("hand-mini-bar Module: Unable to Track player on card.")
-          }
           let renderData = {
             id: cardID,
             back: (card.face == null || fd.down),
@@ -418,6 +406,17 @@ Hooks.on("getCardsConfigHeaderButtons", function(config, buttons){
       class: "open-stack",
       icon: "fas fa-hand-mini-bar-open-hand",
       onclick: ev => HandMiniBarModule.openStackWindow(config.object)
+    });
+  }
+  return true;
+});
+
+//Mark The Pile with the card info and player ID that passed it that's being passed to it
+Hooks.on("passCards", function(from, to, action){
+  if((action.action === "play" || action.action === "pass") && to.type === "pile"){
+    action.toCreate.forEach(function(c,i){
+      let cardID = c._id ? c._id : c.data._id;
+      to.setFlag(HandMiniBarModule.moduleName, cardID, game.userId);
     });
   }
   return true;
