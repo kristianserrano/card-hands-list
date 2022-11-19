@@ -65,6 +65,9 @@
     "HANDMINIBAR.Reset": "Reset",
     "HANDMINIBAR.Shuffle": "Shuffle",
     "HANDMINIBAR.Draw": "Draw",
-    "HANDMINIBAR.FlipAllCards": "Flip All"
+    "HANDMINIBAR.FlipAllCards": "Flip All",
+    "HANDMINIBAR.CardsStackShortcut":"Display Stack Shortcut",
+    "HANDMINIBAR.CardsStackShortcutHint":"If a pile is chosen a button will appear above everyones hand to open a pile window",
+    "HANDMINIBAR.CardsStackShortcutNoShortcut":"No Shortcut"
 
 }

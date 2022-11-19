@@ -13,6 +13,7 @@ CONFIG.HandMiniBar.options = {
   faceUpMode: false,
   showPlayedPlayerNames: false,
   position:"",
+  cardStackShortcut: "",
   positionDefault:"right_bar",
   cardClick:"play_card"
 };
@@ -380,6 +381,30 @@ window.HandMiniBarModule = {
     });
   },
 
+  updateShortcutButton(){
+    CONFIG.HandMiniBar.options.cardStackShortcut = game.settings.get(HandMiniBarModule.moduleName, "CardsStackShortcut");
+    let shortcut = game.cards.get(CONFIG.HandMiniBar.options.cardStackShortcut);
+    //remove any old buttons then prepend this one
+    $(".hand-mini-bar-pile-shortcut").remove();
+    if(!!shortcut){
+      let data = {shortcut: shortcut,shortcutId:shortcut._id ? shortcut._id : shortcut.data._id};
+      renderTemplate('modules/hand-mini-bar/templates/shortcut-button.html', data).then(
+        content => {
+          content = $(content);
+          $("#hand-mini-bar-container").prepend(content);
+      });
+    }
+  },
+
+  updateShortcutPileChoices:function(){
+    //add pile choices for shortcuts
+    game.cards.forEach(function(cards){
+      if(cards.type === "pile"){
+        game.settings.settings.get("hand-mini-bar.CardsStackShortcut").choices[cards._id ? cards._id : cards.data._id] = cards.name;
+      }
+    });
+  },
+
   //Shows the card image
   showCardImage: async function(card){
     const ip = new ImagePopout(card.img, {
@@ -567,6 +592,23 @@ Hooks.on("init", function() {
     },
     filePicker: false,  // set true with a String `type` to use a file picker input
   });
+  game.settings.register(HandMiniBarModule.moduleName, 'CardsStackShortcut', {
+    name: game.i18n.localize("HANDMINIBAR.CardsStackShortcut"),
+    hint: game.i18n.localize("HANDMINIBAR.CardsStackShortcutHint"),
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: String,       // Number, Boolean, String,
+    choices: {
+      "":game.i18n.localize("HANDMINIBAR.CardsStackShortcutNoShortcut")
+    },
+    default: "",
+    onChange: value => { // value is the new value of the setting
+      CONFIG.HandMiniBar.options.cardStackShortcut = value;
+      HandMiniBarModule.updateShortcutButton();
+
+    },
+    filePicker: false,  // set true with a String `type` to use a file picker input
+  });
 });
 Hooks.on("ready", function() {
   // Pre Load templates.
@@ -578,16 +620,18 @@ Hooks.on("ready", function() {
     'modules/hand-mini-bar/templates/empty-hand-message.html',
     'modules/hand-mini-bar/templates/hand-container.html',
     'modules/hand-mini-bar/templates/hand.html',
-  'modules/hand-mini-bar/templates/window-hand.html'];
+    'modules/hand-mini-bar/templates/shortcut-button.html',
+    'modules/hand-mini-bar/templates/window-hand.html'];
   loadTemplates(templatePaths).then(() => {
     console.log("Better Hand templates preloaded")
   });
+  HandMiniBarModule.updateShortcutPileChoices();
   // Creates the outer container
   renderTemplate('modules/hand-mini-bar/templates/hand-container.html', {}).then(
     content => {
       content = $(content);
       $("#ui-bottom").append(content);
-
+      HandMiniBarModule.updateShortcutButton();
       CONFIG.HandMiniBar.options.position = game.settings.get(HandMiniBarModule.moduleName, "BarPosition");
       HandMiniBarModule.updatePostion();
 
@@ -623,6 +667,10 @@ Hooks.on("ready", function() {
           game.settings.set(HandMiniBarModule.moduleName,'HandCount', value);
           HandMiniBarModule.updateHandCount(value);
         }
+      });
+      $(document).on("click",".hand-mini-bar-pile-shortcut",function(e){
+        let cardsId = $(e.target).data("cards");
+        HandMiniBarModule.openStackWindow(game.cards.get(cardsId));
       });
       //popup card image on message click
       $(document).on("click",".hand-mini-bar-message-card", function(e){
