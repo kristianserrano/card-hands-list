@@ -263,9 +263,25 @@ window.HandMiniBarModule = {
     if(cards.permission !== CONST.DOCUMENT_PERMISSION_LEVELS.OWNER){
       return ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoPermission"));
     }
+    let aFaceDown = false;
+    //check to see if any are flipped over
     cards.cards.forEach(function(card){
-      card.flip();
+      if(aFaceDown == false && card.face == null){
+        aFaceDown = true;
+      }
     });
+    //if flipped over only flip the ones that are faced down
+    if(aFaceDown){
+      cards.cards.forEach(function(card){
+        if(card.face== null){
+          card.flip();
+        }
+      });
+    }else{
+      cards.cards.forEach(function(card){
+        card.flip();
+      });
+    }
     
   },
 
