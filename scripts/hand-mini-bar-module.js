@@ -470,6 +470,15 @@ Hooks.on("passCards", function(from, to, action){
   return true;
 });
 
+Hooks.on('renderCardsDirectory', function(obj, html, data) {
+  for (let li of html.find("li.directory-item.document")) { 
+    let id = $(li).data("document-id");
+    if(game.cards.get(id).permission > CONST.DOCUMENT_PERMISSION_LEVELS.LIMITED){
+      $(li).append("<div class='hand-mini-bar-pile-shortcut' data-cards='" + id + "'/>");
+    }
+  }
+});
+
 Hooks.on("init", function() {
   Handlebars.registerHelper('breaklines', function(text) {
     text = Handlebars.Utils.escapeExpression(text);

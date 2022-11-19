@@ -107,6 +107,7 @@ export class HandMiniBarWindow extends FormApplication {
         isDeck: this.cards.type === "deck",
         isHand: this.cards.type === "hand",
         isPile: this.cards.type === "pile",
+        isOwner: t.cards.permission === CONST.DOCUMENT_PERMISSION_LEVELS.OWNER,
         isFaceUpMode: CONFIG.HandMiniBar.options.faceUpMode,
         options: this.options,
         title: this.title
@@ -137,22 +138,25 @@ export class HandMiniBarWindow extends FormApplication {
     /** @override */
     _getHeaderButtons() {
       let buttons = super._getHeaderButtons();
-      let t = this;
-      buttons.unshift({
-        label: "HANDMINIBAR.OpenCardStack",
-        class: "open-stack",
-        icon: "fas fa-cards",
-        onclick: ev => HandMiniBarModule.openHand(t.cards)
-      });    
-      //this feature is only supported in version 10
-      if ( game.user.isGM && game.version.match(/^10/)) {
+      //only add headers if permissions are sufficient
+      if(this.cards.permission >= CONST.DOCUMENT_PERMISSION_LEVELS.OBSERVER){
+        let t = this;
         buttons.unshift({
-          label: "HANDMINIBAR.ActionShow",
-          class: "share-stack",
-          icon: "fas fa-eye",
-          onclick: () => t.showStack()
-        });
-      } 
+          label: "HANDMINIBAR.OpenCardStack",
+          class: "open-stack",
+          icon: "fas fa-cards",
+          onclick: ev => HandMiniBarModule.openHand(t.cards)
+        });    
+        //this feature is only supported in version 10
+        if ( game.user.isGM && game.version.match(/^10/)) {
+          buttons.unshift({
+            label: "HANDMINIBAR.ActionShow",
+            class: "share-stack",
+            icon: "fas fa-eye",
+            onclick: () => t.showStack()
+          });
+        } 
+      }
       
       return buttons
     }

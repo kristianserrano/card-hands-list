@@ -1,39 +1,41 @@
 <form class="hand-mini-bar-window" autocomplete="off">
-  <div class="hand-mini-bar-window-buttons">
-    {{#unless isFaceUpMode}}
-      <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-cards">
-        <i class="fas hand-mini-bar-flip-icon"></i>
-        {{localize "HANDMINIBAR.FlipAllCards"}}
+  {{#if isOwner}}
+    <div class="hand-mini-bar-window-buttons">
+      {{#unless isFaceUpMode}}
+        <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-cards">
+          <i class="fas hand-mini-bar-flip-icon"></i>
+          {{localize "HANDMINIBAR.FlipAllCards"}}
+        </div>
+      {{/unless}}
+      {{#if isHand}}
+        <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-draw">
+        <i class="fas fa-plus"></i>
+          {{localize "HANDMINIBAR.Draw"}}
+        </div>
+      {{/if}}
+      {{#unless isHand}}
+        <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-shuffle">
+          <i class="fas fa-random"></i>
+          {{localize "HANDMINIBAR.Shuffle"}}
+        </div>
+      {{/unless}}
+      {{#if isDeck}}
+        <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-deal">
+          <i class="fas fa-share-square"></i>
+          {{localize "HANDMINIBAR.Deal"}}
+        </div>
+      {{else}}
+        <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-pass">
+          <i class="fas fa-share-square"></i>
+          {{localize "HANDMINIBAR.Pass"}}
+        </div>
+      {{/if}}
+      <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-reset">
+        <i class="fas fa-undo"></i>
+        {{localize "HANDMINIBAR.Reset"}}
       </div>
-    {{/unless}}
-    {{#if isHand}}
-      <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-draw">
-      <i class="fas fa-plus"></i>
-        {{localize "HANDMINIBAR.Draw"}}
-      </div>
-    {{/if}}
-    {{#unless isHand}}
-      <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-shuffle">
-        <i class="fas fa-random"></i>
-        {{localize "HANDMINIBAR.Shuffle"}}
-      </div>
-    {{/unless}}
-    {{#if isDeck}}
-      <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-deal">
-        <i class="fas fa-share-square"></i>
-        {{localize "HANDMINIBAR.Deal"}}
-      </div>
-    {{else}}
-      <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-pass">
-        <i class="fas fa-share-square"></i>
-        {{localize "HANDMINIBAR.Pass"}}
-      </div>
-    {{/if}}
-    <div class="hand-mini-bar-window-button hand-mini-bar-flip-all-reset">
-      <i class="fas fa-undo"></i>
-      {{localize "HANDMINIBAR.Reset"}}
     </div>
-  </div>
+  {{/if}}
   <div class="hand-mini-bar-window-cards {{pileType}} {{#if showPlayers}}show-players{{/if}}">
     <!-- If a deck only show cards that aren't played yet -->
     <!-- if show players is set then the cards are separated into player lists -->

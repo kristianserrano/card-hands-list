@@ -397,6 +397,7 @@ div#hand-mini-bar-container{
     height:100%;
 }
 
+
 .hand-mini-bar-window-cards{    
     max-width: 100%;
     height: calc(100% - 33px);
@@ -405,10 +406,10 @@ div#hand-mini-bar-container{
 }
 
 .hand-mini-bar-pile-shortcut-container{
-    margin-left:10px;
+    margin-left:9px;
 }
 
-.hand-mini-bar-pile-shortcut{
+.hand-mini-bar-pile-shortcut-container .hand-mini-bar-pile-shortcut{
     max-width: 154px;
     min-width: 154px;
     max-height: 52px;
@@ -424,6 +425,15 @@ div#hand-mini-bar-container{
     margin: auto;
     margin-bottom:-22px;    
     pointer-events: all;
+}
+.directory-item .hand-mini-bar-pile-shortcut{    background-image: url(/modules/hand-mini-bar/artwork/cards.png);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    width: 40px;
+    max-width: 40px;
+    background-position: 4px;
+    margin-right: 2px;
+    cursor: pointer;
 }
 
 .hand-mini-bar-pile-shortcut:hover{
