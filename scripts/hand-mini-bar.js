@@ -300,59 +300,67 @@ export default class HandMiniBar{
   }
   //The GM is a able to select a user for each Toolbar
   async chooseUserDialog(){
-    let usersAvailable = {};
     let t = this;
-    let userChosen = function(choice){
-      t.setUserOption(choice);
-    };
+    let userHTML = $("<select class='hand-mini-bar-user-selection' name='users'/>");
     game.users.forEach(async function(c){
-          usersAvailable[c.name] = {
-            label: c.name,
-            callback: function(){userChosen(c)}
-          };
+      let id = c._id?c._id:c.data._id;
+      userHTML.append("<option value='" + id + "'>" + c.name + "</option>");
     });
-    let d = new Dialog({
+    userHTML = $("<div class='hand-mini-bar-option-container'/>").append(userHTML)
+    new Dialog({
       title: game.i18n.localize("HANDMINIBAR.UserList"),
-      content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseUser") + '</p>',
-      buttons: usersAvailable
-    });
-    d.render(true);
+      content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseUser") + '</p>' + userHTML[0].outerHTML,
+      buttons: {
+        ok: {
+          label: "OK",
+          callback: function(html){
+            let id = $(html).find(".hand-mini-bar-user-selection").val();
+            let choice = game.users.get(id);
+            t.setUserOption(choice);
+          }
+        },
+
+        cancel: {
+          label: "Cancel",
+          callback: function(){}
+        }
+      }
+    }).render(true);
   }
   //Select a hand for this Toolbar
   async chooseHandDialog(){
-    let handsAvailable = {};
     let t = this;
-    let handChosen = function(choice){
-      t.setCardsOption(choice);
-    };
-    let count = 0;
+
+    let userHTML = $("<select class='hand-mini-bar-hand-selection' name='users'/>");
+    userHTML.append("<option>" + game.i18n.localize("HANDMINIBAR.NoHand") + "</option>");
     game.cards.forEach(async function(c){
       if((c.permission == CONST.DOCUMENT_PERMISSION_LEVELS.OBSERVER ||
           c.permission == CONST.DOCUMENT_PERMISSION_LEVELS.OWNER) &&
           c.type == "hand"){
-          count++;
-          handsAvailable[c.name] = {
-            icon: '<img src="' + c.thumbnail + '"></img>',
-            label: c.name,
-            callback: function(){handChosen(c)}
-          };
-      }
+            let id = c._id ? c._id : c.data._id;
+            userHTML.append("<option value='" + id + "'>" + c.name + "</option>");
+          }
     });
-    //The ability to set "No Hand" to this toolbar
-    handsAvailable[game.i18n.localize("HANDMINIBAR.NoHand")] = {
-      label: game.i18n.localize("HANDMINIBAR.NoHand"),
-      callback: function(){handChosen(undefined)}
-    };
-    if(count == 0){
-      ui.notifications.info( game.i18n.localize("HANDMINIBAR.NoAvailableHands"));
-    }else{
-      let d = new Dialog({
-        title: game.i18n.localize("HANDMINIBAR.DeckList"),
-        content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseHand") + '</p>',
-        buttons: handsAvailable
-      });
-      d.render(true);
-    }
+    userHTML = $("<div class='hand-mini-bar-option-container'/>").append(userHTML)
+    new Dialog({
+      title: game.i18n.localize("HANDMINIBAR.DeckList"),
+      content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseUser") + '</p>' + userHTML[0].outerHTML,
+      buttons: {
+        ok: {
+          label: "OK",
+          callback: function(html){
+            let id = $(html).find(".hand-mini-bar-hand-selection").val();
+            let choice = game.cards.get(id);
+            t.setCardsOption(choice);
+          }
+        },
+
+        cancel: {
+          label: "Cancel",
+          callback: function(){}
+        }
+      }
+    }).render(true);
   }
   async resetToolbarDialog(){
     if(this.currentCards == undefined){

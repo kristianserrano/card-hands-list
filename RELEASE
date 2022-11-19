@@ -2,6 +2,7 @@ Update 1.3.2
 - Fixed Flip all is context sensitive and will face up all cards if one is flipped
 - Fixed only show the top bar of window buttons for Owner levels
 - Fixed only show header buttons for Owner or Observer levels
+- Changed Player and Hands lists to be drop downs instead of buttons
 - Added pile shortcut above the hand mini bars (optional setting)
 - Added Window Shortcut buttons to the directory list of buttons
 

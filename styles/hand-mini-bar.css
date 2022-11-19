@@ -541,6 +541,9 @@ div#hand-mini-bar-container{
     margin: 2px;
     overflow: hidden;
 }
+.hand-mini-bar-option-container{
+    margin:8px 0px;
+}
 
 /* Shrink macro bar sooner*/
 @media (max-width: 1316px)
