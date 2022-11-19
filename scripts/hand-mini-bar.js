@@ -344,7 +344,7 @@ export default class HandMiniBar{
     userHTML = $("<div class='hand-mini-bar-option-container'/>").append(userHTML)
     new Dialog({
       title: game.i18n.localize("HANDMINIBAR.DeckList"),
-      content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseUser") + '</p>' + userHTML[0].outerHTML,
+      content: '<p>' + game.i18n.localize("HANDMINIBAR.ChooseHand") + '</p>' + userHTML[0].outerHTML,
       buttons: {
         ok: {
           label: "OK",
