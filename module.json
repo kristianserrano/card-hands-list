@@ -1,21 +1,19 @@
 {
-  "name": "hand-mini-bar",
   "title": "Card Hand Mini Toolbar",
   "description": "A module to display a players hand of cards on the screen in a small toolbar",
-  "author": "pengrath",
   "version": "1.3.1",
-  "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "10",
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     },
     {
       "lang": "ja",
       "name": "日本語",
-      "path": "lang/ja.json"
+      "path": "lang/ja.json",
+      "flags": {}
     }
   ],
   "authors": [
@@ -23,7 +21,8 @@
       "name": "Pengrath",
       "email": "pengrath@gmail.com",
       "discord": "pengrath#6083",
-      "url": "https://gitlab.com/pengrath"
+      "url": "https://gitlab.com/pengrath",
+      "flags": {}
     }
   ],
   "esmodules": [
@@ -31,9 +30,14 @@
   ],
   "styles": [
     "styles/hand-mini-bar.css"
-  ],  
+  ],
   "socket": true,
   "url": "https://gitlab.com/pengrath/hand-mini-bar",
   "manifest": "https://gitlab.com/pengrath/hand-mini-bar/-/raw/main/module.json",
-  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.3.1/hand-mini-bar-v1.3.1.zip"
+  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.3.1/hand-mini-bar-v1.3.1.zip",
+  "id": "hand-mini-bar",
+  "compatibility": {
+    "minimum": "9",
+    "verified": "10"
+  }
 }

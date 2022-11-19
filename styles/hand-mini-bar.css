@@ -404,6 +404,10 @@ div#hand-mini-bar-container{
     flex-grow: 1;
 }
 
+.hand-mini-bar-pile-shortcut-container{
+    margin-left:10px;
+}
+
 .hand-mini-bar-pile-shortcut{
     max-width: 154px;
     min-width: 154px;

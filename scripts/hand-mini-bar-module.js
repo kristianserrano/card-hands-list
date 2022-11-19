@@ -385,7 +385,7 @@ window.HandMiniBarModule = {
     CONFIG.HandMiniBar.options.cardStackShortcut = game.settings.get(HandMiniBarModule.moduleName, "CardsStackShortcut");
     let shortcut = game.cards.get(CONFIG.HandMiniBar.options.cardStackShortcut);
     //remove any old buttons then prepend this one
-    $(".hand-mini-bar-pile-shortcut").remove();
+    $(".hand-mini-bar-pile-shortcut-container").remove();
     if(!!shortcut){
       let data = {shortcut: shortcut,shortcutId:shortcut._id ? shortcut._id : shortcut.data._id};
       renderTemplate('modules/hand-mini-bar/templates/shortcut-button.html', data).then(
