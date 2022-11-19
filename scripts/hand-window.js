@@ -65,7 +65,19 @@ export class HandMiniBarWindow extends FormApplication {
         let data = {};
         cards.forEach(function (c, i){
           let cardId = c._id ? c._id: c.data._id;
-          let playerId = t.cards.getFlag(HandMiniBarModule.moduleName, cardId);
+          let playerId = undefined;
+          let latest = 0;
+          //get the person that played or past this card last
+          game.users.forEach(function(u,i){
+            let history = u.getFlag(HandMiniBarModule.moduleName, HandMiniBarModule.playerPlayedProp);
+            if(!!history){
+              let time = history[cardId];
+              if(!!time && time > latest){
+                latest = time;
+                playerId = u._id ? u._id : u.data._id;
+              }
+            }
+          });
           if(playerId === undefined){
             playerId = t.cards.name;
           }

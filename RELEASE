@@ -1,3 +1,7 @@
+Update 1.3.1
+- Fixed card tracking issues by storing player played history on the user object
+- Fixed only stores data when needed and the showPlayerNames Option is turned on
+
 Update 1.3.0
 - Added tracking who played cards to piles, and can show in the pile with a
 setting

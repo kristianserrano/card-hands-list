@@ -21,6 +21,7 @@ window.HandMiniBarModule = {
   handMiniBarList: new Array(),
   moduleName:"hand-mini-bar",
   eventName:"module.hand-mini-bar",
+  playerPlayedProp:"player-played",
   handMax: 10,
   updatePostion:function(){
     let position = CONFIG.HandMiniBar.options.position;
@@ -413,10 +414,16 @@ Hooks.on("getCardsConfigHeaderButtons", function(config, buttons){
 
 //Mark The Pile with the card info and player ID that passed it that's being passed to it
 Hooks.on("passCards", function(from, to, action){
-  if((action.action === "play" || action.action === "pass") && to.type === "pile"){
+  //track who played what if this flag is turned on showPlayedPlayerNames 
+  if((action.action === "play" || action.action === "pass") && to.type === "pile" && CONFIG.HandMiniBar.options.showPlayedPlayerNames){
     action.toCreate.forEach(function(c,i){
       let cardID = c._id ? c._id : c.data._id;
-      to.setFlag(HandMiniBarModule.moduleName, cardID, game.userId);
+      let history = game.user.getFlag(HandMiniBarModule.moduleName, HandMiniBarModule.playerPlayedProp);
+      if(history === undefined){
+        history = {};
+      }
+      history[cardID] = Date.now();
+      game.user.setFlag(HandMiniBarModule.moduleName, HandMiniBarModule.playerPlayedProp, history);
     });
   }
   return true;

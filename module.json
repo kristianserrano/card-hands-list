@@ -3,7 +3,7 @@
   "title": "Card Hand Mini Toolbar",
   "description": "A module to display a players hand of cards on the screen in a small toolbar",
   "author": "pengrath",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "10",
   "languages": [
@@ -35,5 +35,5 @@
   "socket": true,
   "url": "https://gitlab.com/pengrath/hand-mini-bar",
   "manifest": "https://gitlab.com/pengrath/hand-mini-bar/-/raw/main/module.json",
-  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.3.0/hand-mini-bar-v1.3.0.zip"
+  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.3.1/hand-mini-bar-v1.3.1.zip"
 }
