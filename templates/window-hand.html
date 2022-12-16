@@ -53,7 +53,11 @@
       {{/each}}
     {{else if isHand}}
       {{#each cards}}
-        <div class="hand-mini-bar-window-card card" style="background-image:url('{{this.img}}')" title="{{this.name}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true">
+        <div class="hand-mini-bar-window-cards-row">
+          {{#each this}}
+            <div class="hand-mini-bar-window-card card" style="background-image:url('{{this.img}}')" title="{{this.name}}" data-card-id="{{this.id}}" data-card-uuid="{{this.uuid}}" data-cards-id="{{cardsid}}" data-img="{{this.img}}" draggable="true">
+            </div>
+          {{/each}}
         </div>
       {{/each}}
     <!-- If a pile or Deck show all cards in grid-->

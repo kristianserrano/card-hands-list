@@ -6,10 +6,19 @@ export class HandMiniBarWindow extends FormApplication {
       super(cards, {});
       this.cards = cards;
       let t = this;
+
+      /* weak these for better card fitting for the window */
+      this.bestFitHeight = 230;
+      this.buttonHeight = 30;
+      this.handRowSize = 5;
       
       //If tha hand has more than 3 cards or this is a pile or deck initialize with more room
       if(this.cards.type === "pile" || this.cards.type === "deck"){
         this.position.height = 750;
+      }else{
+        let rowCount = Math.ceil(cards.cards.size / this.handRowSize);
+        this.position.height = (rowCount * this.bestFitHeight) + this.buttonHeight;
+
       }
       /**
        * Hooks to listen to changes in this hand
@@ -96,8 +105,22 @@ export class HandMiniBarWindow extends FormApplication {
           }
         });
         cards = data;
-      }else if(this.cards.type !== "hand"){
-        
+      }else if(this.cards.type === "hand"){
+        let data = [];
+        for(let i = 0; i < cards.length; i++){
+          if(i % this.handRowSize === 0){
+            data.push([]);
+          }
+          data[data.length - 1].push(cards[i]);
+        }
+        //resize the height if more rows are added and it needs to grow
+        let rowCount = Math.ceil(cards.length / this.handRowSize);
+        let newHeight = (rowCount * this.bestFitHeight) + this.buttonHeight;
+        if(this.position.height < newHeight){
+          this.position.height = newHeight;
+        }
+
+        cards = data;
       }
       return {
         cards: cards,

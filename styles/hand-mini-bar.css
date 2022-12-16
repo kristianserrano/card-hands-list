@@ -450,6 +450,24 @@ div#hand-mini-bar-container{
     flex-flow: wrap;
 }
 
+.hand-mini-bar-window-cards.hand{    
+    max-width: 100%;
+    height: calc(100% - 33px);
+    display: table;
+    width: 100%;
+}
+
+.hand-mini-bar-window-cards-row{
+    max-width: 100%;
+    height: calc(100% - 33px);
+    display: table-row;
+    flex-grow: 1;
+    flex-direction: row;
+}
+.hand-mini-bar-window-cards-row .card{
+    display: table-cell;
+}
+
 .hand-mini-bar-window-cards.pile.show-players{    
     overflow-x: scroll;
     flex-flow:nowrap;
