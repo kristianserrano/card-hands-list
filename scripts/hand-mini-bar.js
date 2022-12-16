@@ -43,7 +43,7 @@ export default class HandMiniBar{
             content.find('.hand-mini-bar-settings-choose').click(function(e){t.chooseDialog(e)});
             content.find('.hand-mini-bar-settings-choose').contextmenu(function(e){t.resetToolbarDialog(e)});
             content.find('.hand-mini-bar-pass').click(function(e){t.passCards(e)});
-            content.find('.hand-mini-bar-pass').contextmenu(function(e){t.resetHand(e)});
+            content.find('.hand-mini-bar-pass').contextmenu(function(e){t.currentCards.resetDialog()});
             content.find('.hand-mini-bar-draw').click(function(e){t.drawCard(e)});
             $('#hand-mini-bar-hands-container').prepend(content);
             t.restore();
@@ -427,20 +427,6 @@ export default class HandMiniBar{
       },
       rejectClose: false,
       options: {jQuery: false}
-    });
-  }
-  //Resets this hand
-  async resetHand(e){
-    if(this.currentCards == undefined){
-      ui.notifications.warn( game.i18n.localize("HANDMINIBAR.NoHandSelected"));
-      return;
-    }
-    let d = Dialog.confirm({
-      title: game.i18n.localize("HANDMINIBAR.ResetHandConfirmTitle"),
-      content: "<p>" + game.i18n.localize("HANDMINIBAR.ResetHandConfirmQuestion") + "</p>",
-      yes: () => this.currentCards.reset({ chatNotification: !CONFIG.HandMiniBar.options.hideMessages }),
-      no: function(){},//do nothing
-      defaultYes: true
     });
   }
   //Brings up the pass cards dialog
