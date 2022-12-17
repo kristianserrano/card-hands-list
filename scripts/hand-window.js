@@ -17,6 +17,9 @@ export class HandMiniBarWindow extends FormApplication {
         this.position.height = 750;
       }else{
         let rowCount = Math.ceil(cards.cards.size / this.handRowSize);
+        if(rowCount > 3){
+          rowCount = 4;
+        }
         this.position.height = (rowCount * this.bestFitHeight) + this.buttonHeight;
 
       }
@@ -115,6 +118,9 @@ export class HandMiniBarWindow extends FormApplication {
         }
         //resize the height if more rows are added and it needs to grow
         let rowCount = Math.ceil(cards.length / this.handRowSize);
+        if(rowCount > 3){
+          rowCount = 4;
+        }
         let newHeight = (rowCount * this.bestFitHeight) + this.buttonHeight;
         if(this.position.height < newHeight){
           this.position.height = newHeight;

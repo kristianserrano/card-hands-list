@@ -1,5 +1,6 @@
 Update 1.3.4
 - Fix right click reset cards in hand to pass them back to the deck
+- Limit number of rows in for hand windows
 
 Update 1.3.3
 - Tweaked the code to have better fitting calculations for hand windows
