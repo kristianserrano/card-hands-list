@@ -7,7 +7,7 @@ export class HandMiniBarWindow extends FormApplication {
       this.cards = cards;
       let t = this;
 
-      /* weak these for better card fitting for the window */
+      /* tweak these for better card fitting for the window */
       this.bestFitHeight = 230;
       this.buttonHeight = 30;
       this.handRowSize = 5;
@@ -20,8 +20,9 @@ export class HandMiniBarWindow extends FormApplication {
         if(rowCount > 3){
           rowCount = 4;
         }
-        this.position.height = (rowCount * this.bestFitHeight) + this.buttonHeight;
-
+        if(rowCount !== 0){
+          this.position.height = (rowCount * this.bestFitHeight) + this.buttonHeight;
+        }
       }
       /**
        * Hooks to listen to changes in this hand
