@@ -350,7 +350,7 @@ window.HandMiniBarModule = {
             img: img,
             name:(card.face !== null && !fd.down) ? card.name : game.i18n.localize("HANDMINIBAR.CardHidden"),
             description: (card.face !== null && !fd.down) ? desc : null,
-            action: "Played"
+            action: game.i18n.localize("HANDMINIBAR.CardPlayed")
           };
 
           renderTemplate('modules/hand-mini-bar/templates/chat-message.html', renderData).then(

@@ -1,6 +1,8 @@
 Update 1.3.4
 - Fix right click reset cards in hand to pass them back to the deck
+- French localization by Pepel
 - Limit number of rows in for hand windows
+- fix empty hand size
 
 Update 1.3.3
 - Tweaked the code to have better fitting calculations for hand windows
