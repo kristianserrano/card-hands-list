@@ -6,7 +6,7 @@
     "HANDMINIBAR.ChooseHand":"手札を選択",
     "HANDMINIBAR.NoAvailableHands":"このユーザーは利用可能な手札を持っていない。",
     "HANDMINIBAR.CardBack":"戻る",
-	"HANDMINIBAR.CardPlayed": "Played",
+    "HANDMINIBAR.CardPlayed": "カードプレイ",
     "HANDMINIBAR.CardHidden":"隠す",
     "HANDMINIBAR.AddCard":"カードを引く",
     "HANDMINIBAR.ResetHandConfirmTitle":"手札リセット",
