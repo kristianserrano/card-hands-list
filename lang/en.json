@@ -7,6 +7,7 @@
     "HANDMINIBAR.ChooseHand":"Select a Hand for the Toolbar",
     "HANDMINIBAR.NoAvailableHands":"This user does not have any available hands.",
     "HANDMINIBAR.CardBack":"Back",
+    "HANDMINIBAR.CardPlayed":"Played",
     "HANDMINIBAR.CardHidden":"Hidden",
     "HANDMINIBAR.AddCard":"Draw Cards",
     "HANDMINIBAR.ResetHandConfirmTitle":"Reset Hand",
