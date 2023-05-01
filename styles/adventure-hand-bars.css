@@ -1,0 +1,594 @@
+/* Fixes bug when combined with WebRTC Tweaks module */
+#ui-top {
+    min-height: 0;
+}
+
+#fps {
+    font-size: 0.8em;
+    width: max-content;
+    padding: 0 0.5em;
+    margin-right: 0;
+    line-height: 1.5;
+    order: 3;
+}
+
+#adventure-hand-bars-container {
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+
+#adventure-hand-bar-hands-container {
+    display: flex;
+    flex-direction: column;
+    transition: all 500ms ease-in-out;
+    overflow: hidden;
+    align-items: center;
+    gap: 4px;
+}
+
+#adventure-hand-bars-container.adventure-hand-bar-above-players {
+    width: var(--players-width);
+    margin: 0 5px 10px 15px;
+    padding: 0;
+    background: url(../ui/denim075.png) repeat;
+    border: 1px solid var(--color-border-dark);
+}
+
+#adventure-hand-bars-container.hidden #adventure-hand-bar-hands-container {
+    max-height: 0px;
+    padding-bottom: 0px;
+}
+
+.adventure-hand-bar-buttons-container {
+    display: flex;
+    flex-grow: 1;
+    filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.5));
+    transition: transform 0.2s ease-in, z-index 0.2s step-start;
+    justify-content: space-between;
+}
+
+.adventure-hand-bar-buttons-container:hover,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container {
+    max-height: 22px;
+}
+
+.adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hidden-buttons,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons {
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-right: 32px;
+    padding: 0 4px;
+}
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons {
+    justify-content: center;
+}
+.adventure-hand-bar-hidden-buttons,
+.adventure-hand-bar-buttons-container:hover .adventure-hand-bar-show-buttons,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-show-buttons,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-add-bar,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-subtract-bar {
+    display: none;
+}
+
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hide-show {
+    transform: rotate(0deg);
+    margin-bottom: 0px;
+}
+
+.adventure-hand-bar-buttons-container .adventure-hand-bar-hide-show {
+    transform: rotate(180deg);
+}
+
+.adventure-hand-bar-buttons-container * {
+    font-size: 16px;
+    text-align: center;
+    line-height: 16px;
+    color: #c9c7b8;
+    cursor: pointer;
+    pointer-events: all;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
+}
+
+.adventure-hand-bar-show-buttons {
+    /* max-height: 10px; */
+    width: 100%;
+    margin-top: -8px;
+    margin-right: 23px;
+    margin-right: 35px;
+    font-size: 26px;
+    line-height: 0px;
+    /* -webkit-text-stroke-color: black; */
+    /* -webkit-text-stroke-width: 1px; */
+}
+
+.adventure-hand-bar-show-buttons.hide {
+    display: none;
+}
+
+.adventure-hand-bar-hand {
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text-light-highlight);
+    pointer-events: all;
+    width: 100%;
+    align-items: center;
+}
+
+.adventure-hand-bar-hand-inner {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    border-radius: 4px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.adventure-hand-bar-hand-name {
+    display: flex;
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+    flex-basis: 100%;
+    text-overflow: ellipsis;
+}
+
+.adventure-hand-bar-settings,
+.adventure-hand-bar-actions {
+    display: flex;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-around;
+    color: #c9c7b8;
+    box-shadow: 0 0 3px #444 inset;
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-border-dark);
+}
+
+.adventure-hand-bar-settings {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.adventure-hand-bar-actions {
+    border-radius: 4px;
+}
+
+.adventure-hand-bar-settings-hand {
+    background-image: url(/modules/adventure-hand-bar/artwork/cards.png);
+    background-size: 20px;
+    background-repeat: no-repeat;
+    width: 23px;
+    height: 27px;
+    background-position-y: 1px;
+    background-position-x: 0px;
+    border: 1px solid #000;
+    border-radius: 5px 0 0 0;
+    color: #c9c7b8;
+}
+
+.adventure-hand-bar-button {
+    color: #c9c7b8;
+    font-size: 16px;
+    padding-left: 1px;
+    line-height: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.adventure-hand-bar-reset {
+    width: 23px;
+    height: 26px;
+    background-position-y: 7px;
+    border: 1px solid #000;
+    border-radius: 0 0 5px 0;
+    color: #c9c7b8;
+    padding-left: 2px;
+    font-size: 22px;
+    line-height: 23px;
+}
+
+.adventure-hand-bar-reset:before {
+    content: "\21bb";
+}
+
+.adventure-hand-bar-pass {
+    width: 23px;
+    height: 26px;
+    background-position-y: 7px;
+    border: 1px solid #000;
+    border-radius: 0 0 5px 0;
+    color: #c9c7b8;
+    padding-left: 2px;
+    font-size: 22px;
+    line-height: 23px;
+}
+
+.adventure-hand-bar-pass:before {
+    content: "\21aa";
+}
+
+.adventure-hand-bar-draw {
+    color: #c9c7b8;
+    border-radius: 0 5px 0 0;
+}
+
+.adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons *:hover {
+    filter: drop-shadow(0px 0px 2px #fff);
+}
+
+.adventure-hand-bar-settings-choose:hover,
+.adventure-hand-bar-pass:hover,
+.adventure-hand-bar-settings-hand:hover,
+.adventure-hand-bar-draw:hover {
+    text-shadow: 0 0 8px var(--color-shadow-primary);
+}
+
+.adventure-hand-bar-card-container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    height: auto;
+    width: 75%;
+    border-top: 1px solid #000;
+    border: 1px solid var(--color-border-dark);
+    cursor: zoom-in;
+    box-shadow: 0 0 5px #444 inset;
+    background: rgba(0, 0, 0, 0.5);
+    min-height: 50px;
+    border-radius: 4px;
+    gap: 0;
+    justify-content: start;
+    overflow: auto;
+}
+
+.adventure-hand-bar-card-container:hover {
+    box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
+    border: 1px solid var(--color-border-highlight-alt);
+}
+
+.adventure-hand-bar-card {
+    max-height: 48px;
+    margin-right: -14px;
+    filter: drop-shadow(0px 0px 1px #000);
+    transition: margin 500ms;
+    border: 1px solid var(--color-border-dark);
+    width: 35px;
+}
+
+.adventure-hand-bar-card img {
+    object-fit: contain;
+    height: 100%;
+    display: block;
+}
+
+.adventure-hand-bar-message {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.adventure-hand-bar-message-info {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    max-width: 224px;
+    padding-left: 4px;
+}
+
+.adventure-hand-bar-message-name {
+    margin-bottom: 2px;
+}
+
+.adventure-hand-bar-play-dialog-description,
+.adventure-hand-bar-play-dialog-face-description {
+    text-align: center;
+    margin: 0px;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+div.separator {
+    margin: 3px auto 0px auto;
+    width: 30px;
+    height: 6px;
+    border-top: solid 1px #000;
+}
+
+.adventure-hand-bar-message-description {
+    font-size: smaller;
+}
+
+.adventure-hand-bar-message-card {
+    height: 50px;
+    width: 50px;
+    background-position: center;
+    background-size: auto 50px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.5));
+    transition: transform 0.2s ease-in, z-index 0.2s step-start;
+}
+
+.empty-hand-message {
+    padding: 8px;
+    font-size: 0.85em;
+    height: 50px;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* For displaying at the bottom-right of the screen*/
+#ui-bottom.adventure-hand-bar {
+    gap: 5px;
+    display: flex;
+    align-items: end;
+}
+
+.adventure-hand-bar-left #hotbar {
+    order: 2;
+}
+
+.adventure-hand-bar-right #hotbar {
+    order: 1;
+}
+
+.adventure-hand-bar #camera-views .camera-view {
+    height: auto;
+}
+
+#hotbar .bar-controls {
+    justify-content: space-between;
+}
+
+#hotbar .bar-controls a,
+#hotbar .bar-controls span.page-number {
+    flex: 0;
+}
+
+#ui-bottom.adventure-hand-bar > div {
+    display: inline-flex;
+    align-items: end;
+    width: 100%;
+    justify-content: start;
+}
+
+#ui-bottom.adventure-hand-bar div#camera-views {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+div#adventure-hand-bars-container {
+    justify-content: end;
+    gap: 3px;
+}
+
+#ui-bottom.adventure-hand-bar div#adventure-hand-bars-container {
+    display: inline-flex;
+    width: 160px;
+}
+
+#ui-bottom.adventure-hand-bar-left div#adventure-hand-bars-container {
+    order: 1;
+}
+
+#ui-bottom.adventure-hand-bar-right div#adventure-hand-bars-container {
+    order: 2;
+}
+
+@media (min-width: 1420px) {
+    #ui-bottom.adventure-hand-bar-left div#adventure-hand-bars-container,
+    #ui-bottom.adventure-hand-bar-right div#adventure-hand-bars-container {
+        width: 160px;
+    }
+}
+
+/* Window popup css*/
+.adventure-hand-bar-hand-popout .window-content {
+    background: transparent;
+}
+
+.adventure-hand-bar-window {
+    height: 100%;
+}
+
+.adventure-hand-bar-window-cards {
+    max-width: 100%;
+    height: calc(100% - 33px);
+    display: flex;
+    flex-grow: 1;
+}
+
+.adventure-hand-bar-pile-shortcut-container {
+    /* display: flex; */
+    /* justify-content: center; */
+    width: 80%;
+    padding: 0.5em;
+    font-size: 0.9em;
+    color: #c9c7b8;
+    text-shadow: 2px 2px #000;
+    text-align: center;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.adventure-hand-bar-pile-shortcut-container:hover {
+    outline: none;
+    text-shadow: 0 0 8px var(--color-shadow-primary);
+}
+
+.directory-item .adventure-hand-bar-pile-shortcut {
+    background-image: url(/modules/adventure-hand-bar/artwork/cards.png);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    width: 40px;
+    max-width: 40px;
+    background-position: 4px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+
+.adventure-hand-bar-window-cards.deck,
+.adventure-hand-bar-window-cards.pile {
+    max-width: 100%;
+    height: calc(100% - 33px);
+    display: flex;
+    flex-grow: 1;
+    flex-flow: wrap;
+}
+
+.adventure-hand-bar-window-cards.hand {
+    max-width: 100%;
+    height: calc(100% - 33px);
+    display: table;
+    width: 100%;
+}
+
+.adventure-hand-bar-window-cards-row {
+    max-width: 100%;
+    height: calc(100% - 33px);
+    display: table-row;
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.adventure-hand-bar-window-cards-row .card {
+    display: table-cell;
+}
+
+.adventure-hand-bar-window-cards.pile.show-players {
+    overflow-x: scroll;
+    flex-flow: nowrap;
+}
+
+.adventure-hand-bar-window-cards.pile.show-players .adventure-hand-bar-window-card {
+    margin: 10px;
+}
+
+.adventure-hand-bar-window-cards.deck .adventure-hand-bar-window-card,
+.adventure-hand-bar-window-cards.pile .adventure-hand-bar-window-card {
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin: 6px;
+    filter: drop-shadow(0px 0px 6px #000);
+    border: none;
+    flex-grow: 1;
+    max-height: 114px;
+    min-width: 100px;
+    min-height: 165px;
+}
+
+.adventure-hand-bar-window-card {
+    min-height: 300px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin: 6px;
+    filter: drop-shadow(0px 0px 6px #000);
+    border: none;
+    flex-grow: 1;
+}
+
+.fa-adventure-hand-bar-open-hand {
+    background-image: url(/modules/adventure-hand-bar/artwork/cards.png);
+    width: 15px;
+    height: 15px;
+    background-size: contain;
+    display: block;
+    margin-top: 6px;
+    background-repeat: no-repeat;
+    float: left;
+}
+
+.adventure-hand-bar-window-buttons {
+    display: flex;
+    top: 0;
+    padding-bottom: 3px;
+}
+
+.adventure-hand-bar-window-button {
+    flex-grow: 1;
+    max-width: 33%;
+    margin: 0 1px;
+    background: rgba(255, 255, 240, 1);
+    border: 1px solid var(--color-border-light-primary);
+    border-radius: 3px;
+    font-size: var(--font-size-14);
+    line-height: 28px;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    text-align: center;
+    background: url(../../..//ui/parchment.jpg) repeat;
+}
+
+.adventure-hand-bar-window-button:hover {
+    outline: none;
+    box-shadow: 0 0 5px var(--color-shadow-primary);
+}
+
+.adventure-hand-bar-window-player-container {
+    margin-right: 2px;
+}
+
+.adventure-hand-bar-window-player-container-name {
+    color: var(--color-border-light-primary);
+    border: 1px solid var(--color-border-light-primary);
+    text-align: center;
+    border-radius: 8px;
+    background-color: #000;
+    margin-bottom: 0px;
+}
+
+.adventure-hand-bar-window-player-container-cards {
+    width: 130px;
+    margin: 2px;
+    overflow: hidden;
+}
+
+.adventure-hand-bar-option-container {
+    margin: 8px 0px;
+}
+
+@media (max-width: 1118px) {
+    .adventure-hand-bar-left .adventure-hand-bar-pile-shortcut-container,
+    .adventure-hand-bar-right .adventure-hand-bar-pile-shortcut-container {
+        font-size: 0.7em;
+    }
+    .adventure-hand-bar-left .adventure-hand-bar-hand-inner,
+    .adventure-hand-bar-right .adventure-hand-bar-hand-inner {
+        flex-direction: column;
+    }
+
+    #ui-bottom.adventure-hand-bar.adventure-hand-bar-left div#adventure-hand-bars-container,
+    #ui-bottom.adventure-hand-bar.adventure-hand-bar-right div#adventure-hand-bars-container {
+        width: min-content;
+    }
+    .adventure-hand-bar-left .adventure-hand-bar-card-container,
+    .adventure-hand-bar-right .adventure-hand-bar-card-container {
+        width: 100%;
+    }
+    .adventure-hand-bar-left .adventure-hand-bar-settings,
+    .adventure-hand-bar-right .adventure-hand-bar-settings,
+    .adventure-hand-bar-left .adventure-hand-bar-actions,
+    .adventure-hand-bar-right .adventure-hand-bar-actions {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 1316px) {
+    #hotbar {
+        width: calc(var(--hotbar-width) / 2 + 38px);
+        height: calc(var(--hotbar-height) * 2);
+    }
+    #hotbar #macro-list {
+        grid-template-columns: repeat(5, 50px);
+    }
+}

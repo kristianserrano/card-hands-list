@@ -56,7 +56,7 @@ Update 1.2.3
 Update 1.2.2
 - Fixed Play Dialog not working
 - Fixed Pass Dialog Deprecated method
-- Fixed undefined socket Errors 
+- Fixed undefined socket Errors
 - Fixed Description in chat message v9
 
 Update 1.2.1
@@ -100,7 +100,7 @@ Update 1.0.3
 
 Update 1.0.2
 - Refactored to make it easier to extend
-    - CONFIG.HandMiniBar.documentClass
+    - CONFIG.AdventureHandBar.documentClass
     - separated out drag and drop methods so they can be customized
 - Card image in the message is now clickable to popup artwork
 - descriptions can now have new lines

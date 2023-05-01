@@ -1,28 +1,20 @@
 {
-  "title": "Card Hand Mini Toolbar",
-  "description": "A module to display a players hand of cards on the screen in a small toolbar",
+  "title": "Adventure Cards Hand Toolbar for SWADE",
+  "id": "adventure-hand-bars",
+  "description": "A module to display a player's Adventure Cards on the screen in a small toolbar",
   "version": "1.3.5",
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json",
-      "flags": {}
-    },
-    {
-      "lang": "fr",
-      "name": "Français",
-      "path": "lang/fr.json",
-      "flags": {}
-    },
-    {
-      "lang": "ja",
-      "name": "日本語",
-      "path": "lang/ja.json",
-      "flags": {}
-    }
-  ],
+  "compatibility": {
+    "minimum": "10",
+    "verified": "11"
+  },
   "authors": [
+    {
+      "name": "Kristian Serrano",
+      "email": "kristianserrano@gmail.com",
+      "discord": "Kristian Serrano#5077",
+      "url": "https://gitlab.com/kristianserrano",
+      "flags": {}
+    },
     {
       "name": "Pengrath",
       "email": "pengrath@gmail.com",
@@ -32,18 +24,20 @@
     }
   ],
   "esmodules": [
-    "scripts/hand-mini-bar-module.js"
+    "scripts/adventure-hand-bars-module.js"
   ],
   "styles": [
-    "styles/hand-mini-bar.css"
+    "styles/adventure-hand-bars.css"
   ],
-  "socket": true,
-  "url": "https://gitlab.com/pengrath/hand-mini-bar",
-  "manifest": "https://gitlab.com/pengrath/hand-mini-bar/-/raw/main/module.json",
-  "download": "https://gitlab.com/pengrath/hand-mini-bar/-/archive/v1.3.5/hand-mini-bar-v1.3.5.zip",
-  "id": "hand-mini-bar",
-  "compatibility": {
-    "minimum": "9",
-    "verified": "10"
-  }
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json",
+      "flags": {}
+    }
+  ],
+  "url": "https://gitlab.com/kristianserrano/adventure-hand-bars",
+  "manifest": "https://gitlab.com/kristianserrano/adventure-hand-bars/-/raw/main/module.json",
+  "download": "https://gitlab.com/kristianserrano/adventure-hand-bars/-/archive/v1.3.5/adventure-hand-bar-v1.3.5.zip",
 }
