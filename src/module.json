@@ -3,7 +3,7 @@
 	"id": "adventure-hand-bars",
 	"name": "adventure-hand-bars",
 	"description": "A module to display a player's Adventure Cards on the screen in a small toolbar",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"compatibility": {
 		"minimum": "10",
 		"verified": "11"
@@ -54,6 +54,6 @@
 	},
 	"url": "https://gitlab.com/kristianserrano/adventure-hand-bars",
 	"update": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-hand-bars/module.json",
-	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-hand-bars/adventure-hand-bars-1.0.2.zip",
+	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-hand-bars/adventure-hand-bars-1.0.3.zip",
 	"manifest": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-hand-bars/module.json"
 }
