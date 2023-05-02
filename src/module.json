@@ -1,6 +1,7 @@
 {
 	"title": "Adventure Cards Hand Toolbar",
 	"id": "adventure-hand-bars",
+	"name": "adventure-hand-bars",
 	"description": "A module to display a player's Adventure Cards on the screen in a small toolbar",
 	"version": "1.0.1",
 	"compatibility": {

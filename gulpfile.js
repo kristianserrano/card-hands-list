@@ -291,7 +291,7 @@ function updateManifest(cb) {
         //const zipURL = `${rawURL}/package`
         //const result = `${zipURL}/${manifest.file.name}-v${manifest.file.version}.zip`
 
-        manifest.file.update = `${downloadURL}/${manifest.name}`;
+        manifest.file.update = `${downloadURL}/${manifest.file.id}`;
         manifest.file.manifest = manifest.file.update;
         manifest.file.download = `${downloadURL}/${manifest.file.id}-${manifest.file.version}.zip`;
 
@@ -302,7 +302,7 @@ function updateManifest(cb) {
 
         fs.writeJSONSync('package.json', packageJson, { spaces: '\t' });
         fs.writeFileSync(
-            path.join(manifest.root, manifest.name),
+            path.join(manifest.root, manifest.file.id),
             prettyProjectJson,
             'utf8'
         );
