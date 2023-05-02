@@ -181,7 +181,7 @@ window.AdventureHandBarsModule = {
   //Opens the hand for any additional options
   openHand: async function (hand) {
     if (hand == undefined) {
-      ui.notifications.warn(game.i18n.localize("HANDMINIBAR.NoHandSelected"));
+      ui.notifications.warn(game.i18n.localize("ADVENTUREHANDBARS.NoHandSelected"));
       return;
     }
     if (hand.sheet.rendered) {
@@ -200,8 +200,8 @@ window.AdventureHandBarsModule = {
 
 Hooks.on("init", function () {
   game.settings.register(AdventureHandBarsModule.moduleName, 'HandCount', {
-    name: game.i18n.localize("HANDMINIBAR.HandCountSetting"),
-    hint: game.i18n.localize("HANDMINIBAR.HandCountSettingHint"),
+    name: game.i18n.localize("ADVENTUREHANDBARS.HandCountSetting"),
+    hint: game.i18n.localize("ADVENTUREHANDBARS.HandCountSettingHint"),
     scope: 'client',     // "world" = sync to db, "client" = local storage
     config: false,       // false if you dont want it to show in module config
     type: Number,       // Number, Boolean, String,
@@ -214,15 +214,15 @@ Hooks.on("init", function () {
     onChange: (value) => AdventureHandBarsModule.updateHandCount(value),
   });
   game.settings.register(AdventureHandBarsModule.moduleName, 'BarPosition', {
-    name: game.i18n.localize("HANDMINIBAR.BarPositionSetting"),
-    hint: game.i18n.localize("HANDMINIBAR.BarPositionSettingHint"),
+    name: game.i18n.localize("ADVENTUREHANDBARS.BarPositionSetting"),
+    hint: game.i18n.localize("ADVENTUREHANDBARS.BarPositionSettingHint"),
     scope: 'client',     // "world" = sync to db, "client" = local storage
     config: true,       // false if you dont want it to show in module config
     type: String,       // Number, Boolean, String,
     choices: {
-      "right_bar": game.i18n.localize("HANDMINIBAR.BarPositionRightMacroSetting"),
-      "left_bar": game.i18n.localize("HANDMINIBAR.BarPositionLeftMacroSetting"),
-      "above_players": game.i18n.localize("HANDMINIBAR.BarPositionAbovePlayersSetting")
+      "right_bar": game.i18n.localize("ADVENTUREHANDBARS.BarPositionRightMacroSetting"),
+      "left_bar": game.i18n.localize("ADVENTUREHANDBARS.BarPositionLeftMacroSetting"),
+      "above_players": game.i18n.localize("ADVENTUREHANDBARS.BarPositionAbovePlayersSetting")
     },
     default: "right_bar",
     onChange: (value) => AdventureHandBarsModule.updatePosition(),

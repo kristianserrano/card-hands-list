@@ -43,7 +43,7 @@ export default class AdventureHandBar {
     const newHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
     if (newHands.length > 0) {
       buttons.push({
-        label: game.i18n.localize("HANDMINIBAR.Hand"),
+        label: game.i18n.localize("ADVENTUREHANDBARS.Hand"),
         callback: async function () {
           await bar.chooseHandDialog();
         }
@@ -52,18 +52,18 @@ export default class AdventureHandBar {
 
     if ((bar.hand !== undefined)|| bar.currentUser !== undefined) {
       buttons.push({
-        label: game.i18n.localize("HANDMINIBAR.ResetBar"),
+        label: game.i18n.localize("ADVENTUREHANDBARS.ResetBar"),
         callback: async function () {
           await bar.reset();
         }
       });
-      message = game.i18n.localize("HANDMINIBAR.ResetToolbar");
+      message = game.i18n.localize("ADVENTUREHANDBARS.ResetToolbar");
     }
 
-    if (buttons.length > 1) message = game.i18n.localize("HANDMINIBAR.ChooseOrReset");
+    if (buttons.length > 1) message = game.i18n.localize("ADVENTUREHANDBARS.ChooseOrReset");
 
     new Dialog({
-      title: game.i18n.localize("HANDMINIBAR.ReconfigureToolbarTitle"),
+      title: game.i18n.localize("ADVENTUREHANDBARS.ReconfigureToolbarTitle"),
       content: `<p>${message}</p>`,
       buttons: buttons
     }).render(true);
@@ -85,9 +85,9 @@ export default class AdventureHandBar {
     userHTML = $("<div class='adventure-hand-bar-option-container'/>").append(userHTML);
 
     new Dialog({
-      title: game.i18n.localize("HANDMINIBAR.DeckList"),
+      title: game.i18n.localize("ADVENTUREHANDBARS.DeckList"),
       content: `
-        <p>${game.i18n.localize("HANDMINIBAR.ChooseHand")}</p>
+        <p>${game.i18n.localize("ADVENTUREHANDBARS.ChooseHand")}</p>
         ${userHTML[0].outerHTML}
       `,
       buttons: {
@@ -110,7 +110,7 @@ export default class AdventureHandBar {
   async drawCard(e) {
     const hand = this.hand;
     if (hand === undefined) {
-      ui.notifications.warn(game.i18n.localize("HANDMINIBAR.NoHandSelected"));
+      ui.notifications.warn(game.i18n.localize("ADVENTUREHANDBARS.NoHandSelected"));
     } else {
       const deck = game.cards.getName(game.settings.get("adventure-deck", "deckName"));
       const prevDrawn = deck.drawnCards;

@@ -2,7 +2,7 @@
     {{#if shortcut}}
         <div class="adventure-hand-bar-pile-shortcut-container">
             <div class="adventure-hand-bar-pile-shortcut" data-cards="{{shortcut.id}}">
-                {{localize "HANDMINIBAR.ViewPlayedAdventureCards"}}
+                {{localize "ADVENTUREHANDBARS.ViewPlayedAdventureCards"}}
             </div>
         </div>
     {{/if}}
@@ -25,16 +25,16 @@
                     {{/each}}
                     {{else}}
                         <p class="empty-hand-message">
-                            {{localize 'HANDMINIBAR.NoHandMessage'}}
+                            {{localize 'ADVENTUREHANDBARS.NoHandMessage'}}
                         </p>
                     {{/if}}
                 </div>
                 {{#if hand}}
                 <div class="adventure-hand-bar-actions">
-                    <div class="adventure-hand-bar-button adventure-hand-bar-draw" data-bar-index="{{@index}}" data-tooltip="{{localize 'HANDMINIBAR.AddCard'}}">
+                    <div class="adventure-hand-bar-button adventure-hand-bar-draw" data-bar-index="{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.AddCard'}}">
                         <i class="fas fa-cards-blank"></i>
                     </div>
-                    <div class="adventure-hand-bar-button adventure-hand-bar-settings-choose" data-bar-index="{{@index}}" data-tooltip="{{localize 'HANDMINIBAR.ConfigureToolbar'}}">
+                    <div class="adventure-hand-bar-button adventure-hand-bar-settings-choose" data-bar-index="{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.ConfigureToolbar'}}">
                         <i class="fas fa-gear"></i>
                     </div>
                 </div>
@@ -46,9 +46,9 @@
     <div class="adventure-hand-bar-buttons-container">
         <span class="adventure-hand-bar-show-buttons"><i class="fas fa-ellipsis"></i></span>
         <span class="adventure-hand-bar-hidden-buttons">
-            <span class="adventure-hand-bar-subtract-bar" title="{{localize 'HANDMINIBAR.RemoveBar'}}"><i class="fas fa-square-minus"></i></span>
-            <span class="adventure-hand-bar-hide-show" title="{{localize 'HANDMINIBAR.ToggleVisibility'}}"><i class="fas fa-square-caret-up"></i></span>
-            <span class="adventure-hand-bar-add-bar" title="{{localize 'HANDMINIBAR.AddBar'}}"><i class="fas fa-square-plus"></i></span>
+            <span class="adventure-hand-bar-subtract-bar" title="{{localize 'ADVENTUREHANDBARS.RemoveBar'}}"><i class="fas fa-square-minus"></i></span>
+            <span class="adventure-hand-bar-hide-show" title="{{localize 'ADVENTUREHANDBARS.ToggleVisibility'}}"><i class="fas fa-square-caret-up"></i></span>
+            <span class="adventure-hand-bar-add-bar" title="{{localize 'ADVENTUREHANDBARS.AddBar'}}"><i class="fas fa-square-plus"></i></span>
         </span>
     </div>
 </div>
