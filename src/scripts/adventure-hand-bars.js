@@ -72,29 +72,28 @@ export default class AdventureHandBar {
   //Select a hand for this Toolbar
   async chooseHandDialog() {
     const bar = this;
-    let userHTML = $("<select class='adventure-hand-bar-hand-selection' name='users'/>");
+    let select = '<select class="adventure-hand-bar-hand-selection" name="hands">';
     const hands = [];
     for (const b of AdventureHandBarsModule.AdventureBarsList){
       if (b.hand) hands.push(b.hand.id);
     }
     const newHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
     for (const hand of newHands) {
-      userHTML.append(`<option value="${hand.id}">${hand.name}</option>`);
+      select += `<option value="${hand.id}">${hand.name}</option>`;
     };
-
-    userHTML = $("<div class='adventure-hand-bar-option-container'/>").append(userHTML);
+    select += '</select>'
 
     new Dialog({
       title: game.i18n.localize("ADVENTUREHANDBARS.DeckList"),
       content: `
         <p>${game.i18n.localize("ADVENTUREHANDBARS.ChooseHand")}</p>
-        ${userHTML[0].outerHTML}
+        ${select}
       `,
       buttons: {
         ok: {
           label: "OK",
           callback: async function (html) {
-            let chosenHandId = $(html).find(".adventure-hand-bar-hand-selection").val();
+            const chosenHandId = document.querySelector(".adventure-hand-bar-hand-selection").value;
             await bar.setCardsOption(game.cards.get(chosenHandId));
           }
         },
@@ -103,6 +102,8 @@ export default class AdventureHandBar {
           callback: function () { }
         }
       }
+    }, {
+      classes: ['dialog', 'adventure-hand-bar-option-dialog']
     }).render(true);
   }
 

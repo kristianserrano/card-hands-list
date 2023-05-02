@@ -90,13 +90,9 @@ window.AdventureHandBarsModule = {
       }
     }
 
-    // Show/Hide hand bars
-    const hideShowBarElem = document.querySelector('.adventure-hand-bar-hide-show');
-    hideShowBarElem.addEventListener('click', () =>  document.getElementById('adventure-hand-bars-container').classList.toggle('hidden'));
-
     // Display Discard Pile Sheet
     document.querySelector('.adventure-hand-bar-pile-shortcut').addEventListener('click', async function (e) {
-      let cardsId = $(e.target).data("cards");
+      let cardsId = e.target.dataset.cards;
       const cardStack = game.cards.get(cardsId);
       await cardStack.sheet.render(true);
     });
@@ -118,6 +114,10 @@ window.AdventureHandBarsModule = {
       }
     });
 
+    // Show/Hide hand bars
+    document.querySelector('.adventure-hand-bar-hide-show').addEventListener('click', () => document.getElementById('adventure-hand-bars-container').classList.toggle('hidden'));
+
+
     //initialize Options from saved settings
     AdventureHandBarsModule.updatePosition();
   },
@@ -131,10 +131,10 @@ window.AdventureHandBarsModule = {
     if (content) {
       if (position === 'above_players') {
         target = playersListElement;
-        content.classList.add('app');
+        //content.classList.add('app');
       } else {
         target = document.querySelector("#ui-bottom > div");
-        content.classList.remove('app');
+        //content.classList.remove('app');
         uiBottomElement.classList.add('adventure-hand-bar');
       }
       uiBottomElement.classList.remove("adventure-hand-bar-left");
