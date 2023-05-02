@@ -213,7 +213,7 @@ async function packageBuild() {
             zip.pipe(zipFile);
 
             // Add the directory with the final code
-            zip.directory('dist/', manifest.file.name);
+            zip.directory('dist/', manifest.file.id);
 
             zip.finalize();
         } catch (err) {
