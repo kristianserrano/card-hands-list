@@ -27,4 +27,4 @@ deploy to s3:
     entrypoint: [""]
   script:
     - aws --version
-    - aws s3 cp adventure-hand-bars s3://$S3_BUCKET/foundryvtt/adventure-hand-bars --acl public-read --recursive
+    - aws s3 cp adventure-hand-bars s3://kristianserrano/foundryvtt/adventure-hand-bars --acl public-read --recursive
