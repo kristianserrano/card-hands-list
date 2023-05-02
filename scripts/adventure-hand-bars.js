@@ -34,12 +34,13 @@ export default class AdventureHandBar {
     const bar = this;
     //options based on state and GM status
     let buttons = [];
+    let message = '';
     const hands = [];
     for (const b of AdventureHandBarsModule.AdventureBarsList) {
       if (b.hand) hands.push(b.hand.id);
     }
     game.cards.filter(c => c.type === 'hand')
-    const newHands = game.cards.filter((c) => c.type === 'hand' && c.flags['adventure-deck'].group === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
+    const newHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
     if (newHands.length > 0) {
       buttons.push({
         label: game.i18n.localize("HANDMINIBAR.Hand"),
@@ -56,14 +57,16 @@ export default class AdventureHandBar {
           await bar.reset();
         }
       });
+      message = game.i18n.localize("HANDMINIBAR.ResetToolbar");
     }
 
-    let d = new Dialog({
+    if (buttons.length > 1) message = game.i18n.localize("HANDMINIBAR.ChooseOrReset");
+
+    new Dialog({
       title: game.i18n.localize("HANDMINIBAR.ReconfigureToolbarTitle"),
-      content: `<p>${game.i18n.localize("HANDMINIBAR.ReconfigureToolbar")}</p>`,
+      content: `<p>${message}</p>`,
       buttons: buttons
-    });
-    d.render(true);
+    }).render(true);
   }
 
   //Select a hand for this Toolbar
@@ -74,7 +77,7 @@ export default class AdventureHandBar {
     for (const b of AdventureHandBarsModule.AdventureBarsList){
       if (b.hand) hands.push(b.hand.id);
     }
-    const newHands = game.cards.filter((c) => c.type === 'hand' && c.flags['adventure-deck'].group === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
+    const newHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
     for (const hand of newHands) {
       userHTML.append(`<option value="${hand.id}">${hand.name}</option>`);
     };

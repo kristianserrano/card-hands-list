@@ -1,5 +1,5 @@
 {
-  "title": "Adventure Cards Hand Toolbar for SWADE",
+  "title": "Adventure Cards Hand Toolbar",
   "id": "adventure-hand-bars",
   "description": "A module to display a player's Adventure Cards on the screen in a small toolbar",
   "version": "1.3.5",
@@ -37,7 +37,21 @@
       "flags": {}
     }
   ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "swade",
+        "type": "system"
+      }
+    ],
+    "requires": [
+      {
+        "id": "adventure-deck",
+        "type": "module"
+      }
+    ]
+  },
   "url": "https://gitlab.com/kristianserrano/adventure-hand-bars",
   "manifest": "https://gitlab.com/kristianserrano/adventure-hand-bars/-/raw/main/module.json",
-  "download": "https://gitlab.com/kristianserrano/adventure-hand-bars/-/archive/v1.3.5/adventure-hand-bar-v1.3.5.zip",
+  "download": "https://gitlab.com/kristianserrano/adventure-hand-bars/-/archive/v1.3.5/adventure-hand-bar-v1.3.5.zip"
 }

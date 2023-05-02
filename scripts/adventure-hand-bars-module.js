@@ -9,7 +9,7 @@ import AdventureHandBar from './adventure-hand-bars.js';
 window.AdventureHandBarsModule = {
   AdventureBarsList: new Array(),
   moduleName: "adventure-hand-bars",
-  adventureDeckModuleName: "adventure-deck",
+  adventureDeckModuleId: "adventure-deck",
   handMax: 10,
   createBars: async function () {
     // Create bar data.
@@ -28,7 +28,7 @@ window.AdventureHandBarsModule = {
 
   },
   render: async function () {
-    let shortcutHand = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleName, 'dumpPileName'));
+    let shortcutHand = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleId, 'dumpPileName'));
     if (game.user.isGM && shortcutHand && shortcutHand.ownership.default !== CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
       shortcutHand.update({
         'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
@@ -233,7 +233,7 @@ Hooks.on("ready", function () {
   // Pre Load templates.
   loadTemplates(['modules/adventure-hand-bars/templates/adventure-hand-bars-container.hbs']);
   // Get the adventure deck using the stored name in the adventure cards module.
-  const adventureDeck = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleName, 'deckName'));
+  const adventureDeck = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleId, 'deckName'));
   // Check if default ownership is Limited for card draws. If it's not, set it.
   if (game.user.isGM && adventureDeck && adventureDeck.ownership.default < CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED) {
     adventureDeck.update({ 'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED });
