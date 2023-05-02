@@ -11,13 +11,11 @@
         {{#each bars}}
         <div id="adventure-hand-bar-hand-{{@index}}" class="adventure-hand-bar-hand">
             <div class="adventure-hand-bar-hand-inner" data-bar-index="{{@index}}">
-                {{#if hand}}
-                <div id="adventure-hand-bar-hand-name-{{@index}}" class="adventure-hand-bar-hand-name">
-                    {{hand.name}}
-                </div>
-                {{/if}}
                 <div id="adventure-hand-bar-card-container{{#if hand}}-{{@index}}{{/if}}"{{#if hand}} data-cards-id="{{id}}"{{/if}} class="adventure-hand-bar-card-container">
                     {{#if hand}}
+                    <div id="adventure-hand-bar-hand-name-{{@index}}" class="adventure-hand-bar-hand-name">
+                        {{hand.name}}
+                    </div>
                     {{#each hand.cards}}
                     <div class="adventure-hand-bar-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" draggable="true">
                         <img title="{{name}}" src="{{img}}" data-tool-tip="{{description}}" />
