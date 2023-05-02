@@ -6,7 +6,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/immaterial-plane/backstory-cards/fvtt-backstory-cards-assets-library"
+    "url": "https://gitlab.com/kristianserrano/adventure-bar-hands"
   },
   "scripts": {
     "package": "gulp package",
