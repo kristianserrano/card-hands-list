@@ -1,0 +1,30 @@
+workflow:
+  script:
+  - export
+  rules:
+  - if: $CI_COMMIT_TAG
+
+build:
+  image: node:14
+  stage: build
+  script:
+    - cp example-foundryconfig.json foundryconfig.json
+    - npm install
+    - npm install --global gulp-cli
+    - gulp package
+    - mkdir adventure-hand-bars
+    - cp package/adventure-hand-bars-*.zip adventure-hand-bars
+    - cp dist/module.json adventure-hand-bars
+  artifacts:
+    paths:
+      - adventure-hand-bars
+    when: always
+
+deploy to s3:
+  stage: deploy
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  script:
+    - aws --version
+    - aws s3 cp adventure-hand-bars s3://$S3_BUCKET/foundryvtt/adventure-hand-bars --acl public-read --recursive
