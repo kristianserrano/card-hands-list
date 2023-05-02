@@ -50,7 +50,7 @@ window.AdventureHandBarsModule = {
     // Set up listeners for hand bar UI
     const bars = document.querySelectorAll('.adventure-hand-bar-hand-inner');
     for (const b of bars) {
-      const barIndex = b.dataset.barIndex;
+      const barIndex = parseInt(b.dataset.barIndex);
       const bar = AdventureHandBarsModule.AdventureBarsList[barIndex];
       const barSelectorId = `#adventure-hand-bar-hand-${barIndex}`;
 
@@ -66,7 +66,7 @@ window.AdventureHandBarsModule = {
       const emptyHandMessage = document.querySelector(`${barSelectorId} .empty-hand-message`);
       if (!!emptyHandMessage) {
         emptyHandMessage.addEventListener('click', async (e) => {
-          await bar.chooseDialog(e);
+          await bar.chooseHandDialog(e);
         });
       }
 
@@ -74,8 +74,11 @@ window.AdventureHandBarsModule = {
       const chooseHandButton = document.querySelector(`${barSelectorId} .adventure-hand-bar-settings-choose`);
       if (chooseHandButton) {
         chooseHandButton.addEventListener('click', async (e) => {
-          bar.barIndex = barIndex;
-          await bar.chooseDialog(e);
+          if (bar.hand) {
+            await bar.chooseDialog(e);
+          } else {
+            await bar.chooseHandDialog();
+          }
         });
       }
 
@@ -122,12 +125,12 @@ window.AdventureHandBarsModule = {
   updatePosition: function () {
     let position = game.settings.get(AdventureHandBarsModule.moduleName, "BarPosition");
     let content = document.getElementById("adventure-hand-bars-container");
-    const playersElement = document.getElementById("players");
+    const playersListElement = document.getElementById("players");
     const uiBottomElement = document.getElementById("ui-bottom");
     let target = undefined;
     if (content) {
       if (position === 'above_players') {
-        target = playersElement;
+        target = playersListElement;
         content.classList.add('app');
       } else {
         target = document.querySelector("#ui-bottom > div");
@@ -167,17 +170,12 @@ window.AdventureHandBarsModule = {
       //remove some may need additional cleanup
       difference = AdventureHandBarsModule.AdventureBarsList.length - newHandCount;
       for (let i = 0; i < difference; i++) {
-        const barElem = AdventureHandBarsModule.AdventureBarsList.pop();
-        barElem.remove();
+        const bar = AdventureHandBarsModule.AdventureBarsList.pop();
+        const barHtml = document.getElementById(`adventure-hand-bar-hand-${bar.barIndex}`);
+        barHtml.remove();
       }
     }
     AdventureHandBarsModule.render();
-  },
-
-  restore: async function () {
-    for (const h of AdventureHandBarsModule.AdventureBarsList) {
-      await h.restore();
-    }
   },
 
   //Opens the hand for any additional options
@@ -207,18 +205,18 @@ Hooks.on("init", function () {
     scope: 'client',     // "world" = sync to db, "client" = local storage
     config: false,       // false if you dont want it to show in module config
     type: Number,       // Number, Boolean, String,
-    default: 1,
     range: {             // If range is specified, the resulting setting will be a range slider
       min: 0,
       max: 10,
       step: 1
     },
+    default: 1,
     onChange: (value) => AdventureHandBarsModule.updateHandCount(value),
   });
   game.settings.register(AdventureHandBarsModule.moduleName, 'BarPosition', {
     name: game.i18n.localize("HANDMINIBAR.BarPositionSetting"),
     hint: game.i18n.localize("HANDMINIBAR.BarPositionSettingHint"),
-    scope: 'world',     // "world" = sync to db, "client" = local storage
+    scope: 'client',     // "world" = sync to db, "client" = local storage
     config: true,       // false if you dont want it to show in module config
     type: String,       // Number, Boolean, String,
     choices: {
@@ -227,6 +225,7 @@ Hooks.on("init", function () {
       "above_players": game.i18n.localize("HANDMINIBAR.BarPositionAbovePlayersSetting")
     },
     default: "right_bar",
+    onChange: (value) => AdventureHandBarsModule.updatePosition(),
   });
 });
 

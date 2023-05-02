@@ -44,8 +44,8 @@
     display: flex;
     flex-grow: 1;
     filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.5));
-    transition: transform 0.2s ease-in, z-index 0.2s step-start;
     justify-content: space-between;
+    gap: 0;
 }
 
 .adventure-hand-bar-buttons-container:hover,
@@ -53,21 +53,41 @@
     max-height: 22px;
 }
 
-.adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hidden-buttons,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hidden-buttons {
+    justify-content: center;
+}
 #adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons {
+    display: none;
+}
+
+#adventure-hand-bars-container .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hidden-buttons {
     display: flex;
     flex-grow: 1;
     align-items: flex-start;
     justify-content: space-between;
-    margin-right: 32px;
-    padding: 0 4px;
+    max-width: 122px;
+    padding: 0 2px;
+    overflow: hidden;
 }
-#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons {
-    justify-content: center;
+
+#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hide-show {
+    display: revert;
 }
-.adventure-hand-bar-hidden-buttons,
-.adventure-hand-bar-buttons-container:hover .adventure-hand-bar-show-buttons,
-#adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-show-buttons,
+
+.adventure-hand-bar-hidden-buttons {
+    width: 122px;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px #444 inset;
+    transition: transform 0.2s ease-in, z-index 0.2s step-start;
+}
+
+#adventure-hand-bars-container .adventure-hand-bar-hidden-buttons,
+#adventure-hand-bars-container .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-show-buttons,
+#adventure-hand-bars-container .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-hidden-buttons,
+#adventure-hand-bars-container.hidden .adventure-hand-bar-hide-show,
 #adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-add-bar,
 #adventure-hand-bars-container.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-subtract-bar {
     display: none;
@@ -85,7 +105,7 @@
 .adventure-hand-bar-buttons-container * {
     font-size: 16px;
     text-align: center;
-    line-height: 16px;
+    line-height: 0.9;
     color: #c9c7b8;
     cursor: pointer;
     pointer-events: all;
@@ -94,15 +114,10 @@
 }
 
 .adventure-hand-bar-show-buttons {
-    /* max-height: 10px; */
-    width: 100%;
-    margin-top: -8px;
-    margin-right: 23px;
-    margin-right: 35px;
+    width: 122px;
+    margin-top: -10px;
     font-size: 26px;
-    line-height: 0px;
-    /* -webkit-text-stroke-color: black; */
-    /* -webkit-text-stroke-width: 1px; */
+    line-height: 0;
 }
 
 .adventure-hand-bar-show-buttons.hide {
@@ -133,20 +148,21 @@
     color: #fff;
     text-shadow: 2px 2px #000;
     flex-basis: 100%;
-    text-overflow: ellipsis;
+    padding: 0 2px;
 }
 
 .adventure-hand-bar-settings,
 .adventure-hand-bar-actions {
     display: flex;
-    cursor: pointer;
     flex-direction: column;
-    justify-content: space-around;
-    color: #c9c7b8;
-    box-shadow: 0 0 3px #444 inset;
+    justify-content: space-between;
     flex-grow: 1;
+    padding: 6px 0;
+    color: #c9c7b8;
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid var(--color-border-dark);
+    box-shadow: 0 0 3px #444 inset;
+    cursor: pointer;
 }
 
 .adventure-hand-bar-settings {
@@ -218,7 +234,7 @@
 }
 
 .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons *:hover {
-    filter: drop-shadow(0px 0px 2px #fff);
+    text-shadow: 0 0 8px var(--color-shadow-primary);
 }
 
 .adventure-hand-bar-settings-choose:hover,
@@ -230,11 +246,8 @@
 
 .adventure-hand-bar-card-container {
     display: flex;
-    flex-grow: 1;
     flex-direction: row;
-    height: auto;
-    width: 75%;
-    border-top: 1px solid #000;
+    width: 122px;
     border: 1px solid var(--color-border-dark);
     cursor: zoom-in;
     box-shadow: 0 0 5px #444 inset;
@@ -246,7 +259,8 @@
     overflow: auto;
 }
 
-.adventure-hand-bar-card-container:hover {
+.adventure-hand-bar-card-container:hover,
+.adventure-hand-bar-pile-shortcut-container:hover {
     box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
     border: 1px solid var(--color-border-highlight-alt);
 }
@@ -320,6 +334,7 @@ div.separator {
     height: 50px;
     cursor: pointer;
     margin: 0;
+    flex-grow: 1;
 }
 
 /* For displaying at the bottom-right of the screen*/
@@ -404,9 +419,7 @@ div#adventure-hand-bars-container {
 }
 
 .adventure-hand-bar-pile-shortcut-container {
-    /* display: flex; */
-    /* justify-content: center; */
-    width: 80%;
+    width: 122px;
     padding: 0.5em;
     font-size: 0.9em;
     color: #c9c7b8;
@@ -415,6 +428,7 @@ div#adventure-hand-bars-container {
     border: 1px solid var(--color-border-dark);
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px #444 inset;
     pointer-events: all;
     cursor: pointer;
 }
