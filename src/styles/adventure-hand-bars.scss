@@ -1,0 +1,334 @@
+/* Fixes bug when combined with WebRTC Tweaks module */
+#ui-top {
+    min-height: 0;
+}
+
+#ui-bottom > div {
+    justify-content: flex-start;
+}
+
+#hotbar {
+    align-self: flex-end;
+}
+
+#fps {
+    margin-left: auto;
+    order: 1;
+}
+
+#adventure-hand-bars-container {
+    width: 160px;
+    display: inline-flex;
+    flex-direction: column;
+    align-self: flex-end;
+    gap: 5px;
+    z-index: 1;
+    order: 0;
+    color: var(--color-text-light-highlight);
+
+    &.adventure-hand-bar-left {
+        order: -1;
+    }
+
+    &.adventure-hand-bar-above-players {
+        width: 158px;
+        margin: 0 5px 10px 15px;
+        padding: 0;
+        align-self: flex-start;
+    }
+
+   .adventure-hand-bar-pile-shortcut-container {
+        width: 122px;
+        padding: 0.5em;
+        border: 1px solid var(--color-border-dark);
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 5px #444 inset;
+        font-size: var(--font-size-11);
+        pointer-events: all;
+        cursor: pointer;
+    }
+
+    .adventure-hand-bar-pile-shortcut-container:hover {
+        outline: none;
+        text-shadow: 0 0 8px var(--color-shadow-primary);
+    }
+
+    #adventure-hand-bar-hands-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+        overflow: hidden;
+        transition: all 500ms ease-in-out;
+    }
+
+    &.hidden #adventure-hand-bar-hands-container {
+        max-height: 0px;
+        padding-bottom: 0px;
+    }
+
+
+    .adventure-hand-bar-hand {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: all;
+    }
+
+    .adventure-hand-bar-hand-inner {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+        border-radius: 4px;
+    }
+
+    .adventure-hand-bar-hand-name {
+        padding: 0 2px;
+        overflow: hidden;
+        font-size: var(--font-size-11);
+        white-space: nowrap;
+    }
+
+    .adventure-hand-bar-settings,
+    .adventure-hand-bar-actions {
+        padding: 6px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 0;
+        border: 1px solid var(--color-border-dark);
+        box-shadow: 0 0 3px #444 inset;
+        background: rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+    }
+
+    .adventure-hand-bar-settings {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+    .adventure-hand-bar-actions {
+        border-radius: 4px;
+    }
+
+    .adventure-hand-bar-button {
+        padding: 0 2px;
+        display: flex;
+        justify-content: center;
+        font-size: var(--font-size-14);
+        line-height: 32px;
+        color: var(--color-text-light-heading);
+    }
+
+    .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons *:hover {
+        text-shadow: 0 0 8px var(--color-shadow-primary);
+    }
+
+    .adventure-hand-bar-settings-choose:hover,
+    .adventure-hand-bar-pass:hover,
+    .adventure-hand-bar-settings-hand:hover,
+    .adventure-hand-bar-draw:hover {
+        text-shadow: 0 0 8px var(--color-shadow-primary);
+    }
+
+    .adventure-hand-bar-card-container {
+        width: 122px;
+        min-height: 66px;
+        padding: 2px;
+        display: flex;
+        justify-content: start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0;
+        overflow: auto;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--color-border-dark);
+        border-radius: 4px;
+        box-shadow: 0 0 5px #444 inset;
+        cursor: zoom-in;
+    }
+
+    .adventure-hand-bar-card-container:hover,
+    .adventure-hand-bar-pile-shortcut-container:hover {
+        box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
+        border: 1px solid var(--color-border-highlight-alt);
+    }
+
+    .adventure-hand-bar-card {
+        max-height: 48px;
+        margin-right: -14px;
+        filter: drop-shadow(0px 0px 1px #000);
+        transition: margin 500ms;
+        border: 1px solid var(--color-border-dark);
+        width: 35px;
+
+        img {
+           object-fit: contain;
+            height: 100%;
+            display: block;
+        }
+    }
+
+    .adventure-hand-bar-message {
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+    }
+
+    .adventure-hand-bar-message-info {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        max-width: 224px;
+        padding-left: 4px;
+    }
+
+    .adventure-hand-bar-message-name {
+        margin-bottom: 2px;
+    }
+
+    .adventure-hand-bar-play-dialog-description,
+    .adventure-hand-bar-play-dialog-face-description {
+        text-align: center;
+        margin: 0px;
+        font-weight: normal;
+        font-size: 12px;
+    }
+
+    .adventure-hand-bar-message-description {
+        font-size: smaller;
+    }
+
+    .adventure-hand-bar-message-card {
+        height: 50px;
+        width: 50px;
+        background-position: center;
+        background-size: auto 50px;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.5));
+        transition: transform 0.2s ease-in, z-index 0.2s step-start;
+    }
+
+    .empty-hand-message {
+        height: 50px;
+        margin: 0;
+        padding: 8px;
+        flex-grow: 1;
+        font-size: var(--font-size-12);
+        cursor: pointer;
+    }
+
+
+    @media (max-width: 1118px) {
+        .adventure-hand-bar-left .adventure-hand-bar-hand-inner,
+        .adventure-hand-bar-right .adventure-hand-bar-hand-inner {
+            flex-direction: column;
+        }
+
+        .adventure-hand-bar-left .adventure-hand-bar-card-container,
+        .adventure-hand-bar-right .adventure-hand-bar-card-container {
+            width: 100%;
+        }
+        .adventure-hand-bar-left .adventure-hand-bar-settings,
+        .adventure-hand-bar-right .adventure-hand-bar-settings,
+        .adventure-hand-bar-left .adventure-hand-bar-actions,
+        .adventure-hand-bar-right .adventure-hand-bar-actions {
+            flex-direction: row;
+        }
+    }
+
+    .adventure-hand-bar-buttons-container {
+        display: flex;
+        flex-grow: 1;
+        filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.5));
+        justify-content: space-between;
+        gap: 0;
+    }
+
+    .adventure-hand-bar-buttons-container:hover,
+    &.hidden .adventure-hand-bar-buttons-container {
+        max-height: 22px;
+    }
+
+    &.hidden .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hidden-buttons {
+        justify-content: center;
+    }
+
+    &.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons {
+        display: none;
+    }
+
+    .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hidden-buttons {
+        display: flex;
+        flex-grow: 1;
+        align-items: flex-start;
+        justify-content: space-between;
+        max-width: 122px;
+        padding: 0 2px;
+        overflow: hidden;
+    }
+
+    &.hidden .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-hide-show {
+        display: revert;
+    }
+
+    .adventure-hand-bar-hidden-buttons {
+        width: 122px;
+        border: 1px solid var(--color-border-dark);
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 5px #444 inset;
+        transition: transform 0.2s ease-in, z-index 0.2s step-start;
+    }
+
+    .adventure-hand-bar-hidden-buttons,
+    .adventure-hand-bar-buttons-container:hover .adventure-hand-bar-show-buttons,
+    .adventure-hand-bar-buttons-container .adventure-hand-bar-hidden-buttons,
+    &.hidden .adventure-hand-bar-hidden-buttons,
+    &.hidden .adventure-hand-bar-hide-show,
+    &.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-add-bar,
+    &.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-subtract-bar {
+        display: none;
+    }
+
+    &.hidden .adventure-hand-bar-buttons-container .adventure-hand-bar-hide-show {
+        transform: rotate(0deg);
+        margin-bottom: 0px;
+    }
+
+    .adventure-hand-bar-buttons-container .adventure-hand-bar-hide-show {
+        transform: rotate(180deg);
+    }
+
+    .adventure-hand-bar-buttons-container * {
+        font-size: var(--font-size-16);
+        text-align: center;
+        line-height: 0.9;
+        color: #c9c7b8;
+        cursor: pointer;
+        pointer-events: all;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: #000;
+    }
+
+    .adventure-hand-bar-show-buttons {
+        width: 122px;
+        margin-top: -10px;
+        font-size: 26px;
+        line-height: 0;
+    }
+
+    .adventure-hand-bar-show-buttons.hide {
+        display: none;
+    }
+
+    .adventure-hand-bar-option-dialog .dialog-content {
+        margin-bottom: 8px;
+    }
+}
