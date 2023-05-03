@@ -125,30 +125,19 @@ window.AdventureHandBarsModule = {
   updatePosition: function () {
     let position = game.settings.get(AdventureHandBarsModule.moduleName, "BarPosition");
     let content = document.getElementById("adventure-hand-bars-container");
-    const playersListElement = document.getElementById("players");
-    const uiBottomElement = document.getElementById("ui-bottom");
-    let target = undefined;
+    let target = document.querySelector("#ui-bottom > div");
     if (content) {
-      if (position === 'above_players') {
-        target = playersListElement;
-        //content.classList.add('app');
-      } else {
-        target = document.querySelector("#ui-bottom > div");
-        //content.classList.remove('app');
-        uiBottomElement.classList.add('adventure-hand-bar');
-      }
-      uiBottomElement.classList.remove("adventure-hand-bar-left");
-      uiBottomElement.classList.remove("adventure-hand-bar-right");
-      content.classList.remove("adventure-hand-bar-above-players");
+      content.classList.remove("adventure-hand-bar-above-players","adventure-hand-bar-left");
       if (position === "left_bar") {
-        uiBottomElement.classList.add("adventure-hand-bar-left");
+        content.classList.add("adventure-hand-bar-left");
         target.append(content);
-      } else if (position === "right_bar") {
-        uiBottomElement.classList.add("adventure-hand-bar-right");
-        target.append(content);
-      } else {
+      } else if (position === 'above_players') {
+        const playersListElement = document.getElementById("players");
+        target = playersListElement;
         content.classList.add("adventure-hand-bar-above-players");
         target.before(content);
+      } else {
+        target.append(content);
       }
     }
   },
