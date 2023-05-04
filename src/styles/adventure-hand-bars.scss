@@ -124,14 +124,6 @@
         text-shadow: 0 0 8px var(--color-shadow-primary);
     }
 
-    .adventure-hand-bar-hand-name,
-    .adventure-hand-bar-card-container {
-        &:hover {
-            box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
-            border: 1px solid var(--color-border-highlight-alt);
-        }
-    }
-
     .adventure-hand-bar-card-container {
         grid-column: 1/2;
         grid-row: 2/3;
@@ -179,6 +171,14 @@
         cursor: pointer;
     }
 
+    .adventure-hand-bar-hand-name,
+    .adventure-hand-bar-card-container,
+    .adventure-hand-bar-pile-shortcut-container {
+        &:hover {
+            box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
+            border: 1px solid var(--color-border-highlight-alt);
+        }
+    }
 
     @media (max-width: 1118px) {
         .adventure-hand-bar-left .adventure-hand-bar-hand-grid,
