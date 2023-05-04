@@ -1,52 +1,49 @@
 <div id="adventure-hand-bars-container" class="adventure-hand-bars-container">
-    {{#if shortcut}}
-        <div class="adventure-hand-bar-pile-shortcut-container">
-            <div class="adventure-hand-bar-pile-shortcut" data-cards="{{shortcut.id}}">
-                {{localize "ADVENTUREHANDBARS.ViewPlayedAdventureCards"}}
-            </div>
-        </div>
-    {{/if}}
-    <div id="adventure-hand-bar-hands-container">
-        {{!-- Output this a number of desired times --}}
-        {{#each bars}}
-        <div id="adventure-hand-bar-hand-{{@index}}" class="adventure-hand-bar-hand">
-            <div class="adventure-hand-bar-hand-inner" data-bar-index="{{@index}}">
-                <div id="adventure-hand-bar-card-container{{#if hand}}-{{@index}}{{/if}}"{{#if hand}} data-cards-id="{{id}}"{{/if}} class="adventure-hand-bar-card-container">
+    <div class="adventure-hand-inner-wrapper">
+        <div id="adventure-hand-bar-hands-container">
+            {{!-- Output this a number of desired times --}}
+            {{#each bars}}
+            <div id="adventure-hand-bar-hand-{{@index}}" class="adventure-hand-bar-hand">
+                <div class="adventure-hand-bar-hand-grid" data-bar-index="{{@index}}">
                     {{#if hand}}
                     <div id="adventure-hand-bar-hand-name-{{@index}}" class="adventure-hand-bar-hand-name">
                         {{hand.name}}
                     </div>
-                    {{#each hand.cards}}
-                    <div class="adventure-hand-bar-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" draggable="true">
-                        <img title="{{name}}" src="{{img}}" data-tool-tip="{{description}}" />
-                    </div>
-                    {{/each}}
-                    {{else}}
-                        <p class="empty-hand-message">
+                    {{/if}}
+                    <div id="adventure-hand-bar-card-container{{#if hand}}-{{@index}}{{/if}}"{{#if hand}} data-cards-id="{{id}}"{{/if}} class="adventure-hand-bar-container adventure-hand-bar-card-container{{#unless hand}} is-empty{{/unless}}">
+                        {{#if hand}}
+                        {{#each hand.cards}}
+                        <img class="adventure-hand-bar-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="{{name}}: {{description}}" />
+                        {{/each}}
+                        {{else}}
                             {{localize 'ADVENTUREHANDBARS.NoHandMessage'}}
-                        </p>
+                        {{/if}}
+                    </div>
+                    {{#if hand}}
+                    <div class="adventure-hand-bar-actions">
+                        <div class="adventure-hand-bar-button adventure-hand-bar-draw" data-bar-index="{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.AddCard'}}">
+                            <i class="fas fa-cards-blank"></i>
+                        </div>
+                        <div class="adventure-hand-bar-button adventure-hand-bar-settings-choose" data-bar-index="{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.ConfigureToolbar'}}">
+                            <i class="fas fa-gear"></i>
+                        </div>
+                    </div>
                     {{/if}}
                 </div>
-                {{#if hand}}
-                <div class="adventure-hand-bar-actions">
-                    <div class="adventure-hand-bar-button adventure-hand-bar-draw" data-bar-index="{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.AddCard'}}">
-                        <i class="fas fa-cards-blank"></i>
-                    </div>
-                    <div class="adventure-hand-bar-button adventure-hand-bar-settings-choose" data-bar-index="{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.ConfigureToolbar'}}">
-                        <i class="fas fa-gear"></i>
-                    </div>
-                </div>
-                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+        {{#if shortcut}}
+        <div class="adventure-hand-bar-container adventure-hand-bar-pile-shortcut-container">
+            <div class="adventure-hand-bar-pile-shortcut" data-cards="{{shortcut.id}}">
+                {{localize "ADVENTUREHANDBARS.ViewPlayedAdventureCards"}}
             </div>
         </div>
-        {{/each}}
+        {{/if}}
     </div>
     <div class="adventure-hand-bar-buttons-container">
-        <span class="adventure-hand-bar-show-buttons"><i class="fas fa-ellipsis"></i></span>
-        <span class="adventure-hand-bar-hidden-buttons">
-            <span class="adventure-hand-bar-subtract-bar" title="{{localize 'ADVENTUREHANDBARS.RemoveBar'}}"><i class="fas fa-square-minus"></i></span>
-            <span class="adventure-hand-bar-hide-show" title="{{localize 'ADVENTUREHANDBARS.ToggleVisibility'}}"><i class="fas fa-square-caret-up"></i></span>
-            <span class="adventure-hand-bar-add-bar" title="{{localize 'ADVENTUREHANDBARS.AddBar'}}"><i class="fas fa-square-plus"></i></span>
-        </span>
+        <span class="adventure-hand-bar-button adventure-hand-bar-hide-show" data-tooltip="{{localize 'ADVENTUREHANDBARS.ToggleVisibility'}}"><i class="fas fa-caret-down"></i></span>
+        <span class="adventure-hand-bar-button adventure-hand-bar-subtract-bar" data-tooltip="{{localize 'ADVENTUREHANDBARS.RemoveBar'}}"><i class="fas fa-minus"></i></span>
+        <span class="adventure-hand-bar-button adventure-hand-bar-add-bar" data-tooltip="{{localize 'ADVENTUREHANDBARS.AddBar'}}"><i class="fas fa-plus"></i></span>
     </div>
 </div>

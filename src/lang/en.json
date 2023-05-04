@@ -15,9 +15,10 @@
     "ADVENTUREHANDBARS.BarPositionSettingHint": "Select the placement of your Adventure Card hands toolbar",
     "ADVENTUREHANDBARS.ReconfigureToolbarTitle": "Reconfigure Toolbar",
     "ADVENTUREHANDBARS.RemoveBar": "Remove Bar",
-    "ADVENTUREHANDBARS.ToggleVisibility": "Toggle Visibility",
+    "ADVENTUREHANDBARS.ToggleVisibility": "Show/Hide Adventure Card Hands",
     "ADVENTUREHANDBARS.AddBar": "Add Bar",
     "ADVENTUREHANDBARS.ResetBar": "Reset Bar",
     "ADVENTUREHANDBARS.Hand": "Hand",
-    "ADVENTUREHANDBARS.ViewPlayedAdventureCards": "View Played Adventure Cards"
+    "ADVENTUREHANDBARS.ViewPlayedAdventureCards": "View Played Adventure Cards",
+    "ADVENTUREHANDBARS.NoOtherHandsAvailable": "There are no other Adventure Card hands available to select."
 }

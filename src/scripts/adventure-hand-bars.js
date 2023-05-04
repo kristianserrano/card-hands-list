@@ -8,7 +8,6 @@ export default class AdventureHandBar {
      */
     this.barIndex = data.barIndex;
     this.hand = data.hand;
-    let bar = this;
 
     // If this bar doesn't already exist in the list, push it to the list.
     if (!AdventureHandBarsModule.AdventureBarsList[this.barIndex]) {
@@ -78,33 +77,37 @@ export default class AdventureHandBar {
       if (b.hand) hands.push(b.hand.id);
     }
     const newHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER") && !hands.includes(c.id));
-    for (const hand of newHands) {
-      select += `<option value="${hand.id}">${hand.name}</option>`;
-    };
-    select += '</select>'
+    if (newHands.length > 0) {
+      for (const hand of newHands) {
+        select += `<option value="${hand.id}">${hand.name}</option>`;
+      };
+      select += '</select>';
 
-    new Dialog({
-      title: game.i18n.localize("ADVENTUREHANDBARS.DeckList"),
-      content: `
+      new Dialog({
+        title: game.i18n.localize("ADVENTUREHANDBARS.DeckList"),
+        content: `
         <p>${game.i18n.localize("ADVENTUREHANDBARS.ChooseHand")}</p>
         ${select}
       `,
-      buttons: {
-        ok: {
-          label: "OK",
-          callback: async function (html) {
-            const chosenHandId = document.querySelector(".adventure-hand-bar-hand-selection").value;
-            await bar.setCardsOption(game.cards.get(chosenHandId));
+        buttons: {
+          ok: {
+            label: "OK",
+            callback: async function (html) {
+              const chosenHandId = document.querySelector(".adventure-hand-bar-hand-selection").value;
+              await bar.setCardsOption(game.cards.get(chosenHandId));
+            }
+          },
+          cancel: {
+            label: "Cancel",
+            callback: function () { }
           }
-        },
-        cancel: {
-          label: "Cancel",
-          callback: function () { }
         }
-      }
-    }, {
-      classes: ['dialog', 'adventure-hand-bar-option-dialog']
-    }).render(true);
+      }, {
+        classes: ['dialog', 'adventure-hand-bar-option-dialog']
+      }).render(true);
+    } else {
+      ui.notifications.warn(game.i18n.localize("ADVENTUREHANDBARS.NoOtherHandsAvailable"));
+    }
   }
 
   //Draws a card into this hand

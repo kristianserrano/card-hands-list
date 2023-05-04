@@ -48,13 +48,19 @@ window.AdventureHandBarsModule = {
     // Update the bar's placement in the UI
     AdventureHandBarsModule.updatePosition();
     // Set up listeners for hand bar UI
-    const bars = document.querySelectorAll('.adventure-hand-bar-hand-inner');
+    const bars = document.querySelectorAll('.adventure-hand-bar-hand-grid');
     for (const b of bars) {
       const barIndex = parseInt(b.dataset.barIndex);
       const bar = AdventureHandBarsModule.AdventureBarsList[barIndex];
       const barSelectorId = `#adventure-hand-bar-hand-${barIndex}`;
 
       // Open Hand Sheet
+      const handName = document.querySelector(`${barSelectorId} .adventure-hand-bar-hand-name`);
+      if (handName && bar.hand) {
+        handName.addEventListener('click', async (e) => {
+          await bar.hand.sheet.render(true);
+        });
+      }
       const handContainer = document.querySelector(`${barSelectorId} .adventure-hand-bar-card-container`);
       if (handContainer && bar.hand) {
         handContainer.addEventListener('click', async (e) => {
@@ -63,7 +69,7 @@ window.AdventureHandBarsModule = {
       }
 
       //
-      const emptyHandMessage = document.querySelector(`${barSelectorId} .empty-hand-message`);
+      const emptyHandMessage = document.querySelector(`${barSelectorId} .adventure-hand-bar-card-container.is-empty`);
       if (!!emptyHandMessage) {
         emptyHandMessage.addEventListener('click', async (e) => {
           await bar.chooseHandDialog(e);
