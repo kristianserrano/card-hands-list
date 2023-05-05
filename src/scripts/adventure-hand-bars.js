@@ -53,7 +53,7 @@ export default class AdventureHandBar {
       buttons.push({
         label: game.i18n.localize("ADVENTUREHANDBARS.ResetBar"),
         callback: async function () {
-          await bar.reset();
+          await bar.resetCardsID();
         }
       });
       message = game.i18n.localize("ADVENTUREHANDBARS.ResetToolbar");
@@ -153,10 +153,5 @@ export default class AdventureHandBar {
   //gets the previously selected cards ID
   getStoredCardsID() {
     return game.user.getFlag(AdventureHandBarsModule.moduleName, `CardsID-${this.barIndex}`);
-  }
-
-  //Resets the Toolbar
-  async reset() {
-    await this.resetCardsID();
   }
 }
