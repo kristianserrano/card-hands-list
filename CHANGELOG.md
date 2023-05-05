@@ -1,3 +1,19 @@
-# Update 1.0.0
+# v1.0.4 - 1.0.5
+
+## Changed
+
+- Design  of the toolbar in general
+- Entire toolbar collapses to a smaller footprint
+
+## Fixed
+
+- Shortcut to discard pile has proper hover styles
+
+## Added
+
+- Individual cards now have tooltips that include title and description for quick scan without having to open the sheet.
+- Hand name now links to hand sheet as well.
+
+# v1.0.0
 
 - Initial release

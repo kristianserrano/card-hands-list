@@ -20,5 +20,7 @@
     "ADVENTUREHANDBARS.ResetBar": "Reset Bar",
     "ADVENTUREHANDBARS.Hand": "Hand",
     "ADVENTUREHANDBARS.ViewPlayedAdventureCards": "View Played Adventure Cards",
+    "ADVENTUREHANDBARS.Open": "Open",
     "ADVENTUREHANDBARS.NoOtherHandsAvailable": "There are no other Adventure Card hands available to select."
+
 }

@@ -6,7 +6,7 @@
             <div id="adventure-hand-bar-hand-{{@index}}" class="adventure-hand-bar-hand">
                 <div class="adventure-hand-bar-hand-grid" data-bar-index="{{@index}}">
                     {{#if hand}}
-                    <div id="adventure-hand-bar-hand-name-{{@index}}" class="adventure-hand-bar-hand-name">
+                    <div id="adventure-hand-bar-hand-name-{{@index}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{hand.name}}" class="adventure-hand-bar-hand-name">
                         {{hand.name}}
                     </div>
                     {{/if}}
@@ -34,16 +34,14 @@
             {{/each}}
         </div>
         {{#if shortcut}}
-        <div class="adventure-hand-bar-container adventure-hand-bar-pile-shortcut-container">
-            <div class="adventure-hand-bar-pile-shortcut" data-cards="{{shortcut.id}}">
-                {{localize "ADVENTUREHANDBARS.ViewPlayedAdventureCards"}}
-            </div>
+        <div class="adventure-hand-bar-container adventure-hand-bar-pile-shortcut" data-cards="{{shortcut.id}}">
+            {{localize "ADVENTUREHANDBARS.ViewPlayedAdventureCards"}}
         </div>
         {{/if}}
     </div>
     <div class="adventure-hand-bar-buttons-container">
-        <span class="adventure-hand-bar-button adventure-hand-bar-hide-show" data-tooltip="{{localize 'ADVENTUREHANDBARS.ToggleVisibility'}}"><i class="fas fa-caret-down"></i></span>
-        <span class="adventure-hand-bar-button adventure-hand-bar-subtract-bar" data-tooltip="{{localize 'ADVENTUREHANDBARS.RemoveBar'}}"><i class="fas fa-minus"></i></span>
-        <span class="adventure-hand-bar-button adventure-hand-bar-add-bar" data-tooltip="{{localize 'ADVENTUREHANDBARS.AddBar'}}"><i class="fas fa-plus"></i></span>
+        <span class="adventure-hand-bar-button adventure-hand-bar-hide-show" title="{{localize 'ADVENTUREHANDBARS.ToggleVisibility'}}"><i class="fas fa-caret-down"></i></span>
+        <span class="adventure-hand-bar-button adventure-hand-bar-subtract-bar" title="{{localize 'ADVENTUREHANDBARS.RemoveBar'}}"><i class="fas fa-minus"></i></span>
+        <span class="adventure-hand-bar-button adventure-hand-bar-add-bar" title="{{localize 'ADVENTUREHANDBARS.AddBar'}}"><i class="fas fa-plus"></i></span>
     </div>
 </div>

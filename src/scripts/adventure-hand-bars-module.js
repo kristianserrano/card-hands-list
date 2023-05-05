@@ -105,10 +105,13 @@ window.AdventureHandBarsModule = {
 
     // Add a hand bar
     document.querySelector('.adventure-hand-bar-add-bar').addEventListener('click', async () => {
+      const maxHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER"));
       let newHandCount = game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount') + 1;
-      if (newHandCount < AdventureHandBarsModule.handMax + 1) {
+      if (newHandCount < maxHands.length + 1) {
         const index = newHandCount - 1;
         game.settings.set(AdventureHandBarsModule.moduleName, 'HandCount', newHandCount);
+      } else {
+        ui.notifications.warn(game.i18n.localize("ADVENTUREHANDBARS.NoOtherHandsAvailable"));
       }
     });
 
@@ -208,6 +211,7 @@ Hooks.on("init", function () {
     default: 1,
     onChange: (value) => AdventureHandBarsModule.updateHandCount(value),
   });
+
   game.settings.register(AdventureHandBarsModule.moduleName, 'BarPosition', {
     name: game.i18n.localize("ADVENTUREHANDBARS.BarPositionSetting"),
     hint: game.i18n.localize("ADVENTUREHANDBARS.BarPositionSettingHint"),
