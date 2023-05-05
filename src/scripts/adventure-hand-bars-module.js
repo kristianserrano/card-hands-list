@@ -15,9 +15,6 @@ window.AdventureHandBarsModule = {
     // Create bar data.
     let count = game.settings.get(AdventureHandBarsModule.moduleName, "HandCount");
     count = count ? count : 0;
-    if (count > AdventureHandBarsModule.handMax) {
-      count = AdventureHandBarsModule.handMax;
-    }
     for (let i = 0; i < count; i++) {
       const key = `CardsID-${i}`;
       const handId = game.user.getFlag(AdventureHandBarsModule.moduleName, key);
@@ -25,7 +22,6 @@ window.AdventureHandBarsModule = {
       new AdventureHandBar({ barIndex: i, hand: hand });
     }
     await AdventureHandBarsModule.render();
-
   },
   render: async function () {
     let shortcutHand = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleId, 'dumpPileName'));
@@ -36,17 +32,22 @@ window.AdventureHandBarsModule = {
     }
 
     // Creates the outer container
-    const handMiniBar = await renderTemplate('modules/adventure-hand-bars/templates/adventure-hand-bars-container.hbs', { numBars: game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount'), bars: AdventureHandBarsModule.AdventureBarsList, shortcut: shortcutHand });
-    const handMiniBarElem = document.getElementById('adventure-hand-bars-container');
+    const adventureHandBar = await renderTemplate('modules/adventure-hand-bars/templates/adventure-hand-bars-container.hbs', {
+      numBars: game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount'),
+      bars: AdventureHandBarsModule.AdventureBarsList,
+      shortcut: shortcutHand,
+    });
+
+    const adventureHandBarElem = document.getElementById('adventure-hand-bars-container');
     const uiBottom = document.getElementById('ui-bottom');
-    if (!handMiniBarElem) {
-      uiBottom.insertAdjacentHTML("beforeEnd", handMiniBar);
+    if (!adventureHandBarElem) {
+      uiBottom.insertAdjacentHTML("beforeEnd", adventureHandBar);
     } else {
-      handMiniBarElem.outerHTML = handMiniBar;
+      adventureHandBarElem.outerHTML = adventureHandBar;
     }
 
     // Update the bar's placement in the UI
-    AdventureHandBarsModule.updatePosition();
+    AdventureHandBarsModule.setPosition();
     // Set up listeners for hand bar UI
     const bars = document.querySelectorAll('.adventure-hand-bar-hand-grid');
     for (const b of bars) {
@@ -61,7 +62,7 @@ window.AdventureHandBarsModule = {
           await bar.hand.sheet.render(true);
         });
       }
-      const handContainer = document.querySelector(`${barSelectorId} .adventure-hand-bar-card-container`);
+      const handContainer = document.querySelector(`${barSelectorId} .adventure-hand-bar-cards-container`);
       if (handContainer && bar.hand) {
         handContainer.addEventListener('click', async (e) => {
           await bar.hand.sheet.render(true);
@@ -69,7 +70,7 @@ window.AdventureHandBarsModule = {
       }
 
       //
-      const emptyHandMessage = document.querySelector(`${barSelectorId} .adventure-hand-bar-card-container.is-empty`);
+      const emptyHandMessage = document.querySelector(`${barSelectorId} .adventure-hand-bar-cards-container.is-empty`);
       if (!!emptyHandMessage) {
         emptyHandMessage.addEventListener('click', async (e) => {
           await bar.chooseHandDialog(e);
@@ -88,6 +89,7 @@ window.AdventureHandBarsModule = {
         });
       }
 
+      // Draw an Adventure Card
       const drawCardButton = document.querySelector(`${barSelectorId} .adventure-hand-bar-draw`);
       if (drawCardButton) {
         drawCardButton.addEventListener('click', async (e) => {
@@ -105,10 +107,9 @@ window.AdventureHandBarsModule = {
 
     // Add a hand bar
     document.querySelector('.adventure-hand-bar-add-bar').addEventListener('click', async () => {
-      const maxHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER"));
+      const availableAdventureHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER"));
       let newHandCount = game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount') + 1;
-      if (newHandCount < maxHands.length + 1) {
-        const index = newHandCount - 1;
+      if (newHandCount < availableAdventureHands.length + 1) {
         game.settings.set(AdventureHandBarsModule.moduleName, 'HandCount', newHandCount);
       } else {
         ui.notifications.warn(game.i18n.localize("ADVENTUREHANDBARS.NoOtherHandsAvailable"));
@@ -126,12 +127,11 @@ window.AdventureHandBarsModule = {
     // Show/Hide hand bars
     document.querySelector('.adventure-hand-bar-hide-show').addEventListener('click', () => document.getElementById('adventure-hand-bars-container').classList.toggle('hidden'));
 
-
     //initialize Options from saved settings
-    AdventureHandBarsModule.updatePosition();
+    AdventureHandBarsModule.setPosition();
   },
 
-  updatePosition: function () {
+  setPosition: function () {
     let position = game.settings.get(AdventureHandBarsModule.moduleName, "BarPosition");
     let content = document.getElementById("adventure-hand-bars-container");
     let target = document.querySelector("#ui-bottom > div");
@@ -152,9 +152,6 @@ window.AdventureHandBarsModule = {
   },
 
   updateHandCount: function (newHandCount) { // value is the new value of the setting
-    if (newHandCount > AdventureHandBarsModule.handMax) {
-      newHandCount = AdventureHandBarsModule.handMax;
-    }
     let difference = 0;
     //add more
     if (newHandCount > AdventureHandBarsModule.AdventureBarsList.length) {
@@ -162,7 +159,10 @@ window.AdventureHandBarsModule = {
       for (let i = 0; i < difference; i++) {
         const handId = game.user.getFlag(AdventureHandBarsModule.moduleName, `CardsID-${AdventureHandBarsModule.AdventureBarsList.length}`);
         const hand = game.cards.get(handId);
-        new AdventureHandBar({ barIndex: AdventureHandBarsModule.AdventureBarsList.length, hand: hand });
+        new AdventureHandBar({
+          barIndex: AdventureHandBarsModule.AdventureBarsList.length,
+          hand: hand
+        });
       }
     } else if (newHandCount < AdventureHandBarsModule.AdventureBarsList.length) {
       //remove some may need additional cleanup
@@ -224,7 +224,7 @@ Hooks.on("init", function () {
       "above_players": game.i18n.localize("ADVENTUREHANDBARS.BarPositionAbovePlayersSetting")
     },
     default: "right_bar",
-    onChange: (value) => AdventureHandBarsModule.updatePosition(),
+    onChange: (value) => AdventureHandBarsModule.setPosition(),
   });
 });
 
@@ -262,6 +262,17 @@ Hooks.on("createCard", (data) => {
 Hooks.on("deleteCard", (data) => {
   AdventureHandBarsModule.render();
 });
+
+// Hook for clearing a bar that has a hand that has been deleted.
+Hooks.on("deleteCards", (data) => {
+  const barToClear = document.querySelector(`.adventure-hand-bar-container[data-cards-id="${data.id}"]`);
+  if (barToClear) {
+    const barIndex = barToClear.parentElement.dataset.barIndex;
+    const bar = AdventureHandBarsModule.AdventureBarsList[barIndex];
+    bar.resetCardsID();
+  }
+});
+
 
 // Hook for rendering hands when cards are recalled.
 Hooks.on("createChatMessage", (data) => {
