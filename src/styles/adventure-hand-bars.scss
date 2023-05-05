@@ -124,11 +124,12 @@
         text-shadow: 0 0 8px var(--color-shadow-primary);
     }
 
-    .adventure-hand-bar-card-container {
+    .adventure-hand-bar-cards-container {
         grid-column: 1/2;
         grid-row: 2/3;
         display: flex;
         justify-content: start;
+        align-items: center;
         flex-direction: row;
         flex-grow: 1;
         overflow: auto;
@@ -149,7 +150,7 @@
         border: none;
     }
 
-    .adventure-hand-bar-card-container.is-empty {
+    .adventure-hand-bar-cards-container.is-empty {
         height: 50px;
         align-items: center;
         font-size: var(--font-size-12);
@@ -170,7 +171,7 @@
     }
 
     .adventure-hand-bar-hand-name,
-    .adventure-hand-bar-card-container,
+    .adventure-hand-bar-cards-container,
     .adventure-hand-bar-pile-shortcut {
         &:hover {
             box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
@@ -184,8 +185,8 @@
             flex-direction: column;
         }
 
-        .adventure-hand-bar-left .adventure-hand-bar-card-container,
-        .adventure-hand-bar-right .adventure-hand-bar-card-container {
+        .adventure-hand-bar-left .adventure-hand-bar-cards-container,
+        .adventure-hand-bar-right .adventure-hand-bar-cards-container {
             width: 100%;
         }
         .adventure-hand-bar-left .adventure-hand-bar-settings,

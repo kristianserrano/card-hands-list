@@ -10,7 +10,7 @@
                         {{hand.name}}
                     </div>
                     {{/if}}
-                    <div id="adventure-hand-bar-card-container{{#if hand}}-{{@index}}{{/if}}"{{#if hand}} data-cards-id="{{id}}"{{/if}} class="adventure-hand-bar-container adventure-hand-bar-card-container{{#unless hand}} is-empty{{/unless}}">
+                    <div id="adventure-hand-bar-cards-container{{#if hand}}-{{@index}}{{/if}}"{{#if hand}} data-cards-id="{{hand.id}}"{{/if}} class="adventure-hand-bar-container adventure-hand-bar-cards-container{{#unless hand}} is-empty{{/unless}}">
                         {{#if hand}}
                         {{#each hand.cards}}
                         <img class="adventure-hand-bar-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="{{name}}: {{description}}" />
