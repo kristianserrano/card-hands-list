@@ -1,181 +1,89 @@
 
-import AdventureHandBar from './adventure-hand-bars.js';
-
 /**
- * Card Hand Toolbar to show cards on the main display
- * Author: pengrath
+ * Savage Worlds Adventure Deck Hand Toolbar
+ * A Foundry VTT module to display and provide quick access to a player's Adventure Cards in a small toolbar
+ * Developer: Kristian Serrano
+ * Based on Card Hands Mini Toolbar by pengrath
  */
 
-window.AdventureHandBarsModule = {
-  AdventureBarsList: new Array(),
-  moduleName: "adventure-hand-bars",
-  adventureDeckModuleId: "adventure-deck",
-  handMax: 10,
-  createBars: async function () {
-    // Create bar data.
-    let count = game.settings.get(AdventureHandBarsModule.moduleName, "HandCount");
-    count = count ? count : 0;
-    for (let i = 0; i < count; i++) {
-      const key = `CardsID-${i}`;
-      const handId = game.user.getFlag(AdventureHandBarsModule.moduleName, key);
-      const hand = game.cards.get(handId);
-      new AdventureHandBar({ barIndex: i, hand: hand });
-    }
-    await AdventureHandBarsModule.render();
-  },
+const ADVENTURE_DECK_MODULE = {
+  id: "adventure-deck"
+};
+const ADVENTURE_HAND_BARS_MODULE = {
+  adventureBarsList: new Array(),
+  id: "adventure-hand-bars",
   render: async function () {
-    let shortcutHand = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleId, 'dumpPileName'));
-    if (game.user.isGM && shortcutHand && shortcutHand.ownership.default !== CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
-      shortcutHand.update({
-        'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+    const availableAdventureHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(ADVENTURE_DECK_MODULE.id, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER"));
+    let discardPile = game.cards.getName(game.settings.get(ADVENTURE_DECK_MODULE.id, 'dumpPileName'));
+    if (game.user.isGM && discardPile && discardPile.ownership.default !== CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
+      discardPile.update({
+        'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
       });
     }
 
+    // Get the container for the module UI
+    const adventureHandBarElem = document.getElementById('adventure-hand-bars-container');
+
     // Creates the outer container
     const adventureHandBar = await renderTemplate('modules/adventure-hand-bars/templates/adventure-hand-bars-container.hbs', {
-      numBars: game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount'),
-      bars: AdventureHandBarsModule.AdventureBarsList,
-      shortcut: shortcutHand,
+      hands: availableAdventureHands,
+      discardPile: discardPile,
+      hidden: adventureHandBarElem ? adventureHandBarElem.classList.contains('hidden') : true
     });
 
-    const adventureHandBarElem = document.getElementById('adventure-hand-bars-container');
-    const uiBottom = document.getElementById('ui-bottom');
-    if (!adventureHandBarElem) {
-      uiBottom.insertAdjacentHTML("beforeEnd", adventureHandBar);
+    if (adventureHandBarElem) {
+      // Update the HTML (There's a brief moment during dealing when the element doesn't have a parent element)
+      if (adventureHandBarElem.parentElement) adventureHandBarElem.outerHTML = adventureHandBar;
     } else {
-      adventureHandBarElem.outerHTML = adventureHandBar;
+      // If there is not an existing element, create it
+      // Get Foundry VTT's Player List element
+      const playersListElement = document.getElementById("players");
+      // Insert the module UI element
+      playersListElement.insertAdjacentHTML("beforebegin", adventureHandBar);
     }
 
-    // Update the bar's placement in the UI
-    AdventureHandBarsModule.setPosition();
     // Set up listeners for hand bar UI
-    const bars = document.querySelectorAll('.adventure-hand-bar-hand-grid');
+    // Get all the bars and loop through them
+    const bars = document.querySelectorAll('.adventure-hand-bar-cards');
+    // For each bar...
     for (const b of bars) {
-      const barIndex = parseInt(b.dataset.barIndex);
-      const bar = AdventureHandBarsModule.AdventureBarsList[barIndex];
-      const barSelectorId = `#adventure-hand-bar-hand-${barIndex}`;
+      const hand = await game.cards.get(b.dataset.handId);
+      // Set the element ID to use for query selectors.
+      const barElemId = `#adventure-hand-bar-hand-${hand.id}`;
 
-      // Open Hand Sheet
-      const handName = document.querySelector(`${barSelectorId} .adventure-hand-bar-hand-name`);
-      if (handName && bar.hand) {
-        handName.addEventListener('click', async (e) => {
-          await bar.hand.sheet.render(true);
+      // Add listener for opening the hand sheet when clicking on the hand name
+      const handNameElem = document.querySelector(`${barElemId} .adventure-hand-bar-hand-name`);
+      if (handNameElem) {
+        handNameElem.addEventListener('click', async (e) => {
+          await hand.sheet.render(true);
         });
       }
-      const handContainer = document.querySelector(`${barSelectorId} .adventure-hand-bar-cards-container`);
-      if (handContainer && bar.hand) {
+
+      // Add listener for opening the hand sheet when clicking on the cards container
+      const handContainer = document.querySelector(`${barElemId} .adventure-hand-bar-cards-container`);
+      if (handContainer) {
         handContainer.addEventListener('click', async (e) => {
-          await bar.hand.sheet.render(true);
-        });
-      }
-
-      //
-      const emptyHandMessage = document.querySelector(`${barSelectorId} .adventure-hand-bar-cards-container.is-empty`);
-      if (!!emptyHandMessage) {
-        emptyHandMessage.addEventListener('click', async (e) => {
-          await bar.chooseHandDialog(e);
-        });
-      }
-
-      // Choose Hand
-      const chooseHandButton = document.querySelector(`${barSelectorId} .adventure-hand-bar-settings-choose`);
-      if (chooseHandButton) {
-        chooseHandButton.addEventListener('click', async (e) => {
-          if (bar.hand) {
-            await bar.chooseDialog(e);
-          } else {
-            await bar.chooseHandDialog();
-          }
+          await hand.sheet.render(true);
         });
       }
 
       // Draw an Adventure Card
-      const drawCardButton = document.querySelector(`${barSelectorId} .adventure-hand-bar-draw`);
+      const drawCardButton = document.querySelector(`${barElemId} .adventure-hand-bar-draw`);
       if (drawCardButton) {
         drawCardButton.addEventListener('click', async (e) => {
-          await bar.drawCard(e);
+          await ADVENTURE_HAND_BARS_MODULE.drawCard(e);
         });
       }
     }
 
-    // Display Discard Pile Sheet
-    document.querySelector('.adventure-hand-bar-pile-shortcut').addEventListener('click', async function (e) {
-      let cardsId = e.target.dataset.cards;
-      const cardStack = game.cards.get(cardsId);
-      await cardStack.sheet.render(true);
+    // Add listener for hiding and showing the module UI container when the icon is clicked
+    document.querySelector('.adventure-hand-bar-hide-show').addEventListener('click', () => {
+      document.getElementById('adventure-hand-bars-container').classList.toggle('hidden');
+      const arrow = document.querySelector('.adventure-hands-mode');
+      arrow.classList.toggle('fa-angle-up');
+      arrow.classList.toggle('fa-angle-down');
     });
-
-    // Add a hand bar
-    document.querySelector('.adventure-hand-bar-add-bar').addEventListener('click', async () => {
-      const availableAdventureHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(AdventureHandBarsModule.adventureDeckModuleId, 'group') === 'adventure hands' && c.testUserPermission(game.user, "OBSERVER"));
-      let newHandCount = game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount') + 1;
-      if (newHandCount < availableAdventureHands.length + 1) {
-        game.settings.set(AdventureHandBarsModule.moduleName, 'HandCount', newHandCount);
-      } else {
-        ui.notifications.warn(game.i18n.localize("ADVENTUREHANDBARS.NoOtherHandsAvailable"));
-      }
-    });
-
-    // Remove a hand bar
-    document.querySelector('.adventure-hand-bar-subtract-bar').addEventListener('click', async () => {
-      let newHandCount = game.settings.get(AdventureHandBarsModule.moduleName, 'HandCount') - 1;
-      if (newHandCount > 0) {
-        game.settings.set(AdventureHandBarsModule.moduleName, 'HandCount', newHandCount);
-      }
-    });
-
-    // Show/Hide hand bars
-    document.querySelector('.adventure-hand-bar-hide-show').addEventListener('click', () => document.getElementById('adventure-hand-bars-container').classList.toggle('hidden'));
-
-    //initialize Options from saved settings
-    AdventureHandBarsModule.setPosition();
   },
-
-  setPosition: function () {
-    let position = game.settings.get(AdventureHandBarsModule.moduleName, "BarPosition");
-    let content = document.getElementById("adventure-hand-bars-container");
-    let target = document.querySelector("#ui-bottom > div");
-    if (content) {
-      content.classList.remove("adventure-hand-bar-above-players","adventure-hand-bar-left");
-      if (position === "left_bar") {
-        content.classList.add("adventure-hand-bar-left");
-        target.append(content);
-      } else if (position === 'above_players') {
-        const playersListElement = document.getElementById("players");
-        target = playersListElement;
-        content.classList.add("adventure-hand-bar-above-players");
-        target.before(content);
-      } else {
-        target.append(content);
-      }
-    }
-  },
-
-  updateHandCount: function (newHandCount) { // value is the new value of the setting
-    let difference = 0;
-    //add more
-    if (newHandCount > AdventureHandBarsModule.AdventureBarsList.length) {
-      difference = newHandCount - AdventureHandBarsModule.AdventureBarsList.length;
-      for (let i = 0; i < difference; i++) {
-        const handId = game.user.getFlag(AdventureHandBarsModule.moduleName, `CardsID-${AdventureHandBarsModule.AdventureBarsList.length}`);
-        const hand = game.cards.get(handId);
-        new AdventureHandBar({
-          barIndex: AdventureHandBarsModule.AdventureBarsList.length,
-          hand: hand
-        });
-      }
-    } else if (newHandCount < AdventureHandBarsModule.AdventureBarsList.length) {
-      //remove some may need additional cleanup
-      difference = AdventureHandBarsModule.AdventureBarsList.length - newHandCount;
-      for (let i = 0; i < difference; i++) {
-        const bar = AdventureHandBarsModule.AdventureBarsList.pop();
-        const barHtml = document.getElementById(`adventure-hand-bar-hand-${bar.barIndex}`);
-        barHtml.remove();
-      }
-    }
-    AdventureHandBarsModule.render();
-  },
-
   //Opens the hand for any additional options
   openHand: async function (hand) {
     if (hand == undefined) {
@@ -188,43 +96,35 @@ window.AdventureHandBarsModule = {
       hand.sheet.render(true);
     }
   },
+  //Draws a card into this hand
+  drawCard: async function (e) {
+    const handId = e.target.parentElement.dataset.handId;
+    const hand = game.cards.get(handId);
+    const deck = game.cards.getName(game.settings.get(ADVENTURE_DECK_MODULE.id, "deckName"));
+    const prevDrawn = deck.drawnCards;
+    var newlyDrawn = (await deck.deal([hand], 1)).drawnCards.filter(n => !prevDrawn.includes(n));
 
-  cardSort(a, b) {
-    if (a.sort < b.sort) return 1;
-    if (a.sort > b.sort) return -1;
-    return 0;
+    // Use adventure deck chat templates.
+    if (game.settings.get("adventure-deck", "announceCards")) { //AnnounceCards?
+      // Prerender chatcard.
+      const message = await renderTemplate("modules/adventure-deck/templates/dealtcards-chatcard.hbs", {
+        player: hand.name,
+        cards: newlyDrawn
+      });
+
+      // Print card to chat.
+      ChatMessage.create({
+        user: game.user.id,
+        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+        content: message,
+      });
+    }
   }
 };
 
 Hooks.on("init", function () {
-  game.settings.register(AdventureHandBarsModule.moduleName, 'HandCount', {
-    name: game.i18n.localize("ADVENTUREHANDBARS.HandCountSetting"),
-    hint: game.i18n.localize("ADVENTUREHANDBARS.HandCountSettingHint"),
-    scope: 'client',     // "world" = sync to db, "client" = local storage
-    config: false,       // false if you dont want it to show in module config
-    type: Number,       // Number, Boolean, String,
-    range: {             // If range is specified, the resulting setting will be a range slider
-      min: 0,
-      max: 10,
-      step: 1
-    },
-    default: 1,
-    onChange: (value) => AdventureHandBarsModule.updateHandCount(value),
-  });
-
-  game.settings.register(AdventureHandBarsModule.moduleName, 'BarPosition', {
-    name: game.i18n.localize("ADVENTUREHANDBARS.BarPositionSetting"),
-    hint: game.i18n.localize("ADVENTUREHANDBARS.BarPositionSettingHint"),
-    scope: 'client',     // "world" = sync to db, "client" = local storage
-    config: true,       // false if you dont want it to show in module config
-    type: String,       // Number, Boolean, String,
-    choices: {
-      "right_bar": game.i18n.localize("ADVENTUREHANDBARS.BarPositionRightMacroSetting"),
-      "left_bar": game.i18n.localize("ADVENTUREHANDBARS.BarPositionLeftMacroSetting"),
-      "above_players": game.i18n.localize("ADVENTUREHANDBARS.BarPositionAbovePlayersSetting")
-    },
-    default: "right_bar",
-    onChange: (value) => AdventureHandBarsModule.setPosition(),
+  Handlebars.registerHelper("isGM", function () {
+    return game.user.isGM;
   });
 });
 
@@ -232,52 +132,34 @@ Hooks.on("ready", function () {
   // Pre Load templates.
   loadTemplates(['modules/adventure-hand-bars/templates/adventure-hand-bars-container.hbs']);
   // Get the adventure deck using the stored name in the adventure cards module.
-  const adventureDeck = game.cards.getName(game.settings.get(AdventureHandBarsModule.adventureDeckModuleId, 'deckName'));
+  const adventureDeck = game.cards.getName(game.settings.get(ADVENTURE_DECK_MODULE.id, 'deckName'));
   // Check if default ownership is Limited for card draws. If it's not, set it.
   if (game.user.isGM && adventureDeck && adventureDeck.ownership.default < CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED) {
     adventureDeck.update({ 'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED });
   }
-  AdventureHandBarsModule.createBars();
+  ADVENTURE_HAND_BARS_MODULE.render();
 });
 
 /*
  * Hooks to listen to changes in settings and hands data
- * Useful: CONFIG.debug.hooks = true
+ * CONFIG.debug.hooks = true
 */
 
-// Hook for rendering the hands container if the name of the Adventure Deck Discard Pile is changed.
-Hooks.on("updateSetting", (data) => {
-  const keys = ['adventure-deck.dumpPileName', `${AdventureHandBarsModule.moduleName}.BarPosition`]
-  if (keys.includes(data.key)) {
-    AdventureHandBarsModule.render();
-  }
-});
+// CONFIG.debug.hooks = true
+// or use the Developer Mode module
 
 // Hook for rendering hands when cards are dealt.
 Hooks.on("createCard", (data) => {
-  AdventureHandBarsModule.render();
+  ADVENTURE_HAND_BARS_MODULE.render();
 });
 
-// Hook for rendering hands when cards are dealt.
+// Hook for rendering hands when a card is deleted.
 Hooks.on("deleteCard", (data) => {
-  AdventureHandBarsModule.render();
+  ADVENTURE_HAND_BARS_MODULE.render();
 });
 
 // Hook for clearing a bar that has a hand that has been deleted.
 Hooks.on("deleteCards", (data) => {
-  const barToClear = document.querySelector(`.adventure-hand-bar-container[data-cards-id="${data.id}"]`);
-  if (barToClear) {
-    const barIndex = barToClear.parentElement.dataset.barIndex;
-    const bar = AdventureHandBarsModule.AdventureBarsList[barIndex];
-    bar.resetCardsID();
-  }
+  ADVENTURE_HAND_BARS_MODULE.render();
 });
 
-
-// Hook for rendering hands when cards are recalled.
-Hooks.on("createChatMessage", (data) => {
-  // Get the Adventure Deck
-  const deck = game.cards.getName(game.settings.get("adventure-deck", "deckName"));
-  // If the message includes the UUID of the deck, render the hands.
-  if (data.content.includes(deck.uuid)) AdventureHandBarsModule.render();
-});
