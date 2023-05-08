@@ -1,5 +1,23 @@
 # Savage Worlds Adventure Deck Hand Toolbar Changelog
 
+## v2.0.1
+
+Updates Changelog because I keep forgetting to do that.
+
+## v2.0.0
+
+### Changed
+
+- Completely changes UI.
+- Bars are always loaded above the players list.
+- Only owned hands have a draw card option.
+- List is collapsed by default
+       - Owners see their own hand by default.
+       - GMs see the discard pile by default.
+- All settings removed.
+       - Number of bars is always number of adventure card hands plus the discard pile.
+       - Position is always above the players list.
+
 ## v1.0.7
 
 ### Added
