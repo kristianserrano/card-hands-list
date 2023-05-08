@@ -1,40 +1,36 @@
-<aside id="adventure-hand-bars-container" class="app adventure-hand-bars-container{{#if hidden}} hidden{{/if}}">
-    <div id="adventure-hand-bar-title-container" class="adventure-hand-bar-hide-show">
-        <h3>
-            <i class="fas fa-cards-blank"></i> {{localize 'ADVENTUREHANDBARS.AdventureCards'}} <i class="adventure-hands-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
-        </h3>
-    </div>
-    <div class="adventure-hand-inner-wrapper">
-        <div id="adventure-hand-bar-hands-container">
-            {{#each hands}}
-            <div id="adventure-hand-bar-{{id}}" class="adventure-hand-bar-cards{{#if isOwner}}{{#unless ../isGM}} is-owner{{/unless}}{{/if}}" data-hand-id="{{id}}">
-                <div class="adventure-hand-bar-grid" data-hand-id="{{id}}">
-                    <div class="adventure-hand-bar-name" data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{name}}">
-                        {{name}}
-                    </div>
-                    {{#if isOwner}}
-                    <div class="adventure-hand-bar-button adventure-hand-bar-draw" data-hand-id="{{id}}" data-tooltip="{{localize 'ADVENTUREHANDBARS.DrawCard'}}">
-                        <i class="fas fa-cards-blank"></i>
-                    </div>
-                    {{/if}}
-                    <div class="adventure-hand-bar-container adventure-hand-bar-cards-container" data-hand-id="{{id}}">
-                        {{#each cards}}
-                        <img class="adventure-hand-bar-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
-                        {{/each}}
-                    </div>
+<aside id="{{moduleId}}-container" class="app {{moduleId}}-container{{#if hidden}} hidden{{/if}}">
+    <h3>
+        <i class="fas fa-cards-blank"></i> {{localize (lookup (concat translationPrefix '.AdventureCards') 'string')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
+    </h3>
+    <div id="{{moduleId}}-hands-wrapper">
+        {{#each hands}}
+        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if isOwner}}{{#unless ../isGM}} is-owner{{/unless}}{{/if}}" data-hand-id="{{id}}">
+            <div class="{{../moduleId}}-grid" data-hand-id="{{id}}">
+                <div class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
+                    {{name}}
+                </div>
+                {{#if isOwner}}
+                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
+                    <i class="fas fa-cards-blank"></i>
+                </div>
+                {{/if}}
+                <div class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
+                    {{#each cards}}
+                    <img class="{{../../moduleId}}-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                    {{/each}}
                 </div>
             </div>
-            {{/each}}
-            <div id="adventure-hand-bar-{{discardPile.id}}" class="adventure-hand-bar-cards adventure-hand-bar-pile{{#if isGM}} is-owner{{/if}}" data-hand-id="{{discardPile.id}}">
-                <div class="adventure-hand-bar-grid">
-                    <div data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{discardPile.name}}" class="adventure-hand-bar-name">
-                        {{discardPile.name}}
-                    </div>
-                    <div class="adventure-hand-bar-container adventure-hand-bar-cards-container" data-hand-id="{{discardPile.id}}">
-                        {{#each discardPile.cards}}
-                        <img class="adventure-hand-bar-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
-                        {{/each}}
-                    </div>
+        </div>
+        {{/each}}
+        <div id="{{moduleId}}-{{discardPile.id}}" class="{{moduleId}}-cards {{moduleId}}-pile{{#if isGM}} is-owner{{/if}}" data-hand-id="{{discardPile.id}}">
+            <div class="{{moduleId}}-grid">
+                <div data-tooltip="{{localize (lookup (concat translationPrefix '.Open') 'string')}} {{discardPile.name}}" class="{{moduleId}}-name">
+                    {{discardPile.name}}
+                </div>
+                <div class="{{moduleId}}-container {{moduleId}}-cards-container" data-hand-id="{{discardPile.id}}">
+                    {{#each discardPile.cards}}
+                    <img class="{{../moduleId}}-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                    {{/each}}
                 </div>
             </div>
         </div>
