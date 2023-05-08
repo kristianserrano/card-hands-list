@@ -9,6 +9,7 @@
 const ADVENTURE_DECK_MODULE = {
   id: "adventure-deck"
 };
+
 const ADVENTURE_HAND_BARS_MODULE = {
   adventureBarsList: new Array(),
   id: "adventure-hand-bars",
@@ -24,51 +25,56 @@ const ADVENTURE_HAND_BARS_MODULE = {
     // Get the container for the module UI
     const adventureHandBarElem = document.getElementById('adventure-hand-bars-container');
 
-    // Creates the outer container
+    // Get the hidden state of the container from the settings
+    const hidden = game.settings.get(ADVENTURE_HAND_BARS_MODULE.id, 'hideBars');
+    // Render the template
     const adventureHandBar = await renderTemplate('modules/adventure-hand-bars/templates/adventure-hand-bars-container.hbs', {
       hands: availableAdventureHands,
       discardPile: discardPile,
-      hidden: adventureHandBarElem ? adventureHandBarElem.classList.contains('hidden') : true
+      hidden: hidden,
+      isGM: game.user.isGM
     });
 
+    // If the container is in the DOM...
     if (adventureHandBarElem) {
       // Update the HTML (There's a brief moment during dealing when the element doesn't have a parent element)
       if (adventureHandBarElem.parentElement) adventureHandBarElem.outerHTML = adventureHandBar;
-    } else {
-      // If there is not an existing element, create it
+    } else{
+      // Otherwise insert it
       // Get Foundry VTT's Player List element
       const playersListElement = document.getElementById("players");
       // Insert the module UI element
       playersListElement.insertAdjacentHTML("beforebegin", adventureHandBar);
     }
 
-    // Set up listeners for hand bar UI
+    /* Set up listeners for hand bar UI */
+
     // Get all the bars and loop through them
     const bars = document.querySelectorAll('.adventure-hand-bar-cards');
+
     // For each bar...
     for (const b of bars) {
+      // Get its hand
       const hand = await game.cards.get(b.dataset.handId);
-      // Set the element ID to use for query selectors.
-      const barElemId = `#adventure-hand-bar-hand-${hand.id}`;
+
+      // Set the element ID to use for query selectors
+      const barElemId = `#adventure-hand-bar-${hand.id}`;
 
       // Add listener for opening the hand sheet when clicking on the hand name
-      const handNameElem = document.querySelector(`${barElemId} .adventure-hand-bar-hand-name`);
-      if (handNameElem) {
-        handNameElem.addEventListener('click', async (e) => {
-          await hand.sheet.render(true);
-        });
-      }
+      const handNameElem = document.querySelector(`${barElemId} .adventure-hand-bar-name`);
+      handNameElem.addEventListener('click', async (e) => {
+        await hand.sheet.render(true);
+      });
 
       // Add listener for opening the hand sheet when clicking on the cards container
       const handContainer = document.querySelector(`${barElemId} .adventure-hand-bar-cards-container`);
-      if (handContainer) {
-        handContainer.addEventListener('click', async (e) => {
-          await hand.sheet.render(true);
-        });
-      }
+      handContainer.addEventListener('click', async (e) => {
+        await hand.sheet.render(true);
+      });
 
-      // Draw an Adventure Card
+      // Add listener for drawing an Adventure Card
       const drawCardButton = document.querySelector(`${barElemId} .adventure-hand-bar-draw`);
+      // This button only appears for those with ownership permission, so check if it exists
       if (drawCardButton) {
         drawCardButton.addEventListener('click', async (e) => {
           await ADVENTURE_HAND_BARS_MODULE.drawCard(e);
@@ -77,11 +83,13 @@ const ADVENTURE_HAND_BARS_MODULE = {
     }
 
     // Add listener for hiding and showing the module UI container when the icon is clicked
-    document.querySelector('.adventure-hand-bar-hide-show').addEventListener('click', () => {
-      document.getElementById('adventure-hand-bars-container').classList.toggle('hidden');
+    document.querySelector('.adventure-hand-bar-hide-show').addEventListener('click', async () => {
+      const adventureHandBarElem = document.getElementById('adventure-hand-bars-container');
+      adventureHandBarElem.classList.toggle('hidden');
       const arrow = document.querySelector('.adventure-hands-mode');
       arrow.classList.toggle('fa-angle-up');
       arrow.classList.toggle('fa-angle-down');
+      await game.settings.set(ADVENTURE_HAND_BARS_MODULE.id, 'hideBars', adventureHandBarElem.classList.contains('hidden'))
     });
   },
   //Opens the hand for any additional options
@@ -113,7 +121,7 @@ const ADVENTURE_HAND_BARS_MODULE = {
       });
 
       // Print card to chat.
-      ChatMessage.create({
+      await ChatMessage.create({
         user: game.user.id,
         type: CONST.CHAT_MESSAGE_TYPES.OTHER,
         content: message,
@@ -123,8 +131,11 @@ const ADVENTURE_HAND_BARS_MODULE = {
 };
 
 Hooks.on("init", function () {
-  Handlebars.registerHelper("isGM", function () {
-    return game.user.isGM;
+  game.settings.register(ADVENTURE_HAND_BARS_MODULE.id, 'hideBars', {
+    scope: 'client',     // "world" = sync to db, "client" = local storage
+    config: false,       // false if you dont want it to show in module config
+    type: Boolean,       // Number, Boolean, String,
+    default: true,
   });
 });
 
@@ -148,18 +159,27 @@ Hooks.on("ready", function () {
 // CONFIG.debug.hooks = true
 // or use the Developer Mode module
 
-// Hook for rendering hands when cards are dealt.
+Hooks.on("renderPlayerList", (data) => {
+  if (game.ready) {
+    ADVENTURE_HAND_BARS_MODULE.render();
+  }
+});
+Hooks.on("updateCard", (data) => {
+  if (data.parent.type === 'hand') {
+    ADVENTURE_HAND_BARS_MODULE.render();
+  }
+});
+Hooks.on("deleteCard", (data) => {
+  if (data.parent.type === 'hand') {
+    ADVENTURE_HAND_BARS_MODULE.render();
+  }
+});
+Hooks.on("passCards", (data) => {
+  ADVENTURE_HAND_BARS_MODULE.render();
+});
 Hooks.on("createCard", (data) => {
   ADVENTURE_HAND_BARS_MODULE.render();
 });
-
-// Hook for rendering hands when a card is deleted.
-Hooks.on("deleteCard", (data) => {
+Hooks.on("returnCards", (data) => {
   ADVENTURE_HAND_BARS_MODULE.render();
 });
-
-// Hook for clearing a bar that has a hand that has been deleted.
-Hooks.on("deleteCards", (data) => {
-  ADVENTURE_HAND_BARS_MODULE.render();
-});
-

@@ -7,9 +7,9 @@
     <div class="adventure-hand-inner-wrapper">
         <div id="adventure-hand-bar-hands-container">
             {{#each hands}}
-            <div id="adventure-hand-bar-hand-{{id}}" class="adventure-hand-bar-cards{{#if isOwner}}{{#unless (isGM)}} is-owner{{/unless}}{{/if}}" data-hand-id="{{id}}">
-                <div class="adventure-hand-bar-hand-grid" data-hand-id="{{id}}">
-                    <div class="adventure-hand-bar-hand-name" data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{name}}">
+            <div id="adventure-hand-bar-{{id}}" class="adventure-hand-bar-cards{{#if isOwner}}{{#unless ../isGM}} is-owner{{/unless}}{{/if}}" data-hand-id="{{id}}">
+                <div class="adventure-hand-bar-grid" data-hand-id="{{id}}">
+                    <div class="adventure-hand-bar-name" data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{name}}">
                         {{name}}
                     </div>
                     {{#if isOwner}}
@@ -25,9 +25,9 @@
                 </div>
             </div>
             {{/each}}
-            <div id="adventure-hand-bar-hand-{{discardPile.id}}" class="adventure-hand-bar-cards adventure-hand-bar-pile{{#if (isGM)}} is-owner{{/if}}" data-hand-id="{{discardPile.id}}">
-                <div class="adventure-hand-bar-hand-grid">
-                    <div data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{discardPile.name}}" class="adventure-hand-bar-hand-name">
+            <div id="adventure-hand-bar-{{discardPile.id}}" class="adventure-hand-bar-cards adventure-hand-bar-pile{{#if isGM}} is-owner{{/if}}" data-hand-id="{{discardPile.id}}">
+                <div class="adventure-hand-bar-grid">
+                    <div data-tooltip="{{localize 'ADVENTUREHANDBARS.Open'}} {{discardPile.name}}" class="adventure-hand-bar-name">
                         {{discardPile.name}}
                     </div>
                     <div class="adventure-hand-bar-container adventure-hand-bar-cards-container" data-hand-id="{{discardPile.id}}">
