@@ -3,7 +3,7 @@
 	"id": "adventure-deck-hands",
 	"name": "adventure-deck-hands",
 	"description": "A module to display a player's Adventure Cards on the screen.",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"compatibility": {
 		"minimum": "10",
 		"verified": "11"
@@ -54,6 +54,6 @@
 	},
 	"url": "https://gitlab.com/kristianserrano/adventure-deck-hands",
 	"update": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-deck-hands/module.json",
-	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-deck-hands/adventure-deck-hands-2.1.0.zip",
+	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-deck-hands/adventure-deck-hands-2.1.1.zip",
 	"manifest": "https://kristianserrano.s3.amazonaws.com/foundryvtt/adventure-deck-hands/module.json"
 }
