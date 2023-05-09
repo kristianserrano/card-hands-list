@@ -14,11 +14,13 @@
                     <i class="fas fa-cards-blank"></i>
                 </div>
                 {{/if}}
-                <div class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
+                <ul class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
                     {{#each cards}}
-                    <img class="{{../../moduleId}}-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                    <li class="{{../../moduleId}}-card">
+                        <img data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                    </li>
                     {{/each}}
-                </div>
+                </ul>
             </div>
         </div>
         {{/each}}
@@ -27,11 +29,13 @@
                 <div data-tooltip="{{localize (lookup (concat translationPrefix '.Open') 'string')}} {{discardPile.name}}" class="{{moduleId}}-name">
                     {{discardPile.name}}
                 </div>
-                <div class="{{moduleId}}-container {{moduleId}}-cards-container" data-hand-id="{{discardPile.id}}">
+                <ul class="{{moduleId}}-container {{moduleId}}-cards-container" data-hand-id="{{discardPile.id}}">
                     {{#each discardPile.cards}}
-                    <img class="{{../moduleId}}-card card" data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                    <li class="{{../moduleId}}-card">
+                    <img data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
                     {{/each}}
-                </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
