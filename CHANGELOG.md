@@ -1,12 +1,15 @@
-# Savage Worlds Adventure Deck Hand Toolbar Changelog
+# Savage Worlds Adventure Deck Hands Changelog
+
+## v2.1.0
+
+- Renames module and some files.
+- Abstracts the module for easy adaptation for other decks.
 
 ## v2.0.1
 
 Updates Changelog because I keep forgetting to do that.
 
 ## v2.0.0
-
-### Changed
 
 - Completely changes UI.
 - Bars are always loaded above the players list.
@@ -20,24 +23,14 @@ Updates Changelog because I keep forgetting to do that.
 
 ## v1.0.7
 
-### Added
-
 - Prevents adding bars if there are no more Adventure Card hands available
 - When an adventure hand is deleted, the respective bar is reset.
 
 ## v1.0.4 - 1.0.5
 
-### Changed
-
 - Design  of the toolbar in general
 - Entire toolbar collapses to a smaller footprint
-
-### Fixed
-
 - Shortcut to discard pile has proper hover styles
-
-### Added
-
 - Individual cards now have tooltips that include title and description for quick scan without having to open the sheet.
 - Hand name now links to hand sheet as well.
 

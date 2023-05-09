@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "adventure-deck-hands",
-	"version": "2.0.2",
+	"version": "2.1.0",
 	"description": "A fork of the Hand Mini Bar (HMB) module for FoundryVTT completely reconfigured and redesigned to work specifically with the official Savage Worlds Adventure Deck module. Please note that the Adventure Deck module is required to activate this module.",
 	"main": "index.js",
 	"repository": {
