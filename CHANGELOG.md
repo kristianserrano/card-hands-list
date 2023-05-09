@@ -1,5 +1,9 @@
 # Savage Worlds Adventure Deck Hands Changelog
 
+## v2.1.3
+
+- Minor CSS and HTML tweaks
+
 ## v2.1.0
 
 - Renames module and some files.
