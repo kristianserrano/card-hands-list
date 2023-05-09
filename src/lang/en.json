@@ -1,24 +1,7 @@
 {
-    "ADVENTURE_HAND_BARS": {
-        "AdventureCards": "Adventure Cards",
-        "NoHandMessage": "Set an Adventure Card hand",
-        "ConfigureToolbar": "Configure Toolbar",
+    "ADVENTUREDECKHANDS": {
+        "DeckName": "Adventure Cards",
         "DrawCard": "Draw an Adventure Card",
-        "DeckList": "List of Adventure Card hands",
-        "ChooseHand": "Choose a hand.",
-        "ResetToolbar": "Reset the toolbar?",
-        "ChooseOrReset": "Choose a different hand or reset the toolbar?",
-        "HandCountSetting": "Toolbars",
-        "HandCountSettingHint": "Number of toolbars to display",
-        "BarPositionAbovePlayersSetting": "Above Player List",
-        "BarPositionRightMacroSetting": "Right of Macro Bar",
-        "BarPositionLeftMacroSetting": "Left of Macro Bar",
-        "BarPositionSetting": "Placement",
-        "BarPositionSettingHint": "Select the placement of your Adventure Card hands toolbar",
-        "ReconfigureToolbarTitle": "Reconfigure Toolbar",
-        "ToggleVisibility": "Show/Hide Adventure Card Hands",
-        "Hand": "Hand",
-        "Open": "Open",
-        "NoOtherHandsAvailable": "There are no other Adventure Card hands available to select."
+        "Open": "Open"
     }
 }

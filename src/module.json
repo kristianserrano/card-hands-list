@@ -1,8 +1,8 @@
 {
-	"title": "Savage Worlds Adventure Deck Hand Toolbar",
-	"id": "adventure-hand-bars",
-	"name": "adventure-hand-bars",
-	"description": "A module to display a player's Adventure Cards on the screen in a small toolbar",
+	"title": "Savage Worlds Adventure Deck Hands",
+	"id": "adventure-deck-hands",
+	"name": "adventure-deck-hands",
+	"description": "A module to display a player's Adventure Cards on the screen.",
 	"version": "2.0.2",
 	"compatibility": {
 		"minimum": "10",
@@ -25,10 +25,10 @@
 		}
 	],
 	"esmodules": [
-		"scripts/adventure-hand-bars-module.js"
+		"scripts/adventure-deck-hands.js"
 	],
 	"styles": [
-		"styles/adventure-hand-bars.css"
+		"styles/adventure-deck-hands.css"
 	],
 	"languages": [
 		{
