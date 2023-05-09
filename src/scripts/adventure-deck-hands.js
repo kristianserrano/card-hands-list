@@ -24,18 +24,18 @@ const handsModule = {
     }
 
     // Get the container for the module UI
-    const containerElem = document.getElementById(`${this.id}-container`);
+    const containerElem = document.getElementById(`${handsModule.id}-container`);
 
     // Get the hidden state of the container from the settings
-    const hidden = game.settings.get(this.id, 'hideBars');
+    const hidden = game.settings.get(handsModule.id, 'hideBars');
     // Render the template
-    const containerHTML = await renderTemplate(`modules/${this.id}/templates/${this.id}-container.hbs`, {
+    const containerHTML = await renderTemplate(`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`, {
       hands: availableHands,
       discardPile: discardPile,
       hidden: hidden,
       isGM: game.user.isGM,
-      moduleId: this.id,
-      translationPrefix: this.translationPrefix,
+      moduleId: handsModule.id,
+      translationPrefix: handsModule.translationPrefix,
     });
 
     // If the container is in the DOM...
@@ -53,57 +53,55 @@ const handsModule = {
     /* Set up listeners for hand bar UI */
 
     // Get all the bars and loop through them
-    const bars = document.querySelectorAll(`.${this.id}-cards`);
+    const bars = document.querySelectorAll(`.${handsModule.id}-cards`);
 
     // For each bar...
     for (const b of bars) {
       // Get its hand
       const hand = await game.cards.get(b.dataset.handId);
       // Set the element ID to use for query selectors
-      const barElemId = `#${this.id}-${hand.id}`;
+      const barElemId = `#${handsModule.id}-${hand.id}`;
       // Add listener for opening the hand sheet when clicking on the hand name
-      document.querySelector(`${barElemId} .${this.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
+      document.querySelector(`${barElemId} .${handsModule.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
       // Add listener for opening the hand sheet when clicking on the cards container
-      document.querySelector(`${barElemId} .${this.id}-cards-container`).addEventListener('click', async (e) => await hand.sheet.render(true));
+      document.querySelector(`${barElemId} .${handsModule.id}-cards-container`).addEventListener('click', async (e) => await hand.sheet.render(true));
       // Add listener for drawing a Card
-      const drawCardButtonElem = document.querySelector(`${barElemId} .${this.id}-draw`);
+      const drawCardButtonElem = document.querySelector(`${barElemId} .${handsModule.id}-draw`);
       // This button only appears for those with ownership permission, so check if it exists
-      if (drawCardButtonElem) drawCardButtonElem.addEventListener('click', async function (e) {
-        await this.drawCard(e);
-        console.log(this)
-        //e.removeEventListener('click', this);
-      });
+      if (drawCardButtonElem) {
+        drawCardButtonElem.addEventListener('click', async function (e) {
+          e.stopImmediatePropagation()
+          const handId = e.target.parentElement.dataset.handId;
+          const hand = game.cards.get(handId);
+          const deck = game.cards.getName(game.settings.get(handsModule.deckModule.id, 'deckName'));
+          const cardDrawn = await hand.draw(deck);
+          // If announce cards is enabled...
+          if (game.settings.get(handsModule.deckModule.id, 'announceCards')) {
+            // Prerender chat card.
+            const message = await renderTemplate(`modules/${handsModule.deckModule.id}/templates/dealtcards-chatcard.hbs`, {
+              player: hand.name,
+              cards: cardDrawn
+            });
+            // Print card to chat.
+            ChatMessage.create({
+              user: game.user.id,
+              type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+              content: message,
+            });
+          }
+        });
+      }
     }
 
     // Add listener for hiding and showing the module UI container when the icon is clicked
-    document.querySelector(`#${this.id}-container h3`).addEventListener('click', async () => {
-      const containerElem = document.getElementById(`${this.id}-container`);
+    document.querySelector(`#${handsModule.id}-container h3`).addEventListener('click', async () => {
+      const containerElem = document.getElementById(`${handsModule.id}-container`);
       containerElem.classList.toggle('hidden');
-      const arrow = document.querySelector(`.${this.id}-mode`);
+      const arrow = document.querySelector(`.${handsModule.id}-mode`);
       arrow.classList.toggle('fa-angle-up');
       arrow.classList.toggle('fa-angle-down');
-      await game.settings.set(this.id, 'hideBars', containerElem.classList.contains('hidden'))
+      await game.settings.set(handsModule.id, 'hideBars', containerElem.classList.contains('hidden'))
     });
-  },
-  drawCard: async function (e) {
-    const handId = e.target.parentElement.dataset.handId;
-    const hand = game.cards.get(handId);
-    const deck = game.cards.getName(game.settings.get(handsModule.deckModule.id, 'deckName'));
-    const cardDrawn = await hand.draw(deck);
-    // If announce cards is enabled...
-    if (game.settings.get(handsModule.deckModule.id, 'announceCards')) {
-      // Prerender chat card.
-      const message = await renderTemplate(`modules/${handsModule.deckModule.id}/templates/dealtcards-chatcard.hbs`, {
-        player: hand.name,
-        cards: cardDrawn
-      });
-      // Print card to chat.
-      ChatMessage.create({
-        user: game.user.id,
-        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-        content: message,
-      });
-    }
   }
 };
 
