@@ -12,12 +12,12 @@ build:
     - npm install
     - npm install --global gulp-cli
     - gulp package
-    - mkdir adventure-hand-bars
-    - cp package/adventure-hand-bars-*.zip adventure-hand-bars
-    - cp dist/module.json adventure-hand-bars
+    - mkdir adventure-deck-hands
+    - cp package/adventure-deck-hands-*.zip adventure-deck-hands
+    - cp dist/module.json adventure-deck-hands
   artifacts:
     paths:
-      - adventure-hand-bars
+      - adventure-deck-hands
     when: always
 
 deploy to s3:
@@ -27,4 +27,4 @@ deploy to s3:
     entrypoint: [""]
   script:
     - aws --version
-    - aws s3 cp adventure-hand-bars s3://kristianserrano/foundryvtt/adventure-hand-bars --acl public-read --recursive
+    - aws s3 cp adventure-deck-hands s3://kristianserrano/foundryvtt/adventure-deck-hands --acl public-read --recursive
