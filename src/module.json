@@ -1,8 +1,8 @@
 {
-	"title": "SWADE Card Hands",
+	"title": "Card Hands List",
 	"id": "card-hands-list",
 	"name": "card-hands-list",
-	"description": "A module to display card hands in SWADE.",
+	"description": "A module to list owned card hands.",
 	"version": "0.0.1",
 	"compatibility": {
 		"minimum": "10",
