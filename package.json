@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "card-hands-list",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A Foundry VTT module that lists card hands.",
 	"main": "index.js",
 	"repository": {
