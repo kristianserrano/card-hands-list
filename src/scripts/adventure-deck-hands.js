@@ -7,7 +7,7 @@
  */
 
 const handsModule = {
-  id: 'adventure-deck-hands',
+  id: 'swade-card-hands',
   deckModule: {
     id: 'adventure-deck',
     group: 'adventure hands',

@@ -12,12 +12,12 @@ build:
     - npm install
     - npm install --global gulp-cli
     - gulp package
-    - mkdir adventure-deck-hands
-    - cp package/adventure-deck-hands-*.zip adventure-deck-hands
-    - cp dist/module.json adventure-deck-hands
+    - mkdir swade-card-hands
+    - cp package/swade-card-hands-*.zip swade-card-hands
+    - cp dist/module.json swade-card-hands
   artifacts:
     paths:
-      - adventure-deck-hands
+      - swade-card-hands
     when: always
 
 deploy to s3:
@@ -27,4 +27,4 @@ deploy to s3:
     entrypoint: [""]
   script:
     - aws --version
-    - aws s3 cp adventure-deck-hands s3://kristianserrano/foundryvtt/adventure-deck-hands --acl public-read --recursive
+    - aws s3 cp swade-card-hands s3://kristianserrano/foundryvtt/swade-card-hands --acl public-read --recursive
