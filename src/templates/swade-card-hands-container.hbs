@@ -4,14 +4,17 @@
     </h3>
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
-        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if isOwner}}{{#unless ../isGM}} is-owner{{/unless}}{{/if}}" data-hand-id="{{id}}">
+        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if (eq ../favorite id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
             <div class="{{../moduleId}}-grid" data-hand-id="{{id}}">
                 <div class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
                     {{name}}
                 </div>
                 {{#if isOwner}}
-                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
+               {{!-- <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
                     <i class="fas fa-cards-blank"></i>
+                </div> --}}
+                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Favorite') 'string')}}">
+                    <i class="{{#if (eq ../favorite id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
                 </div>
                 {{/if}}
                 <ul class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
@@ -24,19 +27,5 @@
             </div>
         </div>
         {{/each}}
-        <div id="{{moduleId}}-{{discardPile.id}}" class="{{moduleId}}-cards {{moduleId}}-pile{{#if isGM}} is-owner{{/if}}" data-hand-id="{{discardPile.id}}">
-            <div class="{{moduleId}}-grid">
-                <div data-tooltip="{{localize (lookup (concat translationPrefix '.Open') 'string')}} {{discardPile.name}}" class="{{moduleId}}-name">
-                    {{discardPile.name}}
-                </div>
-                <ul class="{{moduleId}}-container {{moduleId}}-cards-container" data-hand-id="{{discardPile.id}}">
-                    {{#each discardPile.cards}}
-                    <li class="{{../moduleId}}-card">
-                    <img data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
-                    {{/each}}
-                    </li>
-                </ul>
-            </div>
-        </div>
     </div>
 </aside>

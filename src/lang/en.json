@@ -1,7 +1,8 @@
 {
-    "SWADECARDHANDS": {
-        "DeckName": "Adventure Cards",
-        "DrawCard": "Draw an Adventure Card",
-        "Open": "Open"
+    "CARDHANDSLIST": {
+        "DeckName": "Card Hands",
+        "DrawCard": "Draw a Card",
+        "Open": "Open",
+        "Favorite": "Mark as Favorite"
     }
 }

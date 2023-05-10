@@ -1,12 +1,12 @@
 {
 	"private": true,
-	"name": "swade-card-hands",
+	"name": "card-hands-list",
 	"version": "2.1.3",
 	"description": "A Foundry VTT module for managing card hands in SWADE.",
 	"main": "index.js",
 	"repository": {
 		"type": "git",
-		"url": "https://gitlab.com/kristianserrano/swade-card-hands"
+		"url": "https://gitlab.com/kristianserrano/card-hands-list"
 	},
 	"scripts": {
 		"package": "gulp package",

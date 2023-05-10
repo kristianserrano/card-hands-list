@@ -1,27 +1,15 @@
 
 /**
- * Savage Worlds Adventure Deck Hand Toolbar
- * A Foundry VTT module to display and provide quick access to a player's Adventure Cards in a small toolbar
+ * SWADE Card Hands
+ * A Foundry VTT module to display and provide quick access to a player's card hands
  * Developer: Kristian Serrano
- * Based on Card Hands Mini Toolbar by pengrath
  */
 
 const handsModule = {
-  id: 'swade-card-hands',
-  deckModule: {
-    id: 'adventure-deck',
-    group: 'adventure hands',
-    cardType: 'adventure',
-  },
-  translationPrefix: 'SWADECARDHANDS',
+  id: 'card-hands-list',
+  translationPrefix: 'CARDHANDSLIST',
   render: async function () {
-    const availableHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(handsModule.deckModule.id, 'group') === handsModule.deckModule.group && c.testUserPermission(game.user, 'OBSERVER'));
-    const discardPile = await game.cards.getName(game.settings.get(handsModule.deckModule.id, 'dumpPileName'));
-    if (game.user.isGM && discardPile && discardPile.ownership.default !== CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
-      discardPile.update({
-        'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
-      });
-    }
+    const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, 'OWNER'));
 
     // Get the container for the module UI
     const containerElem = document.getElementById(`${handsModule.id}-container`);
@@ -31,11 +19,11 @@ const handsModule = {
     // Render the template
     const containerHTML = await renderTemplate(`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`, {
       hands: availableHands,
-      discardPile: discardPile,
       hidden: hidden,
       isGM: game.user.isGM,
       moduleId: handsModule.id,
       translationPrefix: handsModule.translationPrefix,
+      favorite: game.user.getFlag(handsModule.id, 'favorite-hand'),
     });
 
     // If the container is in the DOM...
@@ -65,12 +53,12 @@ const handsModule = {
       document.querySelector(`${barElemId} .${handsModule.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
       // Add listener for opening the hand sheet when clicking on the cards container
       document.querySelector(`${barElemId} .${handsModule.id}-cards-container`).addEventListener('click', async (e) => await hand.sheet.render(true));
-      // Add listener for drawing a Card
+      /* // Add listener for drawing a Card
       const drawCardButtonElem = document.querySelector(`${barElemId} .${handsModule.id}-draw`);
       // This button only appears for those with ownership permission, so check if it exists
       if (drawCardButtonElem) {
         drawCardButtonElem.addEventListener('click', async function (e) {
-          e.stopImmediatePropagation()
+          e.stopImmediatePropagation();
           const handId = e.target.parentElement.dataset.handId;
           const hand = game.cards.get(handId);
           const deck = game.cards.getName(game.settings.get(handsModule.deckModule.id, 'deckName'));
@@ -90,11 +78,20 @@ const handsModule = {
             });
           }
         });
-      }
+      } */
+      // Add listener for favoriting a hand.
+      document.querySelector(`${barElemId} .${handsModule.id}-favorite`).addEventListener('click', async function (e) {
+        e.stopImmediatePropagation();
+        const handId = e.target.parentElement.dataset.handId;
+        //const hand = game.cards.get(handId);
+        await game.user.setFlag(handsModule.id, 'favorite-hand', handId);
+        handsModule.render();
+      });
     }
 
     // Add listener for hiding and showing the module UI container when the icon is clicked
-    document.querySelector(`#${handsModule.id}-container h3`).addEventListener('click', async () => {
+    document.querySelector(`#${handsModule.id}-container h3`).addEventListener('click', async (e) => {
+      e.stopImmediatePropagation();
       const containerElem = document.getElementById(`${handsModule.id}-container`);
       containerElem.classList.toggle('hidden');
       const arrow = document.querySelector(`.${handsModule.id}-mode`);
@@ -103,7 +100,7 @@ const handsModule = {
       await game.settings.set(handsModule.id, 'hideBars', containerElem.classList.contains('hidden'))
     });
   }
-};
+}
 
 Hooks.on('init', function () {
   game.settings.register(handsModule.id, 'hideBars', {
@@ -118,13 +115,6 @@ Hooks.on('ready', function () {
   // Pre Load templates.
   loadTemplates([`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`]);
   // Get the deck using the stored name in the cards module.
-  if (game.ready) {
-    const deck = game.cards.getName(game.settings.get(handsModule.deckModule.id, 'deckName'));
-    // Check if default ownership is Limited for card draws. If it's not, set it.
-    if (game.user.isGM && deck && deck.ownership.default < CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED) {
-      deck.update({ 'ownership.default': CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED });
-    }
-  }
   handsModule.render();
 });
 

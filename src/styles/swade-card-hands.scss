@@ -1,4 +1,4 @@
-$moduleId: swade-card-hands;
+$moduleId: card-hands-list;
 
 ##{$moduleId}-container {
     width: var(--players-width);
@@ -20,8 +20,11 @@ $moduleId: swade-card-hands;
     }
 
     ##{$moduleId}-hands-wrapper {
+        max-height: 300px;
         margin-bottom: 5px;
         padding: 2px;
+        overflow: auto;
+        pointer-events: all;
     }
 
     .#{$moduleId}-grid {
@@ -102,7 +105,6 @@ $moduleId: swade-card-hands;
 
         i {
             margin: 0 6px;
-
         }
 
         .#{$moduleId}-mode {
@@ -113,7 +115,7 @@ $moduleId: swade-card-hands;
     }
 
     &.hidden {
-        .#{$moduleId}-cards:not(.is-owner) {
+        .#{$moduleId}-cards:not(.is-favorite) {
             height: 0;
             overflow: hidden;
         }
