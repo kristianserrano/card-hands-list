@@ -13,7 +13,7 @@ const handsModule = {
     group: 'adventure hands',
     cardType: 'adventure',
   },
-  translationPrefix: 'ADVENTUREDECKHANDS',
+  translationPrefix: 'SWADECARDHANDS',
   render: async function () {
     const availableHands = game.cards.filter((c) => c.type === 'hand' && c.getFlag(handsModule.deckModule.id, 'group') === handsModule.deckModule.group && c.testUserPermission(game.user, 'OBSERVER'));
     const discardPile = await game.cards.getName(game.settings.get(handsModule.deckModule.id, 'dumpPileName'));
