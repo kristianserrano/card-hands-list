@@ -4,19 +4,19 @@
     </h3>
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
-        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if (eq ../favorite id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
+        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if (includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
             <div class="{{../moduleId}}-grid" data-hand-id="{{id}}">
                 <div class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
                     {{name}}
                 </div>
-                {{#if isOwner}}
-               {{!-- <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
+               {{!-- {{#if isOwner}}
+               <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
                     <i class="fas fa-cards-blank"></i>
-                </div> --}}
-                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Favorite') 'string')}}">
-                    <i class="{{#if (eq ../favorite id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
                 </div>
-                {{/if}}
+                {{/if}} --}}
+                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Favorite') 'string')}}">
+                    <i class="{{#if (includes ../favorites id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
+                </div>
                 <ul class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
                     {{#each cards}}
                     <li class="{{../../moduleId}}-card">

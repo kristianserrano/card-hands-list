@@ -1,6 +1,6 @@
 
 /**
- * SWADE Card Hands
+ * Card Hands List
  * A Foundry VTT module to display and provide quick access to a player's card hands
  * Developer: Kristian Serrano
  */
@@ -8,8 +8,10 @@
 const handsModule = {
   id: 'card-hands-list',
   translationPrefix: 'CARDHANDSLIST',
+  scrollPosition: '',
   render: async function () {
-    const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, 'OWNER'));
+    const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
+    const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel));
 
     // Get the container for the module UI
     const containerElem = document.getElementById(`${handsModule.id}-container`);
@@ -23,7 +25,7 @@ const handsModule = {
       isGM: game.user.isGM,
       moduleId: handsModule.id,
       translationPrefix: handsModule.translationPrefix,
-      favorite: game.user.getFlag(handsModule.id, 'favorite-hand'),
+      favorites: game.user.getFlag(handsModule.id, 'favorite-hand'),
     });
 
     // If the container is in the DOM...
@@ -37,6 +39,8 @@ const handsModule = {
       // Insert the module UI element
       playersListElement.insertAdjacentHTML('beforebegin', containerHTML);
     }
+    const handsList = document.getElementById(`${handsModule.id}-hands-wrapper`);
+    handsList.scrollTop = handsModule.scrollPosition;
 
     /* Set up listeners for hand bar UI */
 
@@ -82,10 +86,19 @@ const handsModule = {
       // Add listener for favoriting a hand.
       document.querySelector(`${barElemId} .${handsModule.id}-favorite`).addEventListener('click', async function (e) {
         e.stopImmediatePropagation();
+        handsModule.scrollPosition = e.target.parentElement.parentElement.parentElement.parentElement.scrollTop;
+        const flagKey = 'favorite-hand';
+        let favorites = game.user.getFlag(handsModule.id, flagKey);
         const handId = e.target.parentElement.dataset.handId;
-        //const hand = game.cards.get(handId);
-        await game.user.setFlag(handsModule.id, 'favorite-hand', handId);
-        handsModule.render();
+        if (!favorites) favorites = [];
+        if (favorites.includes(handId)) {
+          favorites.splice(favorites.indexOf(handId), 1);
+          await game.user.setFlag(handsModule.id, flagKey, favorites);
+        } else {
+          favorites.push(handId);
+          await game.user.setFlag(handsModule.id, flagKey, favorites);
+        }
+        //handsModule.render();
       });
     }
 
@@ -109,6 +122,14 @@ Hooks.on('init', function () {
     type: Boolean,
     default: true,
   });
+  game.settings.register(handsModule.id, 'observerLevel', {
+    name: `${handsModule.translationPrefix}.ObserverLevel.Name`,
+    hint: `${handsModule.translationPrefix}.ObserverLevel.Hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 });
 
 Hooks.on('ready', function () {
@@ -126,32 +147,22 @@ Hooks.on('ready', function () {
 // or use the Developer Mode module
 
 Hooks.on('renderPlayerList', (data) => {
-  if (game.ready) {
-    handsModule.render();
-  }
+  if (game.ready) handsModule.render();
 });
 Hooks.on('updateCard', (data) => {
-  if (data.parent.type === 'hand') {
-    handsModule.render();
-  }
+  if (data.parent.type === 'hand') handsModule.render();
 });
 Hooks.on('deleteCard', (data) => {
-  if (data.parent.type === 'hand') {
-    handsModule.render();
-  }
+  if (data.parent.type === 'hand') handsModule.render();
 });
 Hooks.on('createCard', (data) => {
-  if (data.parent.type === 'hand') {
-    handsModule.render();
-  }
+  if (data.parent.type === 'hand') handsModule.render();
 });
-Hooks.on('returnCards', (data) => {
-  const card = data.cards.find((c) => c.type === handsModule.deckModule.cardType);
-  if (card) {
-    handsModule.render();
-  }
+Hooks.on('updateSetting', (data) => {
+  if (data.key === 'card-hands-list.observerLevel') handsModule.render();
 });
-Hooks.on('passCards', (data) => {
-    const exists = data.cards.find(c => c.id === data.id);
-  if (exists) return false;
+
+Handlebars.registerHelper('includes', function (obj, str) {
+  if (!obj) return false;
+  return obj.includes(str);
 });

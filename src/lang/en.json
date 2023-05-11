@@ -3,6 +3,10 @@
         "DeckName": "Card Hands",
         "DrawCard": "Draw a Card",
         "Open": "Open",
-        "Favorite": "Mark as Favorite"
+        "Favorite": "Mark as Favorite",
+        "ObserverLevel": {
+            "Name": "Include Hands with Observer Ownership",
+            "Hint": "Includes hands of which users have Observer-level ownership. Default is Owner-level ownership only."
+        }
     }
 }
