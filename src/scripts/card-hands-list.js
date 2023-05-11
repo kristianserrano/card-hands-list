@@ -25,7 +25,7 @@ const handsModule = {
       isGM: game.user.isGM,
       moduleId: handsModule.id,
       translationPrefix: handsModule.translationPrefix,
-      favorites: game.user.getFlag(handsModule.id, 'favorite-hand'),
+      favorites: game.user.getFlag(handsModule.id, 'favorite-hands'),
     });
 
     // If the container is in the DOM...
@@ -87,7 +87,7 @@ const handsModule = {
       document.querySelector(`${barElemId} .${handsModule.id}-favorite`).addEventListener('click', async function (e) {
         e.stopImmediatePropagation();
         handsModule.scrollPosition = e.target.parentElement.parentElement.parentElement.parentElement.scrollTop;
-        const flagKey = 'favorite-hand';
+        const flagKey = 'favorite-hands';
         let favorites = game.user.getFlag(handsModule.id, flagKey);
         const handId = e.target.parentElement.dataset.handId;
         if (!favorites) favorites = [];
