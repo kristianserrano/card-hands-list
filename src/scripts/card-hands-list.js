@@ -10,14 +10,16 @@ const handsModule = {
   translationPrefix: 'CARDHANDSLIST',
   scrollPosition: '',
   render: async function () {
+    const handsWrapperElement = document.getElementById(`${handsModule.id}-hands-wrapper`);
+    if (handsWrapperElement) handsModule.scrollPosition = handsWrapperElement.scrollTop;
     const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
     const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel));
 
     // Get the container for the module UI
-    const containerElem = document.getElementById(`${handsModule.id}-container`);
+    const containerElement = document.getElementById(`${handsModule.id}-container`);
 
     // Get the hidden state of the container from the settings
-    const hidden = game.settings.get(handsModule.id, 'hideBars');
+    const hidden = game.settings.get(handsModule.id, 'collapseHandsContainer');
     // Render the template
     const containerHTML = await renderTemplate(`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`, {
       hands: availableHands,
@@ -29,99 +31,100 @@ const handsModule = {
     });
 
     // If the container is in the DOM...
-    if (containerElem) {
-      // Update the HTML (There's a brief moment during dealing when the element doesn't have a parent element)
-      if (containerElem.parentElement) containerElem.outerHTML = containerHTML;
+    if (containerElement) {
+      // Update the HTML (There's a brief moment during dealing when the Element doesn't have a parent Element)
+      if (containerElement.parentElement) containerElement.outerHTML = containerHTML;
     } else {
       // Otherwise insert it
-      // Get Foundry VTT's Player List element
+      // Get Foundry VTT's Player List Element
       const playersListElement = document.getElementById('players');
-      // Insert the module UI element
+      // Insert the module UI Element
       playersListElement.insertAdjacentHTML('beforebegin', containerHTML);
     }
-    const handsList = document.getElementById(`${handsModule.id}-hands-wrapper`);
-    handsList.scrollTop = handsModule.scrollPosition;
+    // Set the wrapper's scroll position to the previous position.
+    document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = handsModule.scrollPosition;
 
-    /* Set up listeners for hand bar UI */
+    /* Set up listeners for hands list UI */
 
-    // Get all the bars and loop through them
-    const bars = document.querySelectorAll(`.${handsModule.id}-cards`);
+    // Get all the hands and loop through them
+    const handElements = document.querySelectorAll(`.${handsModule.id}-cards`);
 
-    // For each bar...
-    for (const b of bars) {
+    // For each hand...
+    for (const handElement of handElements) {
       // Get its hand
-      const hand = await game.cards.get(b.dataset.handId);
-      // Set the element ID to use for query selectors
-      const barElemId = `#${handsModule.id}-${hand.id}`;
+      const hand = await game.cards.get(handElement.dataset.handId);
+      // Set the Element ID to use for query selectors
+      const handElementId = `#${handsModule.id}-${hand.id}`;
       // Add listener for opening the hand sheet when clicking on the hand name
-      document.querySelector(`${barElemId} .${handsModule.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
+      document.querySelector(`${handElementId} .${handsModule.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
       // Add listener for opening the hand sheet when clicking on the cards container
-      document.querySelector(`${barElemId} .${handsModule.id}-cards-container`).addEventListener('click', async (e) => await hand.sheet.render(true));
-      /* // Add listener for drawing a Card
-      const drawCardButtonElem = document.querySelector(`${barElemId} .${handsModule.id}-draw`);
+      document.querySelector(`${handElementId} .${handsModule.id}-cards-container`).addEventListener('click', async (e) => await hand.sheet.render(true));
+      // Add listener for drawing a Card
+      const drawCardButtonElement = document.querySelector(`${handElementId} .${handsModule.id}-draw`);
       // This button only appears for those with ownership permission, so check if it exists
-      if (drawCardButtonElem) {
-        drawCardButtonElem.addEventListener('click', async function (e) {
+      if (drawCardButtonElement) {
+        drawCardButtonElement.addEventListener('click', async function (e) {
           e.stopImmediatePropagation();
           const handId = e.target.parentElement.dataset.handId;
           const hand = game.cards.get(handId);
-          const deck = game.cards.getName(game.settings.get(handsModule.deckModule.id, 'deckName'));
-          const cardDrawn = await hand.draw(deck);
-          // If announce cards is enabled...
-          if (game.settings.get(handsModule.deckModule.id, 'announceCards')) {
-            // Prerender chat card.
-            const message = await renderTemplate(`modules/${handsModule.deckModule.id}/templates/dealtcards-chatcard.hbs`, {
-              player: hand.name,
-              cards: cardDrawn
-            });
-            // Print card to chat.
-            ChatMessage.create({
-              user: game.user.id,
-              type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-              content: message,
-            });
-          }
+          hand.drawDialog();
         });
-      } */
+      }
+
       // Add listener for favoriting a hand.
-      document.querySelector(`${barElemId} .${handsModule.id}-favorite`).addEventListener('click', async function (e) {
+      document.querySelector(`${handElementId} .${handsModule.id}-favorite`).addEventListener('click', async function (e) {
+        // Prevent multiple executions
         e.stopImmediatePropagation();
-        handsModule.scrollPosition = e.target.parentElement.parentElement.parentElement.parentElement.scrollTop;
+        // Set the user flag key
         const flagKey = 'favorite-hands';
-        let favorites = game.user.getFlag(handsModule.id, flagKey);
+        // Get the ID of the hand that's being favorited or unfavorited.
         const handId = e.target.parentElement.dataset.handId;
+        // Get the current list of favorited hand IDs from the user flag
+        let favorites = game.user.getFlag(handsModule.id, flagKey);
+        // A quick catch for an empty favorites flag
         if (!favorites) favorites = [];
+        // If the list of favorites includes this hand already...
         if (favorites.includes(handId)) {
+          // Unfavorite it by remove the hand from the array and updating the user flag
           favorites.splice(favorites.indexOf(handId), 1);
           await game.user.setFlag(handsModule.id, flagKey, favorites);
         } else {
+          // Otherwise, add it to the list and update the user flag
           favorites.push(handId);
           await game.user.setFlag(handsModule.id, flagKey, favorites);
         }
-        //handsModule.render();
       });
     }
 
     // Add listener for hiding and showing the module UI container when the icon is clicked
-    document.querySelector(`#${handsModule.id}-container h3`).addEventListener('click', async (e) => {
+    document.querySelector(`.${handsModule.id}-title`).addEventListener('click', async (e) => {
+      // Prevent multiple executions
       e.stopImmediatePropagation();
-      const containerElem = document.getElementById(`${handsModule.id}-container`);
-      containerElem.classList.toggle('hidden');
-      const arrow = document.querySelector(`.${handsModule.id}-mode`);
-      arrow.classList.toggle('fa-angle-up');
-      arrow.classList.toggle('fa-angle-down');
-      await game.settings.set(handsModule.id, 'hideBars', containerElem.classList.contains('hidden'))
+      // Get the angle icon element
+      const angleIconElement = document.querySelector(`.${handsModule.id}-mode`);
+      // Toggle the angle classes
+      angleIconElement.classList.toggle('fa-angle-up');
+      angleIconElement.classList.toggle('fa-angle-down');
+      // Toggle the collapsed setting boolean
+      await game.settings.set(handsModule.id, 'collapseHandsContainer', !game.settings.get(handsModule.id, 'collapseHandsContainer'))
+      // Rerender the container
+      handsModule.render();
     });
   }
 }
 
 Hooks.on('init', function () {
-  game.settings.register(handsModule.id, 'hideBars', {
+  // Register the collapsed state setting
+  game.settings.register(handsModule.id, 'collapseHandsContainer', {
+    name: 'Collapse Hands List',
+    hint: 'Stores the collapsed state of the hands list.',
     scope: 'client',
     config: false,
     type: Boolean,
     default: true,
   });
+
+  // Register the ownership level option
   game.settings.register(handsModule.id, 'observerLevel', {
     name: `${handsModule.translationPrefix}.ObserverLevel.Name`,
     hint: `${handsModule.translationPrefix}.ObserverLevel.Hint`,
@@ -133,19 +136,13 @@ Hooks.on('init', function () {
 });
 
 Hooks.on('ready', function () {
-  // Pre Load templates.
+  // Preload the template
   loadTemplates([`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`]);
-  // Get the deck using the stored name in the cards module.
+  // Render the card hands list
   handsModule.render();
 });
 
-/*
- * Hooks to listen to changes in settings and hands data
- * CONFIG.debug.hooks = true
-*/
-// CONFIG.debug.hooks = true
-// or use the Developer Mode module
-
+/* Hooks to listen to changes in settings and hands data */
 Hooks.on('renderPlayerList', (data) => {
   if (game.ready) handsModule.render();
 });
@@ -162,7 +159,8 @@ Hooks.on('updateSetting', (data) => {
   if (data.key === 'card-hands-list.observerLevel') handsModule.render();
 });
 
-Handlebars.registerHelper('includes', function (obj, str) {
-  if (!obj) return false;
-  return obj.includes(str);
+// Handlebar helper for searching if an array includes a string
+Handlebars.registerHelper('includes', function (array, str) {
+  if (!array) return false;
+  return array.includes(str);
 });

@@ -1,31 +1,33 @@
-<aside id="{{moduleId}}-container" class="app {{moduleId}}-container{{#if hidden}} hidden{{/if}}">
-    <h3>
+<aside id="{{moduleId}}-container" class="app {{moduleId}}-container">
+    <h3 class="{{moduleId}}-title">
         <i class="fas fa-cards-blank"></i> {{localize (lookup (concat translationPrefix '.DeckName') 'string')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
     </h3>
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
+        {{#if (or (not ../hidden) (and ../hidden (includes ../favorites id)))}}
         <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if (includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
-            <div class="{{../moduleId}}-grid" data-hand-id="{{id}}">
-                <div class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
-                    {{name}}
-                </div>
-               {{!-- {{#if isOwner}}
-               <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
-                    <i class="fas fa-cards-blank"></i>
-                </div>
-                {{/if}} --}}
+            <h4 class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
+                {{name}}
+            </h4>
+            <div class="{{../moduleId}}-buttons">
                 <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Favorite') 'string')}}">
                     <i class="{{#if (includes ../favorites id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
                 </div>
-                <ul class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
-                    {{#each cards}}
-                    <li class="{{../../moduleId}}-card">
-                        <img data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
-                    </li>
-                    {{/each}}
-                </ul>
+                {{#if isOwner}}
+                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
+                    <i class="fas fa-cards-blank"></i>
+                </div>
+                {{/if}}
             </div>
+            <ul class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
+                {{#each cards}}
+                <li class="{{../../moduleId}}-card">
+                    <img data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                </li>
+                {{/each}}
+            </ul>
         </div>
+        {{/if}}
         {{/each}}
     </div>
 </aside>
