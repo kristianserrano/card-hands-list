@@ -2,6 +2,10 @@
 
 ## v1.1.0
 
+- Removes SWADE system requirement.
+
+## v1.1.0
+
 - Adds support for multiple favorites.
 - Adds world setting to include hands with Observer-level ownership.
 - Makes hands list scrollable to restrict height.
