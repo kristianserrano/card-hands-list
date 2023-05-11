@@ -1,5 +1,10 @@
 # Card Hands List
 
+## v1.2.0
+
+- Adds card draw button to hands.
+- A ton of cleanup and optimizations behind the scenes.
+
 ## v1.1.1
 
 - Fixes favorites flag.
