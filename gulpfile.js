@@ -69,8 +69,8 @@ async function clean() {
     const files = [];
 
     files.push(
-        'artwork',
-        'audio',
+        'assets',
+        'lang',
         'packs',
         'scripts',
         'styles',
