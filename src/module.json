@@ -31,14 +31,6 @@
 			"flags": {}
 		}
 	],
-	"relationships": {
-		"systems": [
-			{
-				"id": "swade",
-				"type": "system"
-			}
-		]
-	},
 	"url": "https://gitlab.com/kristianserrano/card-hands-list",
 	"update": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/module.json",
 	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/card-hands-list-1.1.0.zip",
