@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.1.1
+
+- Fixes favorites flag.
+
 ## v1.1.0
 
 - Removes SWADE system requirement.
