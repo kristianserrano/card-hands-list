@@ -1,5 +1,12 @@
 # Card Hands List
 
+## v1.3.0
+
+- Cards are now draggable for sorting and passing in the hands list
+- Hidden state is reset on client reload
+- Draw Card button added to each hand
+- Hands now respect card sort order
+
 ## v1.2.0
 
 - Adds card draw button to hands.
