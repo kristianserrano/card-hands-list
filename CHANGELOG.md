@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.3.1
+
+Fixes issue with Alien RPG's override of the core `concat` Handlebars helper breaking the translations in the template.
+
 ## v1.3.0
 
 - Cards are now draggable for sorting and passing in the hands list
