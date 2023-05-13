@@ -1,6 +1,6 @@
 # Card Hands List
 
-Cards Hands List is a system-agnostic module for Foundry VTT that provides quick access to Card Hands to which the user has full ownership. The module adds a collapsible list of card hands placed above the Players List, blending in with the core Foundry VTT UI.
+Card Hands List is a system-agnostic module for Foundry VTT that provides quick access to card hands the user owns. The module adds a collapsible list of card hands placed above the Players List, blending in with the core Foundry VTT UI.
 
 ## Features
 
