@@ -10,21 +10,6 @@ const handsModule = {
   translationPrefix: 'CARDHANDSLIST',
   scrollPosition: '',
   hidden: true,
-  sortCards: function (a, b) {
-    const property = 'sort';
-    // Get the value of the property from each object
-    const valueA = a[property];
-    const valueB = b[property];
-
-    // Compare the values
-    if (valueA < valueB) {
-      return -1;
-    } else if (valueA > valueB) {
-      return 1;
-    } else {
-      return 0;
-    }
-  },
   render: async function () {
     const handsWrapperElement = document.getElementById(`${handsModule.id}-hands-wrapper`);
     if (handsWrapperElement) handsModule.scrollPosition =  handsWrapperElement.scrollTop;
@@ -218,21 +203,26 @@ Hooks.on('ready', function () {
 Hooks.on('renderPlayerList', (data) => {
   if (game.ready) handsModule.render();
 });
+
 Hooks.on('updateCard', (data) => {
   if (data.parent.type === 'hand') handsModule.render();
 });
+
 Hooks.on('deleteCard', (data) => {
   if (data.parent.type === 'hand') handsModule.render();
 });
+
 Hooks.on('createCard', (data) => {
   if (data.parent.type === 'hand') handsModule.render();
 });
+
 Hooks.on('updateSetting', (data) => {
   if (data.key === 'card-hands-list.observerLevel') handsModule.render();
 });
-// Hook for dropping cards on a canvas
-Hooks.on('dropCanvasData', (data) => {
-  console.log(data);
+
+// Handlebar helper for concat but with a namespaced helper name so as not to override the default concat helper
+Handlebars.registerHelper('cardHandsConcat', function (string1, string2) {
+  return string1 + string2;
 });
 
 // Handlebar helper for searching if an array includes a string
@@ -243,5 +233,19 @@ Handlebars.registerHelper('includes', function (array, str) {
 
 // Handlebar helper for sorting cards in the hands list.
 Handlebars.registerHelper('sortCards', (objects, property) => {
-  return Array.from(objects).sort(handsModule.sortCards);
+  return Array.from(objects).sort((a, b) => {
+    const property = 'sort';
+    // Get the value of the property from each object
+    const valueA = a[property];
+    const valueB = b[property];
+
+    // Compare the values
+    if (valueA < valueB) {
+      return -1;
+    } else if (valueA > valueB) {
+      return 1;
+    } else {
+      return 0;
+    };
+  });
 });

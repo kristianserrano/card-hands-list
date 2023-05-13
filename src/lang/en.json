@@ -1,6 +1,6 @@
 {
     "CARDHANDSLIST": {
-        "DeckName": "Card Hands",
+        "Title": "Card Hands",
         "DrawCard": "Draw a Card",
         "Open": "Open",
         "Favorite": "Mark as Favorite",

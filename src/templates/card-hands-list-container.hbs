@@ -1,20 +1,20 @@
 <aside id="{{moduleId}}-container" class="app {{moduleId}}-container">
     <h3 class="{{moduleId}}-title">
-        <i class="fas fa-cards-blank"></i> {{localize (lookup (concat translationPrefix '.DeckName') 'string')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
+        <i class="fas fa-cards-blank"></i> {{localize (cardHandsConcat translationPrefix '.Title')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
     </h3>
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
         {{#if (or (not ../hidden) (and ../hidden (includes ../favorites id)))}}
         <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
-            <h4 class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
+            <h4 class="{{../moduleId}}-name" data-tooltip="{{localize (cardHandsConcat ../translationPrefix '.Open')}} {{name}}">
                 {{name}}
             </h4>
             <div class="{{../moduleId}}-buttons">
-                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Favorite') 'string')}}">
+                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsConcat ../translationPrefix '.Favorite')}}">
                     <i class="{{#if (includes ../favorites id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
                 </div>
                 {{#if isOwner}}
-                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (lookup (concat ../translationPrefix '.DrawCard') 'string')}}">
+                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsConcat ../translationPrefix '.DrawCard')}}">
                     <i class="fas fa-cards-blank"></i>
                 </div>
                 {{/if}}
