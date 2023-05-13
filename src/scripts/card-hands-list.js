@@ -9,9 +9,25 @@ const handsModule = {
   id: 'card-hands-list',
   translationPrefix: 'CARDHANDSLIST',
   scrollPosition: '',
+  hidden: true,
+  sortCards: function (a, b) {
+    const property = 'sort';
+    // Get the value of the property from each object
+    const valueA = a[property];
+    const valueB = b[property];
+
+    // Compare the values
+    if (valueA < valueB) {
+      return -1;
+    } else if (valueA > valueB) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
   render: async function () {
     const handsWrapperElement = document.getElementById(`${handsModule.id}-hands-wrapper`);
-    if (handsWrapperElement) handsModule.scrollPosition = handsWrapperElement.scrollTop;
+    if (handsWrapperElement) handsModule.scrollPosition =  handsWrapperElement.scrollTop;
     const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
     const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel));
 
@@ -19,7 +35,7 @@ const handsModule = {
     const containerElement = document.getElementById(`${handsModule.id}-container`);
 
     // Get the hidden state of the container from the settings
-    const hidden = game.settings.get(handsModule.id, 'collapseHandsContainer');
+    const hidden = handsModule.hidden;
     // Render the template
     const containerHTML = await renderTemplate(`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`, {
       hands: availableHands,
@@ -45,9 +61,15 @@ const handsModule = {
     document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = handsModule.scrollPosition;
 
     /* Set up listeners for hands list UI */
+    const canvas = document.getElementById("board");
+    canvas.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const cardUuid = e.dataTransfer.getData('text/plain');
+      console.log(cardUuid);
+    });
 
     // Get all the hands and loop through them
-    const handElements = document.querySelectorAll(`.${handsModule.id}-cards`);
+    const handElements = document.querySelectorAll(`.${handsModule.id}-hand`);
 
     // For each hand...
     for (const handElement of handElements) {
@@ -57,17 +79,51 @@ const handsModule = {
       const handElementId = `#${handsModule.id}-${hand.id}`;
       // Add listener for opening the hand sheet when clicking on the hand name
       document.querySelector(`${handElementId} .${handsModule.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
+      // Get the cards list element
+      const cardsListElement = document.querySelector(`${handElementId} .${handsModule.id}-cards`);
       // Add listener for opening the hand sheet when clicking on the cards container
-      document.querySelector(`${handElementId} .${handsModule.id}-cards-container`).addEventListener('click', async (e) => await hand.sheet.render(true));
-      // Add listener for drawing a Card
-      const drawCardButtonElement = document.querySelector(`${handElementId} .${handsModule.id}-draw`);
-      // This button only appears for those with ownership permission, so check if it exists
-      if (drawCardButtonElement) {
-        drawCardButtonElement.addEventListener('click', async function (e) {
-          e.stopImmediatePropagation();
-          const handId = e.target.parentElement.dataset.handId;
-          const hand = game.cards.get(handId);
-          hand.drawDialog();
+      cardsListElement.addEventListener('click', async (e) => await hand.sheet.render(true));
+      // Add listener for dropping a card within the cards list element.
+      cardsListElement.addEventListener('drop', async (e) => {
+        // Prevent multiple executions
+        e.stopImmediatePropagation();
+
+        const cardDragged = await fromUuid(e.dataTransfer.getData('text/plain'));
+        const dropTarget = await fromUuid(e.target.dataset.uuid);
+        let hand = undefined;
+        if (dropTarget.documentName === 'Card') {
+          // If the target is a card, set the hand
+          hand = await fromUuid(dropTarget.parent.uuid);
+        } else if (dropTarget.documentName === 'Cards' && dropTarget.type === 'hand') {
+          // If the target is a hand, set the hand.
+          hand = dropTarget;
+        }
+
+        if (cardDragged.parent.id !== hand.id) {
+          // If the card's parent and the target hand are not the same, pass the card
+          await cardDragged.parent.pass(hand, [cardDragged.id]);
+        } else {
+          // If they are the same, order the cards.
+          const otherCards = hand.cards.filter((c) => c.id !== cardDragged.id);
+          const data = SortingHelpers.performIntegerSort(cardDragged, { target: dropTarget, siblings: otherCards });
+          const target = data[0].target;
+          const sort = data[0].update.sort;
+          await target.update({ sort: sort });
+        }
+      });
+
+      const cardsListItemElements = handElement.querySelectorAll('li');
+      for (const li of cardsListItemElements) {
+        // On right click
+        li.children[0].addEventListener('contextmenu', async (e) => {
+          e.preventDefault();
+          const card = await fromUuid(e.target.dataset.uuid);
+          card.flip();
+        });
+
+        // On dragStart
+        li.children[0].addEventListener('dragstart', async (e) => {
+          e.dataTransfer.setData('text/plain', e.target.dataset.uuid);
         });
       }
 
@@ -94,6 +150,32 @@ const handsModule = {
           await game.user.setFlag(handsModule.id, flagKey, favorites);
         }
       });
+
+      // Add listener for drawing a Card
+      const drawCardButtonElement = document.querySelector(`${handElementId} .${handsModule.id}-draw`);
+      // This button only appears for those with ownership permission, so check if it exists
+      if (drawCardButtonElement) {
+        drawCardButtonElement.addEventListener('click', async function (e) {
+          e.stopImmediatePropagation();
+          const handId = e.target.parentElement.dataset.handId;
+          const hand = game.cards.get(handId);
+          const cardsDrawn = await hand.drawDialog();
+          // If Adventure Cards and announce cards is enabled in that module...
+          if (cardsDrawn.some((c) => c.type === 'adventure') && game.settings.get('adventure-deck', 'announceCards')) {
+            // Prerender chat card.
+            const message = await renderTemplate(`modules/adventure-deck/templates/dealtcards-chatcard.hbs`, {
+              player: hand.name,
+              cards: cardsDrawn
+            });
+            // Print card to chat.
+            ChatMessage.create({
+              user: game.user.id,
+              type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+              content: message,
+            });
+          }
+        });
+      }
     }
 
     // Add listener for hiding and showing the module UI container when the icon is clicked
@@ -106,7 +188,7 @@ const handsModule = {
       angleIconElement.classList.toggle('fa-angle-up');
       angleIconElement.classList.toggle('fa-angle-down');
       // Toggle the collapsed setting boolean
-      await game.settings.set(handsModule.id, 'collapseHandsContainer', !game.settings.get(handsModule.id, 'collapseHandsContainer'))
+      handsModule.hidden = !handsModule.hidden;
       // Rerender the container
       handsModule.render();
     });
@@ -114,16 +196,6 @@ const handsModule = {
 }
 
 Hooks.on('init', function () {
-  // Register the collapsed state setting
-  game.settings.register(handsModule.id, 'collapseHandsContainer', {
-    name: 'Collapse Hands List',
-    hint: 'Stores the collapsed state of the hands list.',
-    scope: 'client',
-    config: false,
-    type: Boolean,
-    default: true,
-  });
-
   // Register the ownership level option
   game.settings.register(handsModule.id, 'observerLevel', {
     name: `${handsModule.translationPrefix}.ObserverLevel.Name`,
@@ -158,9 +230,18 @@ Hooks.on('createCard', (data) => {
 Hooks.on('updateSetting', (data) => {
   if (data.key === 'card-hands-list.observerLevel') handsModule.render();
 });
+// Hook for dropping cards on a canvas
+Hooks.on('dropCanvasData', (data) => {
+  console.log(data);
+});
 
 // Handlebar helper for searching if an array includes a string
 Handlebars.registerHelper('includes', function (array, str) {
   if (!array) return false;
   return array.includes(str);
+});
+
+// Handlebar helper for sorting cards in the hands list.
+Handlebars.registerHelper('sortCards', (objects, property) => {
+  return Array.from(objects).sort(handsModule.sortCards);
 });

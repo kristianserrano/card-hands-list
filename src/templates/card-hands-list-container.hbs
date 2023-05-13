@@ -5,7 +5,7 @@
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
         {{#if (or (not ../hidden) (and ../hidden (includes ../favorites id)))}}
-        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-cards{{#if (includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
+        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
             <h4 class="{{../moduleId}}-name" data-tooltip="{{localize (lookup (concat ../translationPrefix '.Open') 'string')}} {{name}}">
                 {{name}}
             </h4>
@@ -19,10 +19,10 @@
                 </div>
                 {{/if}}
             </div>
-            <ul class="{{../moduleId}}-container {{../moduleId}}-cards-container" data-hand-id="{{id}}">
-                {{#each cards}}
+            <ul class="{{../moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}">
+                {{#each (sortCards cards 'sort')}}
                 <li class="{{../../moduleId}}-card">
-                    <img data-card-id="{{id}}" data-card-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" data-tooltip="<h3>{{name}}</h3><p>{{description}}</p>" />
+                    <img  class="{{../../moduleId}}-card-image" data-card-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" {{#if isOwner}}draggable="true"{{/if}} data-tooltip="<h4><b>{{name}}</b></h4><hr><p>{{description}}</p>" />
                 </li>
                 {{/each}}
             </ul>
