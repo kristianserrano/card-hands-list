@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.3.2
+
+- Refreshes Cards Hands List when Card Hands are created or deleted.
+
 ## v1.3.1
 
 Fixes issue with Alien RPG's override of the core `concat` Handlebars helper breaking the translations in the template.
