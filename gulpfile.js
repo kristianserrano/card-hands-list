@@ -292,7 +292,7 @@ function updateManifest(cb) {
         //const result = `${zipURL}/${manifest.file.name}-v${manifest.file.version}.zip`
 
         manifest.file.update = `${downloadURL}/${manifest.name}`;
-        manifest.file.manifest = manifest.file.update;
+        manifest.file.manifest = `${downloadURL}/${manifest.file.version}/module.json`;
         manifest.file.download = `${downloadURL}/${manifest.file.version}/${manifest.file.id}-${manifest.file.version}.zip`;
 
         const prettyProjectJson = stringify(manifest.file, {
