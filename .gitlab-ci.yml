@@ -21,7 +21,7 @@ deploy to s3:
     entrypoint: [""]
   script:
     - aws --version
-    - aws s3 ls
+    - echo "${CI_PROJECT_NAME}/module.json"
     - aws s3 cp $CI_PROJECT_NAME/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read
     - aws s3 cp $CI_PROJECT_NAME s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/$CI_COMMIT_TAG --acl public-read --recursive
   rules:
