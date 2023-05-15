@@ -1,7 +1,7 @@
 
 /**
  * Card Hands List
- * A Foundry VTT module to display and provide quick access to a player's card hands
+ * A Foundry VTT module to display and provide quick access to a player's Card Hands
  * Developer: Kristian Serrano
  */
 
@@ -45,7 +45,7 @@ const handsModule = {
     // Set the wrapper's scroll position to the previous position.
     document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = handsModule.scrollPosition;
 
-    /* Set up listeners for hands list UI */
+    /* Set up listeners for Card Hands list UI */
     const canvas = document.getElementById("board");
     canvas.addEventListener("drop", (e) => {
       e.preventDefault();
@@ -53,47 +53,58 @@ const handsModule = {
       console.log(cardUuid);
     });
 
-    // Get all the hands and loop through them
+    // Get all the Card Hands and loop through them
     const handElements = document.querySelectorAll(`.${handsModule.id}-hand`);
 
-    // For each hand...
+    // For each Hand...
     for (const handElement of handElements) {
-      // Get its hand
+      // Get its Hand
       const hand = await game.cards.get(handElement.dataset.handId);
       // Set the Element ID to use for query selectors
       const handElementId = `#${handsModule.id}-${hand.id}`;
-      // Add listener for opening the hand sheet when clicking on the hand name
+      // Add listener for opening the Card Hand sheet when clicking on the Card Hand name
       document.querySelector(`${handElementId} .${handsModule.id}-name`).addEventListener('click', async (e) => await hand.sheet.render(true));
-      // Get the cards list element
+      // Get the Card Hands list element
       const cardsListElement = document.querySelector(`${handElementId} .${handsModule.id}-cards`);
-      // Add listener for opening the hand sheet when clicking on the cards container
+      // Add listener for opening the Card Hand sheet when clicking on the Cards container
       cardsListElement.addEventListener('click', async (e) => await hand.sheet.render(true));
-      // Add listener for dropping a card within the cards list element.
+      // Add listener for dropping a Card within the Cards list element.
       cardsListElement.addEventListener('drop', async (e) => {
         // Prevent multiple executions
         e.stopImmediatePropagation();
+        // Get the data transfer text value
+        const textDataTransfer = e.dataTransfer.getData('text/plain');
+        if (textDataTransfer) {
+          // If there's a value, parse it
+          const parsedDataTransfer = JSON.parse(textDataTransfer);
+          if (parsedDataTransfer && parsedDataTransfer.type === 'Card') {
+            // If there is parsed data, get the document from the UUI
+            const cardDragged = await fromUuid(parsedDataTransfer.uuid);
+            if (cardDragged) {
+              // If there's an actual document
+              const dropTarget = await fromUuid(e.target.dataset.uuid);
+              let hand = undefined;
+              if (dropTarget.documentName === 'Card') {
+                // If the target is a Card, get its Hand
+                hand = await fromUuid(dropTarget.parent.uuid);
+              } else if (dropTarget.documentName === 'Cards' && dropTarget.type === 'hand') {
+                // If the target is a Hand, set the Hand.
+                hand = dropTarget;
+              }
 
-        const cardDragged = await fromUuid(e.dataTransfer.getData('text/plain'));
-        const dropTarget = await fromUuid(e.target.dataset.uuid);
-        let hand = undefined;
-        if (dropTarget.documentName === 'Card') {
-          // If the target is a card, set the hand
-          hand = await fromUuid(dropTarget.parent.uuid);
-        } else if (dropTarget.documentName === 'Cards' && dropTarget.type === 'hand') {
-          // If the target is a hand, set the hand.
-          hand = dropTarget;
-        }
-
-        if (cardDragged.parent.id !== hand.id) {
-          // If the card's parent and the target hand are not the same, pass the card
-          await cardDragged.parent.pass(hand, [cardDragged.id]);
-        } else {
-          // If they are the same, order the cards.
-          const otherCards = hand.cards.filter((c) => c.id !== cardDragged.id);
-          const data = SortingHelpers.performIntegerSort(cardDragged, { target: dropTarget, siblings: otherCards });
-          const target = data[0].target;
-          const sort = data[0].update.sort;
-          await target.update({ sort: sort });
+              if (cardDragged.parent.id !== hand.id) {
+                // If the Card's parent and the target Card Hand are not the same, pass the Card
+                await cardDragged.parent.pass(hand, [cardDragged.id]);
+              } else {
+                // If they are the same, order the Cards.
+                const otherCards = hand.cards.filter((c) => c.id !== cardDragged.id);
+                const data = SortingHelpers.performIntegerSort(cardDragged, { target: dropTarget, siblings: otherCards });
+                const target = data[0].target;
+                const sort = data[0].update.sort;
+                await target.update({ sort: sort });
+              }
+            }
+          }
         }
       });
 
@@ -108,25 +119,29 @@ const handsModule = {
 
         // On dragStart
         li.children[0].addEventListener('dragstart', async (e) => {
-          e.dataTransfer.setData('text/plain', e.target.dataset.uuid);
+          const data = {
+            type: "Card",
+            uuid: e.target.dataset.uuid
+          }
+          e.dataTransfer.setData('text/plain', JSON.stringify(data));
         });
       }
 
-      // Add listener for favoriting a hand.
+      // Add listener for favoriting a Hand.
       document.querySelector(`${handElementId} .${handsModule.id}-favorite`).addEventListener('click', async function (e) {
         // Prevent multiple executions
         e.stopImmediatePropagation();
         // Set the user flag key
         const flagKey = 'favorite-hands';
-        // Get the ID of the hand that's being favorited or unfavorited.
+        // Get the ID of the Card Hand that's being favorited or unfavorited.
         const handId = e.target.parentElement.dataset.handId;
-        // Get the current list of favorited hand IDs from the user flag
+        // Get the current list of favorited Card Hand IDs from the user flag
         let favorites = game.user.getFlag(handsModule.id, flagKey);
         // A quick catch for an empty favorites flag
         if (!favorites) favorites = [];
-        // If the list of favorites includes this hand already...
+        // If the list of favorites includes this Card Hand already...
         if (favorites.includes(handId)) {
-          // Unfavorite it by remove the hand from the array and updating the user flag
+          // Unfavorite it by remove the Card Hand from the array and updating the user flag
           favorites.splice(favorites.indexOf(handId), 1);
           await game.user.setFlag(handsModule.id, flagKey, favorites);
         } else {
@@ -145,14 +160,19 @@ const handsModule = {
           const handId = e.target.parentElement.dataset.handId;
           const hand = game.cards.get(handId);
           const cardsDrawn = await hand.drawDialog();
-          // If Adventure Cards and announce cards is enabled in that module...
-          if (cardsDrawn.some((c) => c.type === 'adventure') && game.settings.get('adventure-deck', 'announceCards')) {
-            // Prerender chat card.
+          const swadeAdventureDeckModule = game.modules.find((m) => m.id === 'adventure-deck')
+          if (
+            swadeAdventureDeckModule.active &&
+            cardsDrawn.some((c) => c.type === 'adventure') &&
+            game.settings.get('adventure-deck', 'announceCards')
+          ) {
+            // If Adventure Cards and Announce Cards is enabled in that module...
+            // Prerender Chat Card.
             const message = await renderTemplate(`modules/adventure-deck/templates/dealtcards-chatcard.hbs`, {
               player: hand.name,
               cards: cardsDrawn
             });
-            // Print card to chat.
+            // Print Card to chat.
             ChatMessage.create({
               user: game.user.id,
               type: CONST.CHAT_MESSAGE_TYPES.OTHER,
@@ -195,11 +215,11 @@ Hooks.on('init', function () {
 Hooks.on('ready', function () {
   // Preload the template
   loadTemplates([`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`]);
-  // Render the card hands list
+  // Render the Card Hands list
   handsModule.render();
 });
 
-/* Hooks to listen to changes in settings and hands data */
+/* Hooks to listen to changes in settings and Card Hands data */
 Hooks.on('renderPlayerList', (data) => {
   if (game.ready) handsModule.render();
 });
@@ -228,6 +248,17 @@ Hooks.on('updateSetting', (data) => {
   if (data.key === 'card-hands-list.observerLevel') handsModule.render();
 });
 
+Hooks.on('renderCardsHand', (data) => {
+  document.getElementById(data.id).addEventListener('drop', async (e) => {
+    const card = await fromUuid(e.dataTransfer.getData('text/plain'));
+    if (card) {
+      card.parent.pass(data.document, [card.id]);
+    }
+  });
+});
+
+/* Handlebar Helpers */
+
 // Handlebar helper for concat but with a namespaced helper name so as not to override the default concat helper
 Handlebars.registerHelper('cardHandsConcat', function (string1, string2) {
   return string1 + string2;
@@ -239,7 +270,7 @@ Handlebars.registerHelper('includes', function (array, str) {
   return array.includes(str);
 });
 
-// Handlebar helper for sorting cards in the hands list.
+// Handlebar helper for sorting Cards in the Card Hands list.
 Handlebars.registerHelper('sortCards', (objects, property) => {
   return Array.from(objects).sort((a, b) => {
     const property = 'sort';
