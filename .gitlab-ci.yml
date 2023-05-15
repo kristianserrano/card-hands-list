@@ -12,12 +12,12 @@ build:
     - npm install
     - npm install --global gulp-cli
     - gulp package
-    - mkdir card-hands-list
-    - cp package/card-hands-list-*.zip card-hands-list
-    - cp dist/module.json card-hands-list
+    - mkdir $CI_PROJECT_NAME
+    - cp package/$CI_PROJECT_NAME-*.zip $CI_PROJECT_NAME
+    - cp dist/module.json $CI_PROJECT_NAME
   artifacts:
     paths:
-      - card-hands-list
+      - $CI_PROJECT_NAME
     when: always
 
 deploy to s3:
@@ -25,8 +25,6 @@ deploy to s3:
   image:
     name: amazon/aws-cli
     entrypoint: [""]
-  before_script:
-    - export MODULE_VERSION=$CI_COMMIT_TAG
   script:
     - aws --version
-    - aws s3 cp card-hands-list s3://kristianserrano/foundryvtt/card-hands-list/${MODULE_VERSION} --acl public-read --recursive
+    - aws s3 cp $CI_PROJECT_NAME s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/$CI_COMMIT_TAG --acl public-read --recursive
