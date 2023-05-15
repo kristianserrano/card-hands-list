@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.3.3
+
+- Adds support for dragging and dropping to and from Cards sheets.
+
 ## v1.3.2
 
 - Refreshes Cards Hands List when Card Hands are created or deleted.
@@ -20,11 +24,11 @@ Fixes issue with Alien RPG's override of the core `concat` Handlebars helper bre
 - Adds card draw button to hands.
 - A ton of cleanup and optimizations behind the scenes.
 
-## v1.1.1
+## v1.1.2
 
 - Fixes favorites flag.
 
-## v1.1.0
+## v1.1.1
 
 - Removes SWADE system requirement.
 
