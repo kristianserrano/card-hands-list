@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.3.4
+
+- Formal release
+
 ## v1.3.3
 
 - Adds support for dragging and dropping to and from Cards sheets.
