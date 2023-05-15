@@ -29,4 +29,4 @@ deploy to s3:
     entrypoint: [""]
   script:
     - aws --version
-    - aws s3 cp card-hands-list s3://kristianserrano/foundryvtt/card-hands-list/$MODULE_VERSION --acl public-read --recursive
+    - aws s3 cp card-hands-list s3://kristianserrano/foundryvtt/card-hands-list/${MODULE_VERSION} --acl public-read --recursive
