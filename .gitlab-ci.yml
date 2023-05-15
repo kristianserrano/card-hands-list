@@ -7,6 +7,7 @@ build:
     - npm install --global gulp-cli
     - gulp package
     - mkdir $CI_PROJECT_NAME
+    - cp package/module.json $CI_PROJECT_NAME
     - cp package/$CI_PROJECT_NAME-*.zip $CI_PROJECT_NAME
   artifacts:
     paths:
@@ -21,6 +22,6 @@ deploy to s3:
   script:
     - aws --version
     - aws s3 cp $CI_PROJECT_NAME s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/$CI_COMMIT_TAG --acl public-read --recursive
-    - aws s3 cp src/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
+    - aws s3 cp $CI_PROJECT_NAME/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
   rules:
   - if: $CI_COMMIT_TAG
