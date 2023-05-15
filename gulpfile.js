@@ -216,6 +216,7 @@ async function packageBuild() {
             zip.directory('dist/', manifest.file.id);
 
             zip.finalize();
+            src(['dist/module.json']).pipe(dest('package'));
         } catch (err) {
             return reject(err);
         }
