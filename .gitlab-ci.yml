@@ -25,8 +25,7 @@ deploy to s3:
   image:
     name: amazon/aws-cli
     entrypoint: [""]
-  variables:
-    VERSION: $(node -p "require('dist/module.json').version")
   script:
+    - VERSION = $(node -p "require('dist/module.json').version")
     - aws --version
     - aws s3 cp card-hands-list s3://kristianserrano/foundryvtt/card-hands-list/$VERSION --acl public-read --recursive
