@@ -7,7 +7,7 @@ build:
     - npm install --global gulp-cli
     - gulp package
     - mkdir $CI_PROJECT_NAME
-    - cp package/module.json $CI_PROJECT_NAME
+    - cp dist/module.json $CI_PROJECT_NAME
     - cp package/$CI_PROJECT_NAME-*.zip $CI_PROJECT_NAME
   artifacts:
     paths:
