@@ -20,9 +20,9 @@ deploy to s3:
     name: amazon/aws-cli
     entrypoint: [""]
   script:
+    - echo $CI_PROJECT_NAME
     - aws --version
     - aws s3 cp $CI_PROJECT_NAME s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/$CI_COMMIT_TAG --acl public-read --recursive
-    - aws s3 cp src/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
     - aws s3 cp dist/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
   rules:
   - if: $CI_COMMIT_TAG
