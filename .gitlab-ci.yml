@@ -1,7 +1,3 @@
-workflow:
-  rules:
-  - if: $CI_COMMIT_TAG
-
 build:
   image: node:18
   stage: build
@@ -12,7 +8,6 @@ build:
     - gulp package
     - mkdir $CI_PROJECT_NAME
     - cp package/$CI_PROJECT_NAME-*.zip $CI_PROJECT_NAME
-    - cp dist/module.json $CI_PROJECT_NAME
   artifacts:
     paths:
       - $CI_PROJECT_NAME
@@ -24,7 +19,8 @@ deploy to s3:
     name: amazon/aws-cli
     entrypoint: [""]
   script:
-    - echo $CI_COMMIT_TAG
     - aws --version
     - aws s3 cp $CI_PROJECT_NAME s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/$CI_COMMIT_TAG --acl public-read --recursive
-    - aws s3 cp $CI_PROJECT_NAME/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/ --acl public-read --recursive
+    - aws s3 cp $CI_PROJECT_NAME/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
+  rules:
+  - if: $CI_COMMIT_TAG
