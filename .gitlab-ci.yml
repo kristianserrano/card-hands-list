@@ -15,7 +15,7 @@ build:
     - mkdir card-hands-list
     - cp package/card-hands-list-*.zip card-hands-list
     - cp dist/module.json card-hands-list
-    - VERSION=$(node -p "require('card-hands-list/module.json').version")
+    - VERSION=$(node -p "require('module.json').version")
   artifacts:
     paths:
       - card-hands-list
