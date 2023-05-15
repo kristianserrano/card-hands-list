@@ -15,7 +15,8 @@ build:
     - mkdir card-hands-list
     - cp package/card-hands-list-*.zip card-hands-list
     - cp dist/module.json card-hands-list
-    - VERSION=$(node -p "require('module.json').version")
+    - MANIFEST=gulp getManifest()
+    - VERSION=MANIFEST.version
   artifacts:
     paths:
       - card-hands-list
