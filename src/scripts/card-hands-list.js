@@ -216,6 +216,14 @@ Hooks.on('createCard', (data) => {
   if (data.parent.type === 'hand') handsModule.render();
 });
 
+Hooks.on('deleteCards', (data) => {
+  if (data.type === 'hand') handsModule.render();
+});
+
+Hooks.on('createCards', (data) => {
+  if (data.type === 'hand') handsModule.render();
+});
+
 Hooks.on('updateSetting', (data) => {
   if (data.key === 'card-hands-list.observerLevel') handsModule.render();
 });
