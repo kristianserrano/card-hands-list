@@ -22,6 +22,6 @@ deploy to s3:
   script:
     - aws --version
     - aws s3 cp $CI_PROJECT_NAME s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME/$CI_COMMIT_TAG --acl public-read --recursive
-    - aws s3 cp $CI_PROJECT_NAME/module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
+    - aws s3 cp module.json s3://kristianserrano/foundryvtt/$CI_PROJECT_NAME --acl public-read --recursive
   rules:
   - if: $CI_COMMIT_TAG
