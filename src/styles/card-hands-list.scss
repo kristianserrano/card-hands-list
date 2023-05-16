@@ -52,10 +52,6 @@ $moduleId: card-hands-list;
         grid-template-rows: 1fr 60px;
         padding: 1px 8px;
         border-radius: 4px;
-
-        &.is-owner {
-            color: #c0eddb;
-        }
     }
 
     .#{$moduleId}-name {
@@ -68,6 +64,10 @@ $moduleId: card-hands-list;
         white-space: nowrap;
         cursor: pointer;
         pointer-events: all;
+
+        &.is-owner {
+            color: #c0eddb;
+        }
     }
     .#{$moduleId}-buttons {
         grid-row: 1/3;

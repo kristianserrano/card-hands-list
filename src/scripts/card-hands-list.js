@@ -260,18 +260,22 @@ Hooks.on('renderCardsHand', (data) => {
 /* Handlebar Helpers */
 
 // Handlebar helper for concat but with a namespaced helper name so as not to override the default concat helper
-Handlebars.registerHelper('cardHandsConcat', function (string1, string2) {
+Handlebars.registerHelper('cardHandsList_Concat', function (string1, string2) {
   return string1 + string2;
 });
 
+Handlebars.registerHelper('cardHandsList_IsGM', function () {
+  return game.user.isGM;
+});
+
 // Handlebar helper for searching if an array includes a string
-Handlebars.registerHelper('includes', function (array, str) {
+Handlebars.registerHelper('cardHandsList_Includes', function (array, str) {
   if (!array) return false;
   return array.includes(str);
 });
 
 // Handlebar helper for sorting Cards in the Card Hands list.
-Handlebars.registerHelper('sortCards', (objects, property) => {
+Handlebars.registerHelper('cardHandsList_SortCards', (objects, property) => {
   return Array.from(objects).sort((a, b) => {
     const property = 'sort';
     // Get the value of the property from each object

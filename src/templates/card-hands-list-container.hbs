@@ -1,26 +1,26 @@
 <aside id="{{moduleId}}-container" class="app {{moduleId}}-container">
     <h3 class="{{moduleId}}-title">
-        <i class="fas fa-cards-blank"></i> {{localize (cardHandsConcat translationPrefix '.Title')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
+        <i class="fas fa-cards-blank"></i> {{localize (cardHandsList_Concat translationPrefix '.Title')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
     </h3>
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
-        {{#if (or (not ../hidden) (and ../hidden (includes ../favorites id)))}}
-        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
-            <h4 class="{{../moduleId}}-name" data-tooltip="{{localize (cardHandsConcat ../translationPrefix '.Open')}} {{name}}">
+        {{#if (or (not ../hidden) (and ../hidden (cardHandsList_Includes ../favorites id)))}}
+        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (cardHandsList_Includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
+            <h4 class="{{../moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Open')}} {{name}}">
                 {{name}}
             </h4>
             <div class="{{../moduleId}}-buttons">
-                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsConcat ../translationPrefix '.Favorite')}}">
-                    <i class="{{#if (includes ../favorites id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
+                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Favorite')}}">
+                    <i class="{{#if (cardHandsList_Includes ../favorites id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
                 </div>
                 {{#if isOwner}}
-                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsConcat ../translationPrefix '.DrawCard')}}">
+                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.DrawCard')}}">
                     <i class="fas fa-cards-blank"></i>
                 </div>
                 {{/if}}
             </div>
             <ul class="{{../moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}">
-                {{#each (sortCards cards 'sort')}}
+                {{#each (cardHandsList_SortCards cards 'sort')}}
                 <li class="{{../../moduleId}}-card">
                     <img  class="{{../../moduleId}}-card-image" data-card-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" {{#if isOwner}}draggable="true"{{/if}} data-tooltip="<h4><b>{{name}}</b></h4><hr><p>{{description}}</p>" />
                 </li>
