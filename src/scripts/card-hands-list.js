@@ -217,6 +217,14 @@ Hooks.on('renderPlayerList', (data) => {
   if (game.ready) handsModule.render();
 });
 
+// Recreates the Card Hands List UI if the camera dock changes position to properly insert it back in the left or right dock elements
+Hooks.on('renderCameraViews', (data) => {
+  if (game.ready) {
+    document.getElementById(`${handsModule.id}-container`).remove();
+    handsModule.render();
+  }
+});
+
 Hooks.on('updateCard', (data) => {
   if (data.parent.type === 'hand') handsModule.render();
 });
