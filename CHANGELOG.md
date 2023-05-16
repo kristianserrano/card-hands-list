@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.4.0
+
+- Changes the color of the Card Hand name if the user owns it. The color changes for a GM Card Hand only if the Card Hand doesn't have player owners.
+
 ## v1.3.4
 
 - Formal release
