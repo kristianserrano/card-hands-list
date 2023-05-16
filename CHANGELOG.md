@@ -2,7 +2,7 @@
 
 ## v1.4.1
 
-- Fixes Card Hands List UI not being readded to the camera dock if it's position was changed from top or bottom to left or right.
+- Fixes Card Hands List UI not being re-added to the camera dock if it's position was changed from top or bottom to left or right.
 
 ## v1.4.0
 
