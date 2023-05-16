@@ -3,7 +3,7 @@
 	"id": "card-hands-list",
 	"name": "card-hands-list",
 	"description": "A module to list owned card hands.",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"compatibility": {
 		"minimum": "10",
 		"verified": "11"
@@ -33,6 +33,6 @@
 	],
 	"url": "https://gitlab.com/kristianserrano/card-hands-list",
 	"update": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/module.json",
-	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/1.4.0/card-hands-list-1.4.0.zip",
-	"manifest": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/1.4.0/module.json"
+	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/1.4.1/card-hands-list-1.4.1.zip",
+	"manifest": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/1.4.1/module.json"
 }
