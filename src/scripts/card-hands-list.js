@@ -45,14 +45,7 @@ const handsModule = {
     // Set the wrapper's scroll position to the previous position.
     document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = handsModule.scrollPosition;
 
-    /* Set up listeners for Card Hands list UI */
-    const canvas = document.getElementById("board");
-    canvas.addEventListener("drop", (e) => {
-      e.preventDefault();
-      const cardUuid = e.dataTransfer.getData('text/plain');
-      console.log(cardUuid);
-    });
-
+    /* Set up listeners for Card Hands List UI */
     // Get all the Card Hands and loop through them
     const handElements = document.querySelectorAll(`.${handsModule.id}-hand`);
 
