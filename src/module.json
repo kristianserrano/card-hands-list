@@ -12,9 +12,10 @@
 		{
 			"name": "Kristian Serrano",
 			"email": "kristianserrano@gmail.com",
+			"url": "https://immaterialplane.com",
 			"discord": "Kristian Serrano#5077",
-			"url": "https://gitlab.com/kristianserrano",
-			"flags": {}
+			"mastodon": "@KristianSerrano@savageworlds.social",
+			"reddit": "u/kristianserrano"
 		}
 	],
 	"esmodules": [
