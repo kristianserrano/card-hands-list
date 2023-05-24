@@ -18,6 +18,15 @@
 			"reddit": "u/kristianserrano"
 		}
 	],
+	"relationships": {
+		"recommends": [
+			{
+				"id": "monarch",
+				"type": "module",
+				"reason": "Offers new sheets for Card Stacks and Cards for easier handling and viewing."
+			}
+		]
+	},
 	"esmodules": [
 		"scripts/card-hands-list.js"
 	],
@@ -28,8 +37,7 @@
 		{
 			"lang": "en",
 			"name": "English",
-			"path": "lang/en.json",
-			"flags": {}
+			"path": "lang/en.json"
 		}
 	],
 	"url": "https://gitlab.com/kristianserrano/card-hands-list",
