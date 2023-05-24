@@ -14,7 +14,7 @@ const handsModule = {
     // Get the hidden state of the container from the settings
     const hidden = handsModule.hidden;
     // If it's available, set the scroll position in case it was rendered after starring a hand.
-    if (handsWrapperElement) handsModule.scrollPosition = handsWrapperElement.scrollTop;
+    const handsWrapperElement = document.getElementById(`${handsModule.id}-hands-wrapper`);
     if (handsWrapperElement) handsModule.scrollPosition = handsWrapperElement.scrollTop;
     const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
     const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel));
