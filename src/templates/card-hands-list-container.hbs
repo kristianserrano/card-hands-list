@@ -1,6 +1,6 @@
-<aside id="{{moduleId}}-container" class="app {{moduleId}}-container">
+<aside id="{{moduleId}}-container" class="app {{moduleId}}-container{{#if hidden}} hidden{{/if}}">
     <h3 class="{{moduleId}}-title">
-        <i class="fas fa-cards-blank"></i> {{localize (cardHandsList_Concat translationPrefix '.Title')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
+        <i class="fas fa-cards-blank"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
     </h3>
     <div id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
@@ -22,7 +22,35 @@
             <ul class="{{../moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}">
                 {{#each (cardHandsList_SortCards cards 'sort')}}
                 <li class="{{../../moduleId}}-card">
-                    <img  class="{{../../moduleId}}-card-image" data-card-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" src="{{img}}" {{#if isOwner}}draggable="true"{{/if}} data-tooltip="<h4><b>{{name}}</b></h4><hr><p>{{description}}</p>" />
+                <img
+                    class="{{../data.moduleId}}-card-image"
+                    data-card-id="{{id}}"
+                    data-uuid="{{uuid}}"
+                    data-img="{{img}}"
+                    src="{{img}}"
+                    {{#if ../stack.isOwner}}
+                    draggable="true"
+                    {{/if}}
+                    data-tooltip="
+                        <h4>{{name}}</h4>
+                        {{#if (or (eq face null) faces.[0].text description)}}
+                        <hr>
+                        <p>
+                            {{#if (eq face null)}}
+                                {{back.text}}
+                            {{else}}
+                                {{#if faces.[0].text}}
+                                    {{faces.[0].text}}
+                                {{else}}
+                                    {{#if description}}
+                                        {{description}}
+                                    {{/if}}
+                                {{/if}}
+                            {{/if}}
+                        </p>
+                        {{/if}}
+                    "
+                />
                 </li>
                 {{/each}}
             </ul>
