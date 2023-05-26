@@ -20,6 +20,7 @@ $moduleId: card-hands-list;
     }
 
     ##{$moduleId}-hands-wrapper {
+        max-height: 40vh;
         margin-bottom: 5px;
         padding: 2px;
         overflow-y: overlay;
@@ -28,7 +29,7 @@ $moduleId: card-hands-list;
     }
 
     &.hidden ##{$moduleId}-hands-wrapper {
-        max-height: 126px;
+        max-height: 188px;
     }
 
     .#{$moduleId}-title {
