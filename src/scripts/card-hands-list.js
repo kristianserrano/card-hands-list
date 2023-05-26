@@ -11,16 +11,17 @@ const handsModule = {
   scrollPosition: '',
   hidden: true,
   render: async function () {
+    // Get the hidden state of the container from the settings
+    const hidden = handsModule.hidden;
+    // If it's available, set the scroll position in case it was rendered after starring a hand.
     const handsWrapperElement = document.getElementById(`${handsModule.id}-hands-wrapper`);
-    if (handsWrapperElement) handsModule.scrollPosition =  handsWrapperElement.scrollTop;
+    if (handsWrapperElement) handsModule.scrollPosition = handsWrapperElement.scrollTop;
     const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
     const availableHands = game.cards.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel));
 
     // Get the container for the module UI
     const containerElement = document.getElementById(`${handsModule.id}-container`);
 
-    // Get the hidden state of the container from the settings
-    const hidden = handsModule.hidden;
     // Render the template
     const containerHTML = await renderTemplate(`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`, {
       hands: availableHands,
@@ -107,7 +108,7 @@ const handsModule = {
         li.children[0].addEventListener('contextmenu', async (e) => {
           e.preventDefault();
           const card = await fromUuid(e.target.dataset.uuid);
-          card.flip();
+          await card.flip();
         });
 
         // On dragStart
@@ -115,7 +116,7 @@ const handsModule = {
           const data = {
             type: "Card",
             uuid: e.target.dataset.uuid
-          }
+          };
           e.dataTransfer.setData('text/plain', JSON.stringify(data));
         });
       }
@@ -153,9 +154,9 @@ const handsModule = {
           const handId = e.target.parentElement.dataset.handId;
           const hand = game.cards.get(handId);
           const cardsDrawn = await hand.drawDialog();
-          const swadeAdventureDeckModule = game.modules.find((m) => m.id === 'adventure-deck')
+          const swadeAdventureDeckModule = game.modules.find((m) => m.id === 'adventure-deck');
           if (
-            swadeAdventureDeckModule.active &&
+            swadeAdventureDeckModule?.active &&
             cardsDrawn.some((c) => c.type === 'adventure') &&
             game.settings.get('adventure-deck', 'announceCards')
           ) {
@@ -191,7 +192,7 @@ const handsModule = {
       handsModule.render();
     });
   }
-}
+};
 
 Hooks.on('init', function () {
   // Register the ownership level option
@@ -202,6 +203,7 @@ Hooks.on('init', function () {
     config: true,
     type: Boolean,
     default: false,
+    onChange: async () => await handsModule.render()
   });
 });
 
@@ -213,48 +215,50 @@ Hooks.on('ready', function () {
 });
 
 /* Hooks to listen to changes in settings and Card Hands data */
+// Array of Card Hooks
+const cardHandsListCardHooksArray = [
+  'createCard',
+  'updateCard',
+  'deleteCard',
+];
+
+// Array of Cards (i.e., Stacks) Hooks
+const cardHandsListCardsHooksArray = [
+  'createCards',
+  'updateCards',
+  'deleteCards',
+];
+
+// Hooks for Card events
+for (const hook of cardHandsListCardHooksArray) {
+  Hooks.on(hook, (data) => {
+    if (data.parent.type === 'hand') handsModule.render();
+  });
+}
+
+// Hooks for Cards events
+for (const hook of cardHandsListCardsHooksArray) {
+  Hooks.on(hook, (data) => {
+    if (data.type === 'hand') handsModule.render();
+  });
+}
+
+// When the Camera View is rendered (e.g., changing doc position), render the module UI
+Hooks.on('renderCameraViews', (data) => {
+  document.getElementById(`${handsModule.id}-container`).remove();
+  handsModule.render();
+});
+
+// When the Player List is rendered, render the module UI
 Hooks.on('renderPlayerList', (data) => {
   if (game.ready) handsModule.render();
 });
 
-// Recreates the Card Hands List UI if the camera dock changes position to properly insert it back in the left or right dock elements
-Hooks.on('renderCameraViews', (data) => {
-  if (game.ready) {
-    document.getElementById(`${handsModule.id}-container`).remove();
-    handsModule.render();
-  }
-});
-
-Hooks.on('updateCard', (data) => {
-  if (data.parent.type === 'hand') handsModule.render();
-});
-
-Hooks.on('deleteCard', (data) => {
-  if (data.parent.type === 'hand') handsModule.render();
-});
-
-Hooks.on('createCard', (data) => {
-  if (data.parent.type === 'hand') handsModule.render();
-});
-
-Hooks.on('deleteCards', (data) => {
-  if (data.type === 'hand') handsModule.render();
-});
-
-Hooks.on('createCards', (data) => {
-  if (data.type === 'hand') handsModule.render();
-});
-
-Hooks.on('updateSetting', (data) => {
-  if (data.key === 'card-hands-list.observerLevel') handsModule.render();
-});
-
+// When a Cards sheet is rendered, add the drop event listener.
 Hooks.on('renderCardsHand', (data) => {
   document.getElementById(data.id).addEventListener('drop', async (e) => {
     const card = await fromUuid(e.dataTransfer.getData('text/plain'));
-    if (card) {
-      card.parent.pass(data.document, [card.id]);
-    }
+      card?.parent.pass(data.document, [card.id]);
   });
 });
 
@@ -265,14 +269,15 @@ Handlebars.registerHelper('cardHandsList_Concat', function (string1, string2) {
   return string1 + string2;
 });
 
+// Handlebar helper for determining if the use is a GM
 Handlebars.registerHelper('cardHandsList_IsGM', function () {
   return game.user.isGM;
 });
 
 // Handlebar helper for searching if an array includes a string
 Handlebars.registerHelper('cardHandsList_Includes', function (array, str) {
-  if (!array) return false;
-  return array.includes(str);
+  //if (!array) return false;
+  return array?.includes(str);
 });
 
 // Handlebar helper for sorting Cards in the Card Hands list.
