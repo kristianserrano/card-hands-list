@@ -23,16 +23,16 @@
                 {{#each (cardHandsList_SortCards cards 'sort')}}
                 <li class="{{../../moduleId}}-card">
                 <img
-                    class="{{../data.moduleId}}-card-image"
+                    class="{{../../moduleId}}-card-image"
                     data-card-id="{{id}}"
                     data-uuid="{{uuid}}"
                     data-img="{{img}}"
                     src="{{img}}"
-                    {{#if ../stack.isOwner}}
+                    {{#if ../isOwner}}
                     draggable="true"
                     {{/if}}
                     data-tooltip="
-                        <h4>{{name}}</h4>
+                        <h4 style='margin: 0; font-weight: bold;'>{{name}}</h4>
                         {{#if (or (eq face null) faces.[0].text description)}}
                         <hr>
                         <p>
