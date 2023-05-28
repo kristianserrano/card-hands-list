@@ -32,15 +32,17 @@
                     draggable="true"
                     {{/if}}
                     data-tooltip="
-                        <h4 style='margin: 0; font-weight: bold;'>{{_source.name}}</h4>
+                        {{#if (or (not (eq face null)) ../isOwner)}}
+                        <h4 style='margin: 0; font-weight: bold;'>{{_source.name}}{{#if (eq face null)}} ({{localize (cardHandsList_Concat ../../translationPrefix '.FaceDown')}}){{/if}}</h4>
                         {{#if description}}
-                        {{description}}
+                        <div>{{description}}</div>
+                        {{/if}}
                         {{/if}}
                         {{#unless (eq face null)}}
                             {{#with (lookup faces face)}}
                             {{#if name}}
                             {{#unless (eq ../_source.name name)}}
-                            <h5 style='margin: 0; font-weight: bold;'>{{name}}</h5>
+                            <h5 style='font-weight: bold;'>{{name}}</h5>
                             {{/unless}}
                             {{/if}}
                             {{#if text}}
@@ -50,11 +52,15 @@
                         {{else}}
                             {{#if back.name}}
                             {{#unless (eq ../_source.name back.name)}}
-                            <h5 style='margin: 0; font-weight: bold;'>{{back.name}}</h5>
+                            <h5 style='font-weight: bold;'>{{back.name}}</h5>
                             {{/unless}}
                             {{/if}}
                             {{#if back.text}}
                             <div>{{back.text}}</div>
+                            {{else}}
+                            {{#unless ../isOwner}}
+                            <div>Unknown Card (Face Down)</div>
+                            {{/unless}}
                             {{/if}}
                         {{/unless}}
                     "
