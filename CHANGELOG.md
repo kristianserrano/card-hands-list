@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.4.3
+
+- Adds template conditionals for displaying Card face and back content in the tooltip.
+
 ## v1.4.2
 
 - Just some minor tweaks, simplifications, and optimizations behind the scenes.
