@@ -1,4 +1,4 @@
-const { series, parallel, src, dest, watch } = require('gulp');
+const { series, parallel, src, dest, watch, filter } = require('gulp');
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
@@ -41,27 +41,22 @@ function processImageFile(file, cb) {
 }
 
 function convertToWebp(cb) {
-    src('./src/artwork/**/*.png')
+    src('./artwork/**/*.png')
         .pipe(flatMap(processImageFile))
         .pipe(scaleImages(computeFileName))
-        .pipe(dest('./src/artwork/'));
+        .pipe(dest('./artwork/'));
     cb();
 }
 
 function buildSASS() {
-    return src('src/**/*.scss')
+    return src('./**/*.scss')
         .pipe(sass().on('error', sass.logError))
-        .pipe(dest('dist'));
-}
-
-function copyFiles() {
-    return src(['./src/**', './CHANGELOG.md'])
-        .pipe(dest('./dist'));
+        .pipe(dest('./'));
 }
 
 function copyPacks() {
     return src('./dist/packs/*')
-        .pipe(dest('./src/packs/'));
+        .pipe(dest('./packs/'));
 }
 
 async function clean() {
@@ -122,11 +117,7 @@ function getManifest() {
 }
 
 function buildWatch() {
-    watch('src/**/*.scss', { ignoreInitial: false }, buildSASS);
-    watch(
-        ['src/templates', 'src/scripts', 'src/styles'], { ignoreInitial: false },
-        copyFiles
-    );
+    watch('styles/**/*.scss', { ignoreInitial: false }, buildSASS);
 }
 
 // Link build to User Data folder
@@ -138,8 +129,7 @@ async function linkUserData() {
     let destDir;
     try {
         if (
-            fs.existsSync(path.resolve('.', 'dist', 'module.json')) ||
-            fs.existsSync(path.resolve('.', 'src', 'module.json'))
+            fs.existsSync(path.resolve('module.json'))
         ) {
             destDir = 'modules';
         } else {
@@ -170,7 +160,7 @@ async function linkUserData() {
             console.log(
                 chalk.green(`Copying build to ${chalk.blueBright(linkDir)}`)
             );
-            await fs.symlink(path.resolve('./dist'), linkDir);
+            await fs.symlink(path.resolve('.'), linkDir);
         }
         return Promise.resolve();
     } catch (err) {
@@ -314,7 +304,7 @@ function updateManifest(cb) {
     }
 }
 
-const execBuild = parallel(buildSASS, copyFiles);
+const execBuild = parallel(buildSASS);
 
 exports.webp = convertToWebp;
 exports.build = series(
@@ -330,7 +320,6 @@ exports.package = series(
     packageBuild
 );
 exports.update = updateManifest; //$ gulp --update="<major || minor || patch>"
-exports.clone = copyFiles;
 exports.copypacks = copyPacks;
 exports.publish = series(
     clean,
@@ -338,4 +327,3 @@ exports.publish = series(
     execBuild,
     packageBuild
 );
-exports.default = series(clean, copyFiles);

@@ -12,7 +12,6 @@
 		"package": "gulp package",
 		"build": "gulp build && gulp link",
 		"build:watch": "gulp watch",
-		"clean": "gulp clean && gulp link --clean",
 		"link": "gulp link"
 	},
 	"author": "Kristian Serrano",
