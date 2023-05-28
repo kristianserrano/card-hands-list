@@ -1,5 +1,17 @@
 # Card Hands List
 
+## v.1.4.6
+
+- Adds more conditionals for card tool tips to allow an Owner to see a value of a card while it's face down, but prevents Observers from seeing the value.
+
+## v.1.4.5
+
+- Fixes bad manifest URL.
+
+## v1.4.4
+
+- Migrates repo  and releases to GitHub.
+
 ## v1.4.3
 
 - Adds template conditionals for displaying Card face and back content in the tooltip.
