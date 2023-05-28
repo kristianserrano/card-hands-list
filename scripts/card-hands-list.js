@@ -245,7 +245,7 @@ for (const hook of cardHandsListCardsHooksArray) {
 
 // When the Camera View is rendered (e.g., changing doc position), render the module UI
 Hooks.on('renderCameraViews', (data) => {
-  document.getElementById(`${handsModule.id}-container`).remove();
+  document.getElementById(`${handsModule.id}-container`)?.remove();
   handsModule.render();
 });
 
