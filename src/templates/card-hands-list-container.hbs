@@ -32,23 +32,31 @@
                     draggable="true"
                     {{/if}}
                     data-tooltip="
-                        <h4 style='margin: 0; font-weight: bold;'>{{name}}</h4>
-                        {{#if (or (eq face null) faces.[0].text description)}}
-                        <hr>
-                        <p>
-                            {{#if (eq face null)}}
-                                {{back.text}}
-                            {{else}}
-                                {{#if faces.[0].text}}
-                                    {{faces.[0].text}}
-                                {{else}}
-                                    {{#if description}}
-                                        {{description}}
-                                    {{/if}}
-                                {{/if}}
-                            {{/if}}
-                        </p>
+                        <h4 style='margin: 0; font-weight: bold;'>{{_source.name}}</h4>
+                        {{#if description}}
+                        {{description}}
                         {{/if}}
+                        {{#unless (eq face null)}}
+                            {{#with (lookup faces face)}}
+                            {{#if name}}
+                            {{#unless (eq ../_source.name name)}}
+                            <h5 style='margin: 0; font-weight: bold;'>{{name}}</h5>
+                            {{/unless}}
+                            {{/if}}
+                            {{#if text}}
+                            <div>{{text}}</div>
+                            {{/if}}
+                            {{/with}}
+                        {{else}}
+                            {{#if back.name}}
+                            {{#unless (eq ../_source.name back.name)}}
+                            <h5 style='margin: 0; font-weight: bold;'>{{back.name}}</h5>
+                            {{/unless}}
+                            {{/if}}
+                            {{#if back.text}}
+                            <div>{{back.text}}</div>
+                            {{/if}}
+                        {{/unless}}
                     "
                 />
                 </li>
