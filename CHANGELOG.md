@@ -1,10 +1,14 @@
 # Card Hands List
 
-## v.1.4.6
+## v1.4.7
+
+- Fixes UI getting added twice on renderCameraViews hook.
+
+## v1.4.6
 
 - Adds more conditionals for card tool tips to allow an Owner to see a value of a card while it's face down, but prevents Observers from seeing the value.
 
-## v.1.4.5
+## v1.4.5
 
 - Fixes bad manifest URL.
 
