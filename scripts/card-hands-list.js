@@ -245,8 +245,11 @@ for (const hook of cardHandsListCardsHooksArray) {
 
 // When the Camera View is rendered (e.g., changing doc position), render the module UI
 Hooks.on('renderCameraViews', (data) => {
-  document.getElementById(`${handsModule.id}-container`)?.remove();
-  handsModule.render();
+  const cardHandsContainerElement = document.getElementById(`${handsModule.id}-container`);
+  if (cardHandsContainerElement) {
+    cardHandsContainerElement.remove();
+    handsModule.render();
+  }
 });
 
 // When the Player List is rendered, render the module UI
@@ -258,7 +261,7 @@ Hooks.on('renderPlayerList', (data) => {
 Hooks.on('renderCardsHand', (data) => {
   document.getElementById(data.id).addEventListener('drop', async (e) => {
     const card = await fromUuid(e.dataTransfer.getData('text/plain'));
-      card?.parent.pass(data.document, [card.id]);
+    card?.parent.pass(data.document, [card.id]);
   });
 });
 
