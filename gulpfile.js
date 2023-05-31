@@ -41,10 +41,10 @@ function processImageFile(file, cb) {
 }
 
 function convertToWebp(cb) {
-    src('./artwork/**/*.png')
+    src('./**/*.png')
         .pipe(flatMap(processImageFile))
         .pipe(scaleImages(computeFileName))
-        .pipe(dest('./artwork/'));
+        .pipe(dest('./'));
     cb();
 }
 
