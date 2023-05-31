@@ -40,6 +40,13 @@
 			"path": "lang/en.json"
 		}
 	],
+	"media": [
+		{
+			"type": "setup",
+			"url": "modules/card-hands-list/assets/images/card-hands-ui.webp",
+			"thumbnail": "modules/card-hands-list/assets/images/card-hands-ui.webp"
+		}
+	],
 	"url": "https://gitlab.com/kristianserrano/card-hands-list",
 	"update": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/module.json",
 	"download": "https://kristianserrano.s3.amazonaws.com/foundryvtt/card-hands-list/1.4.3/card-hands-list-1.4.3.zip",
