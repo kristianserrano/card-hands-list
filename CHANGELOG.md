@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.4.8
+
+- Adds thumbnail image for setup screen.
+
 ## v1.4.7
 
 - Fixes UI getting added twice on renderCameraViews hook.
