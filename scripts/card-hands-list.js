@@ -21,7 +21,11 @@ const handsModule = {
 
     // Get the container for the module UI
     const containerElement = document.getElementById(`${handsModule.id}-container`);
-
+    // If the container is in the DOM...
+    if (containerElement) {
+      // Remove it
+      containerElement.remove();
+    }
     // Render the template
     const containerHTML = await renderTemplate(`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`, {
       hands: availableHands,
@@ -32,17 +36,10 @@ const handsModule = {
       favorites: game.user.getFlag(handsModule.id, 'favorite-hands'),
     });
 
-    // If the container is in the DOM...
-    if (containerElement) {
-      // Update the HTML (There's a brief moment during dealing when the Element doesn't have a parent Element)
-      if (containerElement.parentElement) containerElement.outerHTML = containerHTML;
-    } else {
-      // Otherwise insert it
-      // Get Foundry VTT's Player List Element
-      const playersListElement = document.getElementById('players');
-      // Insert the module UI Element
-      playersListElement.insertAdjacentHTML('beforebegin', containerHTML);
-    }
+    // Get the Players List Element
+    const playersListElement = document.getElementById('players');
+    // Insert the module UI Element
+    playersListElement.insertAdjacentHTML('beforebegin', containerHTML);
     // Set the wrapper's scroll position to the previous position.
     document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = handsModule.scrollPosition;
 
@@ -210,8 +207,6 @@ Hooks.on('init', function () {
 Hooks.on('ready', function () {
   // Preload the template
   loadTemplates([`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`]);
-  // Render the Card Hands list
-  handsModule.render();
 });
 
 /* Hooks to listen to changes in settings and Card Hands data */
@@ -236,21 +231,12 @@ for (const hook of cardHandsListCardHooksArray) {
   });
 }
 
-// Hooks for Cards events
+// Hooks for Card Stack events
 for (const hook of cardHandsListCardsHooksArray) {
   Hooks.on(hook, (data) => {
     if (data.type === 'hand') handsModule.render();
   });
 }
-
-// When the Camera View is rendered (e.g., changing doc position), render the module UI
-Hooks.on('renderCameraViews', (data) => {
-  const cardHandsContainerElement = document.getElementById(`${handsModule.id}-container`);
-  if (cardHandsContainerElement) {
-    cardHandsContainerElement.remove();
-    handsModule.render();
-  }
-});
 
 // When the Player List is rendered, render the module UI
 Hooks.on('renderPlayerList', (data) => {
