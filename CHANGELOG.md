@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.4.9
+
+- Fixes double insertion of UI in Foundry VTT v11 when the camera view is docked to the left or right.
+
 ## v1.4.8
 
 - Adds thumbnail image for setup screen.
