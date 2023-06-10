@@ -205,8 +205,9 @@ Hooks.on('init', function () {
 });
 
 Hooks.on('ready', function () {
-  // Preload the template
+  // Preload the template and render the UI
   loadTemplates([`modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`]);
+  handsModule.render();
 });
 
 /* Hooks to listen to changes in settings and Card Hands data */
