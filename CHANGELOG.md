@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.4.10
+
+- Fixes mutliple UIs added when multiple Card Documents are updated at the same time.
+
 ## v1.4.9
 
 - Fixes double insertion of UI in Foundry VTT v11 when the camera view is docked to the left or right.
