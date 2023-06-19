@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.5.1
+
+- Updates image used for Setup Screen Module Page and Compendium Folder banner.
+
 ## v1.5.0
 
 - Rewrites module as a Foundry VTT Application.
