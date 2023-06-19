@@ -1,5 +1,13 @@
 # Card Hands List
 
+## v1.5.0
+
+- Rewrites module as a Foundry VTT Application.
+- Adds Flip All Cards button for each Hand.
+- Adds Shuffle Hand button for each Hand.
+- Removes clicking on Cards to open the Hand.
+- Changes right-click to flip a Card to left-click.
+
 ## v1.4.10
 
 - Fixes mutliple UIs added when multiple Card Documents are updated at the same time.
