@@ -1,11 +1,11 @@
 <aside id="{{moduleId}}-container" class="app {{moduleId}}-container{{#if hidden}} hidden{{/if}}">
     <h3 class="{{moduleId}}-title">
-        <i class="fas fa-cards-blank"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
+        <i class="fas fa-cards"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
     </h3>
-    <div id="{{moduleId}}-hands-wrapper">
+    <ul id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
         {{#if (or (not ../hidden) (and ../hidden (cardHandsList_Includes ../favorites id)))}}
-        <div id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (cardHandsList_Includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
+        <li id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (cardHandsList_Includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
             <h4 class="{{../moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Open')}} {{name}}">
                 {{name}}
             </h4>
@@ -16,6 +16,12 @@
                 {{#if isOwner}}
                 <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.DrawCard')}}">
                     <i class="fas fa-cards-blank"></i>
+                </div>
+                <div class="{{../moduleId}}-button {{../moduleId}}-flip" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.FlipAll')}}">
+                    <i class="fas fa-rotate"></i>
+                </div>
+                <div class="{{../moduleId}}-button {{../moduleId}}-shuffle" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Shuffle')}}">
+                    <i class="fas fa-shuffle"></i>
                 </div>
                 {{/if}}
             </div>
@@ -68,8 +74,8 @@
                 </li>
                 {{/each}}
             </ul>
-        </div>
+        </li>
         {{/if}}
         {{/each}}
-    </div>
+    </ul>
 </aside>
