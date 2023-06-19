@@ -3,7 +3,10 @@
         "Heading": "Card Hands",
         "DrawCard": "Draw a Card",
         "Open": "Open",
-        "Favorite": "Mark as Favorite",
+        "FlipAll": "Flip All Cards",
+        "Shuffle": "Shuffle Hand",
+        "Favorite": "Add to Favorites",
+        "UnFavorite": "Remove from Favorites",
         "ObserverLevel": {
             "Name": "Include Hands with Observer Ownership",
             "Hint": "Includes hands of which users have Observer-level ownership. Default is Owner-level ownership only."
