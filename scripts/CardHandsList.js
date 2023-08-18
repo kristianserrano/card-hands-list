@@ -66,6 +66,8 @@ export class CardHandsList extends Application {
         html.find(`.${handsModule.id}-title`).click(this._onToggleAllHands.bind(this));
         // Open the Cards Hand
         html.find(`.${handsModule.id}-name`)?.click(this._onOpenCardsHand.bind(this));
+        // Open the Card Card
+        html.find(`.${handsModule.id}-card`)?.click(this._onOpenCard.bind(this));
         // Favorite the Cards Hand
         html.find(`.${handsModule.id}-favorite`)?.click(this._onFavoriteHand.bind(this));
         // Draw a Card
@@ -77,7 +79,7 @@ export class CardHandsList extends Application {
         // Get a collection of card images
         const cardImages = html.find(`.${handsModule.id}-card-image`);
         // Flip a Card
-        cardImages?.click(this._onFlipCard.bind(this));
+        cardImages?.on('contextmenu', this._onFlipCard.bind(this));
         // Drag a Card
         cardImages?.on('dragstart', this._onDragCard.bind(this));
         // Drop a Card
@@ -122,9 +124,21 @@ export class CardHandsList extends Application {
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const handId = e.target.parentElement.dataset.handId;
-        const hand = game.cards.get(handId);
+        const hand = game.cards.get(e.target.parentElement.dataset.handId);
         await hand.sheet.render(true);
+    }
+
+    // Open the Card
+    async _onOpenCard(e) {
+        // Prevent multiple executions
+        e.preventDefault();
+        const card = await fromUuid(e.target.dataset.uuid);
+        // Render the image popout
+        const imgPopout = new ImagePopout(card.img, {
+            title: card.name,
+            uuid: card.uuid
+        });
+        await imgPopout.render(true);
     }
 
     // Favorite Cards Hand
@@ -138,8 +152,7 @@ export class CardHandsList extends Application {
     // Draw a Card from a Cards Stack
     async _onDrawCard(e) {
         e.stopImmediatePropagation();
-        const handId = e.target.parentElement.dataset.handId;
-        const hand = game.cards.get(handId);
+        const hand = game.cards.get(e.target.parentElement.dataset.handId);
         const cardsDrawn = await hand.drawDialog();
         // Custom message output using the SWADE Adventure Deck module's template
         const swadeAdventureDeckModule = game.modules.find((m) => m.id === 'adventure-deck');
