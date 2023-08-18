@@ -1,5 +1,18 @@
 # Card Hands List
 
+## v1.6.1
+
+- Updates this changelog to include the previous version's changes. (That's so meta.)
+
+## v1.6.0
+
+- Foundry VTT v10 is no longer supported.
+- Lists owned Card Hands at top followed by observed hands.
+- Uses state data for Card Documents (supported in v11 only) to for name, img, and text values.
+- Changes to Card interactions:
+  - Left-click now opens the card image in an Image Popout.
+  - Right-click is now used to flip an individual card.
+
 ## v1.5.1
 
 - Updates image used for Setup Screen Module Page and Compendium Folder banner.
