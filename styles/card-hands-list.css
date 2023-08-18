@@ -112,3 +112,18 @@ div#camera-views #card-hands-list-container {
   object-fit: contain;
   border: none;
 }
+
+.card-hands-list-tooltip-heading {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+.card-hands-list-tooltip-heading:has(+ .card-hands-list-card-text-description) {
+  margin-bottom: 0.125em;
+  padding-bottom: 0.125em;
+  border-bottom: 1px dotted currentColor;
+}
+
+.card-hands-list-card-text-description {
+  margin: 0;
+  font-size: 0.8em;
+}

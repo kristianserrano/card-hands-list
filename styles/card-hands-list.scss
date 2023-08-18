@@ -25,7 +25,6 @@ $moduleId: card-hands-list;
         padding: 2px;
         overflow-y: overlay;
         pointer-events: all;
-
     }
 
     &.hidden ##{$moduleId}-hands-wrapper {
@@ -132,4 +131,18 @@ $moduleId: card-hands-list;
             border: none;
         }
     }
+}
+.#{$moduleId}-tooltip-heading {
+    font-size: 0.9em;
+    font-weight: bold;
+
+    &:has(+ .#{$moduleId}-card-text-description) {
+        margin-bottom: 0.125em;
+        padding-bottom: 0.125em;
+        border-bottom: 1px dotted currentColor;
+    }
+}
+.#{$moduleId}-card-text-description {
+  margin: 0;
+  font-size: 0.8em;
 }
