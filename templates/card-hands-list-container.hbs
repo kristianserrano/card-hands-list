@@ -4,78 +4,15 @@
     </h3>
     <ul id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
-        {{#if (or (not ../hidden) (and ../hidden (cardHandsList_Includes ../favorites id)))}}
-        <li id="{{../moduleId}}-{{id}}" class="{{../moduleId}}-hand{{#if (cardHandsList_Includes ../favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
-            <h4 class="{{../moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Open')}} {{name}}">
-                {{name}}
-            </h4>
-            <div class="{{../moduleId}}-buttons">
-                <div class="{{../moduleId}}-button {{../moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Favorite')}}">
-                    <i class="{{#if (cardHandsList_Includes ../favorites id)}}fas{{else}}fa-regular{{/if}} fa-star"></i>
-                </div>
-                {{#if isOwner}}
-                <div class="{{../moduleId}}-button {{../moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.DrawCard')}}">
-                    <i class="fas fa-cards-blank"></i>
-                </div>
-                <div class="{{../moduleId}}-button {{../moduleId}}-flip" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.FlipAll')}}">
-                    <i class="fas fa-rotate"></i>
-                </div>
-                <div class="{{../moduleId}}-button {{../moduleId}}-shuffle" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat ../translationPrefix '.Shuffle')}}">
-                    <i class="fas fa-shuffle"></i>
-                </div>
-                {{/if}}
-            </div>
-            <ul class="{{../moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}">
-                {{#each (cardHandsList_SortCards cards 'sort')}}
-                <li class="{{../../moduleId}}-card">
-                <img
-                    class="{{../../moduleId}}-card-image"
-                    data-card-id="{{id}}"
-                    data-uuid="{{uuid}}"
-                    data-img="{{img}}"
-                    src="{{img}}"
-                    {{#if ../isOwner}}
-                    draggable="true"
-                    {{/if}}
-                    data-tooltip="
-                        {{#if (or (not (eq face null)) ../isOwner)}}
-                        <h4 style='margin: 0; font-weight: bold;'>{{_source.name}}{{#if (eq face null)}} ({{localize (cardHandsList_Concat ../../translationPrefix '.FaceDown')}}){{/if}}</h4>
-                        {{#if description}}
-                        <div>{{description}}</div>
-                        {{/if}}
-                        {{/if}}
-                        {{#unless (eq face null)}}
-                            {{#with (lookup faces face)}}
-                            {{#if name}}
-                            {{#unless (eq ../_source.name name)}}
-                            <h5 style='font-weight: bold;'>{{name}}</h5>
-                            {{/unless}}
-                            {{/if}}
-                            {{#if text}}
-                            <div>{{text}}</div>
-                            {{/if}}
-                            {{/with}}
-                        {{else}}
-                            {{#if back.name}}
-                            {{#unless (eq ../_source.name back.name)}}
-                            <h5 style='font-weight: bold;'>{{back.name}}</h5>
-                            {{/unless}}
-                            {{/if}}
-                            {{#if back.text}}
-                            <div>{{back.text}}</div>
-                            {{else}}
-                            {{#unless ../isOwner}}
-                            <div>Unknown Card (Face Down)</div>
-                            {{/unless}}
-                            {{/if}}
-                        {{/unless}}
-                    "
-                />
-                </li>
-                {{/each}}
-            </ul>
-        </li>
+        {{#if isOwner}}
+            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/if}}
+        {{/each}}
+        {{#each hands}}
+        {{#unless isOwner}}
+            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+        {{/unless}}
         {{/each}}
     </ul>
 </aside>
+{{log this}}
