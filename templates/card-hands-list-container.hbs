@@ -2,17 +2,23 @@
     <h3 class="{{moduleId}}-title">
         <i class="fas fa-cards"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
     </h3>
-    <ul id="{{moduleId}}-hands-wrapper">
+    <section id="{{moduleId}}-hands-wrapper">
         {{#each hands}}
-        {{#if isOwner}}
+        {{#if (cardHandsList_Includes ../favorites id)}}
             {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/if}}
         {{/each}}
         {{#each hands}}
-        {{#unless isOwner}}
+        {{#if isOwner}}
+        {{#unless (cardHandsList_Includes ../favorites id)}}
+            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+        {{/unless}}
+        {{/if}}
+        {{/each}}
+        {{#each hands}}
+        {{#unless (or isOwner (cardHandsList_Includes ../favorites id))}}
             {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/unless}}
         {{/each}}
-    </ul>
+    </section>
 </aside>
-{{log this}}

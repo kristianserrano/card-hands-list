@@ -48,6 +48,12 @@ div#camera-views #card-hands-list-container {
   margin: 4px;
   padding: 4px;
 }
+#card-hands-list-container .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
+  border-bottom: 2px groove var(--color-border-dark-secondary);
+}
+#card-hands-list-container.hidden .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
+  border-bottom: none;
+}
 #card-hands-list-container .card-hands-list-name {
   margin: 0;
   grid-row: 1/2;
