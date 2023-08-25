@@ -4,6 +4,7 @@
 
 - Favorited Hands are now pinned to the top of the expanded list.
 - Favorites icon changed from star to pin.
+- Removes recommendation of Monarch. (Foundry VTT's UX for this could use some improvement.)
 
 ## v1.6.1
 
