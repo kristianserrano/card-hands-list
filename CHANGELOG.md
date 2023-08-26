@@ -1,6 +1,6 @@
 # Card Hands List
 
-## v1.6.2
+## v1.7.0
 
 - Favorited Hands are now pinned to the top of the expanded list.
 - Favorites icon changed from star to pin.
