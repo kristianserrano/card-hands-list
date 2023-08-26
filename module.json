@@ -4,6 +4,9 @@
 	"name": "card-hands-list",
 	"description": "A module to list owned card hands.",
 	"version": "",
+	"url": "",
+	"download": "",
+	"manifest": "",
 	"compatibility": {
 		"minimum": "11",
 		"verified": "11"
@@ -38,7 +41,22 @@
 			"thumbnail": "modules/card-hands-list/assets/images/card-hands-ui.webp"
 		}
 	],
-	"url": "",
-	"download": "",
-	"manifest": ""
+	"flags": {
+		"hotReload": {
+			"extensions": [
+				"js",
+				"css",
+				"hbs",
+				"json"
+			],
+			"paths": [
+				"templates/card-hands-list-container.hbs",
+				"templates/hand-list-item.hbs",
+				"styles/card-hands-list.css",
+				"lang/en.json",
+				"scripts/card-hands-list.js",
+				"scripts/CardHandsList.js"
+			]
+		}
+	}
 }
