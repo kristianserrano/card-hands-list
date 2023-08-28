@@ -65,17 +65,13 @@ export class CardHandsList extends Application {
         // Toggle online/offline
         html.find(`.${handsModule.id}-title`).click(this._onToggleAllHands.bind(this));
         // Open the Cards Hand
-        html.find(`.${handsModule.id}-name`)?.click(this._onOpenCardsHand.bind(this));
+        html.find(`.${handsModule.id}-name a`)?.click(this._onOpenCardsHand.bind(this));
+        // Favorite the Cards Hand
+        html.find(`.${handsModule.id}-favorite a`)?.click(this._onFavoriteHand.bind(this));
+        // Draw a Card
+        html.find(`.${handsModule.id}-draw a`)?.click(this._onDrawCard.bind(this));
         // Open the Card Card
         html.find(`.${handsModule.id}-card`)?.click(this._onOpenCard.bind(this));
-        // Favorite the Cards Hand
-        html.find(`.${handsModule.id}-favorite`)?.click(this._onFavoriteHand.bind(this));
-        // Draw a Card
-        html.find(`.${handsModule.id}-draw`)?.click(this._onDrawCard.bind(this));
-        // Flip all Cards
-        html.find(`.${handsModule.id}-flip`)?.click(this._onFlipAllCards.bind(this));
-        // Shuffle Hand
-        html.find(`.${handsModule.id}-shuffle`)?.click(this._onShuffle.bind(this));
         // Get a collection of card images
         const cardImages = html.find(`.${handsModule.id}-card-image`);
         // Flip a Card
@@ -127,7 +123,7 @@ export class CardHandsList extends Application {
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const hand = game.cards.get(e.target.parentElement.dataset.handId);
+        const hand = game.cards.get(e.target.parentElement.parentElement.dataset.handId);
         await hand.sheet.render(true);
     }
 
@@ -149,13 +145,13 @@ export class CardHandsList extends Application {
         // Prevent multiple executions
         e.stopImmediatePropagation();
         // Favorite the Hand based on its ID.
-        await this._favoriteHand(e.target.parentElement.dataset.handId)
+        await this._favoriteHand(e.target.parentElement.parentElement.dataset.handId)
     }
 
     // Draw a Card from a Cards Stack
     async _onDrawCard(e) {
         e.stopImmediatePropagation();
-        const hand = game.cards.get(e.target.parentElement.dataset.handId);
+        const hand = game.cards.get(e.target.parentElement.parentElement.dataset.handId);
         const cardsDrawn = await hand.drawDialog();
         // Custom message output using the SWADE Adventure Deck module's template
         const swadeAdventureDeckModule = game.modules.find((m) => m.id === 'adventure-deck');
@@ -166,7 +162,7 @@ export class CardHandsList extends Application {
         ) {
             // If Adventure Cards and Announce Cards is enabled in that module...
             // Prerender Chat Card.
-            const message = await renderTemplate(`modules / adventure - deck / templates / dealtcards - chatcard.hbs`, {
+            const message = await renderTemplate(`modules/adventure-deck/templates/dealtcards-chatcard.hbs`, {
                 player: hand.name,
                 cards: cardsDrawn
             });
@@ -178,17 +174,6 @@ export class CardHandsList extends Application {
             });
         }
     };
-
-    // Shuffle Cards Hand
-    async _onShuffle(e) {
-        const hand = game.cards.get(e.target.parentElement.dataset.handId);
-        await hand.shuffle();
-    }
-
-    async _onFlipAllCards(e) {
-        const hand = game.cards.get(e.target.parentElement.dataset.handId);
-        for (const card of hand.cards) await card.flip();
-    }
 
     // Flip a Card in a Cards Hand
     async _onFlipCard(e) {
@@ -249,7 +234,6 @@ export class CardHandsList extends Application {
                 name: game.i18n.localize('OWNERSHIP.Configure'),
                 icon: '<i class="fas fa-lock"></i>',
                 condition: el => {
-                    console.log(el)
                     // Return whether or not the user is a GM.
                     return game.user.isGM;
                 },
@@ -263,7 +247,6 @@ export class CardHandsList extends Application {
                 icon: '<i class="fas fa-shuffle"></i>',
                 condition: el => {
                     const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
-                    console.log(hand)
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },

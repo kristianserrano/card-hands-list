@@ -25,7 +25,7 @@ div#camera-views #card-hands-list-container {
   pointer-events: all;
 }
 #card-hands-list-container.hidden #card-hands-list-hands-wrapper {
-  max-height: 188px;
+  max-height: 200px;
 }
 #card-hands-list-container .card-hands-list-title {
   margin: 3px;
@@ -45,12 +45,13 @@ div#camera-views #card-hands-list-container {
 #card-hands-list-container .card-hands-list-hand {
   display: grid;
   grid-template-columns: 1fr 18px;
-  grid-template-rows: 1fr 60px;
-  row-gap: 0.25em;
+  grid-template-rows: 1fr 68px;
+  gap: 0.25em;
   padding: 4px 8px;
 }
 #card-hands-list-container .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
   border-bottom: 2px groove var(--color-border-dark-secondary);
+  margin-bottom: 8px;
 }
 #card-hands-list-container.hidden .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
   border-bottom: none;
@@ -87,7 +88,6 @@ div#camera-views #card-hands-list-container {
   grid-column: 2/3;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
   gap: 0.25em;
 }
@@ -96,8 +96,8 @@ div#camera-views #card-hands-list-container {
   cursor: pointer;
   pointer-events: all;
 }
-#card-hands-list-container .card-hands-list-button:hover,
-#card-hands-list-container .card-hands-list-name:hover {
+#card-hands-list-container .card-hands-list-button a:hover,
+#card-hands-list-container .card-hands-list-name a:hover {
   text-shadow: 0 0 8px var(--color-shadow-primary);
 }
 #card-hands-list-container .card-hands-list-cards {

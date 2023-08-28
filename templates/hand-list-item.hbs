@@ -1,24 +1,29 @@
 {{#if (or (not parent.hidden) (and parent.hidden (cardHandsList_Includes parent.favorites id)))}}
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (cardHandsList_Includes parent.favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
     <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Open')}} {{name}}">
-        {{name}}
+        <a>{{name}}</a>
     </h4>
     <div class="{{parent.moduleId}}-buttons">
         <div
-        class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite"
-        data-hand-id="{{id}}"
-        data-tooltip="
-            {{#if (cardHandsList_Includes parent.favorites id)}}
-            {{localize (cardHandsList_Concat parent.translationPrefix '.Unfavorite')}}
-            {{else}}
-            {{localize (cardHandsList_Concat parent.translationPrefix '.Favorite')}}
-            {{/if}}
-        ">
-            <i class="{{#if (cardHandsList_Includes parent.favorites id)}}fas{{else}}far{{/if}} fa-thumbtack"></i>
+            class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite"
+            data-hand-id="{{id}}"
+            data-tooltip="
+                {{#if (cardHandsList_Includes parent.favorites id)}}
+                {{localize (cardHandsList_Concat parent.translationPrefix '.Unfavorite')}}
+                {{else}}
+                {{localize (cardHandsList_Concat parent.translationPrefix '.Favorite')}}
+                {{/if}}
+            "
+        >
+            <a><i class="{{#if (cardHandsList_Includes parent.favorites id)}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
         </div>
         {{#if isOwner}}
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.DrawCard')}}">
-            <i class="far fa-cards-blank"></i>
+        <div
+            class="{{parent.moduleId}}-button {{parent.moduleId}}-draw"
+            data-hand-id="{{id}}"
+            data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.DrawCard')}}"
+        >
+            <a><i class="far fa-cards-blank"></i></a>
         </div>
         {{/if}}
     </div>
