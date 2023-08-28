@@ -1,8 +1,12 @@
 # Card Hands List
 
+## v1.8.1
+
+- Minor CSS bug fixes and tweaks
+
 ## v1.8.0
 
-- Adds context menu to hands (right-click on hand name)
+- Adds context menu to hands (right-click on hand name).
   - Configure Ownership
   - Shuffle
   - Flip all cards
