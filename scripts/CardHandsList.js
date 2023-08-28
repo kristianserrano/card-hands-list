@@ -84,10 +84,13 @@ export class CardHandsList extends Application {
         cardImages?.on('dragstart', this._onDragCard.bind(this));
         // Drop a Card
         html.find(`.${handsModule.id}-cards`)?.on('drop', this._onDropCard.bind(this));
+        // Configure Ownership
+        //html.find(`.${handsModule.id}-name`)?.on('contextmenu', this._onConfigureOwnership.bind(this));
+
         // Context menu
-        /* const contextOptions = this._getHandContextOptions();
+        const contextOptions = this._getHandContextOptions();
         Hooks.call("getHandContextOptions", html, contextOptions);
-        new ContextMenu(html, ".card-hands-list-hand", contextOptions); */
+        new ContextMenu(html, `.${handsModule.id}-name`, contextOptions);
     }
 
     // Favorite Cards Hand
@@ -241,63 +244,71 @@ export class CardHandsList extends Application {
 
     // Return the default context options available for the Card Hands List application
     _getHandContextOptions() {
-        // Set the user flag key
-        const favcoritesFlagKey = 'favorite-hands';
         return [
             {
-                name: game.i18n.localize("CARDHANDSLIST.Favorite"),
-                icon: `< i class="fa-regular fa-star" ></i > `,
-                condition: li => {
-                    // Get the current list of favorited Card Hand IDs from the user flag
-                    let favorites = game?.user?.getFlag(handsModule.id, favcoritesFlagKey);
-                    // If the list of favorites includes this Card Hand already...
-                    return !favorites?.includes(li[0].dataset.handId);
+                name: game.i18n.localize('OWNERSHIP.Configure'),
+                icon: '<i class="fas fa-lock"></i>',
+                condition: el => {
+                    console.log(el)
+                    // Return whether or not the user is a GM.
+                    return game.user.isGM;
                 },
-                callback: async li => {
-                    // Favorite the Hand based on its ID.
-                    await this._favoriteHand(li[0].dataset.handId)
-                    this.render(true);
+                callback: async el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    new DocumentOwnershipConfig(hand).render(true);
                 }
             },
             {
-                name: game.i18n.localize("CARDHANDSLIST.UnFavorite"),
-                icon: `< i class="fas fa-star" ></i > `,
-                condition: li => {
-                    // Get the current list of favorited Card Hand IDs from the user flag
-                    let favorites = game?.user?.getFlag(handsModule.id, favcoritesFlagKey);
-                    // If the list of favorites includes this Card Hand already...
-                    return favorites?.includes(li[0].dataset.handId);
-                },
-                callback: async li => {
-                    // Unfavorite the Hand based on its ID.
-                    await this._favoriteHand(li[0].dataset.handId);
-                    this.render(true);
-                }
-            },
-            {
-                name: game.i18n.localize("CARDHANDSLIST.Shuffle"),
+                name: game.i18n.localize("CARDS.Shuffle"),
                 icon: '<i class="fas fa-shuffle"></i>',
-                condition: li => {
-                    const hand = game.cards.get(li[0].dataset.handId);
+                condition: el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    console.log(hand)
                     // Check if GM or if user is owner of hand
-                    return hand.isOwner;
+                    return hand?.isOwner;
                 },
-                callback: async li => {
-                    const hand = game.cards.get(li[0].dataset.handId);
-                    await hand.shuffle();
+                callback: async el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    await hand?.shuffle();
                 }
             },
             {
                 name: game.i18n.localize("CARDHANDSLIST.FlipAll"),
                 icon: '<i class="fas fa-rotate"></i>',
-                condition: li => {
-                    const hand = game.cards.get(li[0].dataset.handId);
+                condition: el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
                     // Check if GM or if user is owner of hand
-                    return hand.isOwner;
+                    return hand?.isOwner;
                 },
-                callback: async li => {
-                    const hand = game.cards.get(li[0].dataset.handId);
-                    for (const card of hand.cards) await card.flip();
+                callback: async el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    for (const card of hand?.cards) await card.flip();
+                }
+            },
+            {
+                name: game.i18n.localize("CARDS.Pass"),
+                icon: '<i class="fas fa-share-square"></i>',
+                condition: el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    // Check if GM or if user is owner of hand
+                    return hand?.isOwner;
+                },
+                callback: async el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    await hand?.passDialog();
+                }
+            },
+            {
+                name: game.i18n.localize("CARDS.Reset"),
+                icon: '<i class="fas fa-undo"></i>',
+                condition: el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    // Check if GM or if user is owner of hand
+                    return hand?.isOwner;
+                },
+                callback: async el => {
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    await hand?.resetDialog();
                 }
             },
         ];
