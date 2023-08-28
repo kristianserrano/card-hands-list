@@ -22,4 +22,4 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
 - Drag and drop Cards:
   - From Card Hand to Card Hand in the Card Hands List.
   - Between a Cards sheet and a Hand in the list.
-  - To a scene (i.e., works with Card Tiles)
+  - To a scene (i.e., works with [https://foundryvtt.com/packages/card-tiles](Card Tiles).
