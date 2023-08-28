@@ -1,5 +1,16 @@
 # Card Hands List
 
+## v1.8.0
+
+- Adds context menu to hands (right-click on hand name)
+  - Configure Ownership
+  - Shuffle
+  - Flip all cards
+  - Pass (pass cards to another pile)
+  - Reset (sends all cards in hand back to original decks)
+- Fixes previous version number in this changelog.
+- Replaces solid cards icon with regular version.
+
 ## v1.7.0
 
 - Favorited Hands are now pinned to the top of the expanded list.
