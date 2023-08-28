@@ -14,17 +14,11 @@
             {{localize (cardHandsList_Concat parent.translationPrefix '.Favorite')}}
             {{/if}}
         ">
-            <i class="{{#if (cardHandsList_Includes parent.favorites id)}}fas{{else}}fa-regular{{/if}} fa-thumbtack"></i>
+            <i class="{{#if (cardHandsList_Includes parent.favorites id)}}fas{{else}}far{{/if}} fa-thumbtack"></i>
         </div>
         {{#if isOwner}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-draw" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.DrawCard')}}">
-            <i class="fa-regular fa-cards-blank"></i>
-        </div>
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-flip" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.FlipAll')}}">
-            <i class="fas fa-rotate"></i>
-        </div>
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-shuffle" data-hand-id="{{id}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Shuffle')}}">
-            <i class="fas fa-shuffle"></i>
+            <i class="far fa-cards-blank"></i>
         </div>
         {{/if}}
     </div>
