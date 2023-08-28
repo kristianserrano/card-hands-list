@@ -19,6 +19,7 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
   - Reset Hand
 - Left-click to view the Card image in an Image Popout.
 - Right-click on a Card to flip it.
-- Drag and drop Cards
-- From Card Hand to Card Hand in the Card Hands List.
-- Between a Cards sheet and a Hand in the list.
+- Drag and drop Cards:
+  - From Card Hand to Card Hand in the Card Hands List.
+  - Between a Cards sheet and a Hand in the list.
+  - To a scene (i.e., works with Card Tiles)
