@@ -57,6 +57,7 @@ export class CardHandsList extends Application {
             moduleId: handsModule.id,
             translationPrefix: handsModule.translationPrefix,
             favorites: game?.user?.getFlag(handsModule.id, 'favorite-hands'),
+            minimalUi: game.modules.get('minimal-ui')?.active,
         };
     }
 
