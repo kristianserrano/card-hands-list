@@ -1,8 +1,12 @@
 # Card Hands List
 
+## v1.8.2
+
+- Adds support for Minimal UI.
+
 ## v1.8.1
 
-- Minor CSS bug fixes and tweaks
+- Minor CSS bug fixes and tweaks.
 
 ## v1.8.0
 
