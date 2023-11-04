@@ -25,9 +25,9 @@ export class CardHandsList extends Application {
     async _render(force = false, options = {}) {
         await super._render(force, options);
         // Get Players List element
-        const playersListElement = document.getElementById('players');
+        const playersListElement = document.querySelector('#players');
         // Get Card Hands List element
-        const cardHandsListElement = document.getElementById('card-hands-list-container');
+        const cardHandsListElement = document.querySelector('#card-hands');
         // If both exist, move the Card Hands List element to be placed above the Player List element
         if (playersListElement && cardHandsListElement) {
             playersListElement.before(cardHandsListElement);
@@ -52,19 +52,24 @@ export class CardHandsList extends Application {
         // Return the data for rendering
         return {
             hands,
-            hidden: !this._showAllHands,
+            collapsed: !this._showAllHands,
             isGM: game?.user?.isGM,
             moduleId: handsModule.id,
             translationPrefix: handsModule.translationPrefix,
             favorites: game?.user?.getFlag(handsModule.id, 'favorite-hands'),
-            minimalUi: game.modules.get('minimal-ui')?.active,
+            minimalUi: {
+                active: game.modules.get('minimal-ui')?.active,
+                playerListBehavior: game.settings.get('minimal-ui', 'playerList'),
+            }
+
         };
     }
 
     /** @override */
     activateListeners(html) {
-        // Toggle online/offline
+        // Toggle collapsed state
         html.find(`.${handsModule.id}-title`).click(this._onToggleAllHands.bind(this));
+
         // Open the Cards Hand
         html.find(`.${handsModule.id}-name a`)?.click(this._onOpenCardsHand.bind(this));
         // Favorite the Cards Hand
@@ -118,6 +123,11 @@ export class CardHandsList extends Application {
         this._showAllHands = !this._showAllHands;
         // Rerender the container
         this.render(true);
+    }
+
+    _onToggleMinimal(e) {
+        const element = e.currentTarget;
+        console.log(element);
     }
 
     // Open the Cards Hand

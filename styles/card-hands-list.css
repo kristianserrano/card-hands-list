@@ -1,4 +1,4 @@
-#card-hands-list-container {
+.card-hands-list-container {
   width: var(--players-width);
   margin: 0 5px 10px 15px;
   padding: 0;
@@ -7,30 +7,39 @@
   border: 1px solid var(--color-border-dark);
   color: var(--color-text-light-highlight);
 }
-#card-hands-list-container.minimal-ui {
-  margin-bottom: calc(var(--playerbot) / 4);
-  width: var(--playerwidthhv);
-  visibility: var(--playervis);
+.card-hands-list-container.minimal-ui {
   box-shadow: 0 var(--hotbarshp) var(--shadowstrength) 2px var(--shadowcolor);
   border: 1px solid var(--bordercolor);
   opacity: var(--opacity);
+  margin-bottom: calc(var(--playerbot) / 6);
+}
+.card-hands-list-container.minimal-ui.player-list-behavior-clicktoggle {
   transition: all 0.5s ease-out 0s;
+}
+.card-hands-list-container.minimal-ui.player-list-behavior-hidden {
+  margin-bottom: -50px;
+}
+.card-hands-list-container.minimal-ui:is(.player-list-behavior-clicktoggle, .player-list-behavior-autohide:hover, .player-list-behavior-hidden) {
+  --playerwidthhv: 200px;
+  --playerfsizehv: inherit;
+  --playervis: visible;
+  width: var(--playerwidthhv);
+  max-height: 450px;
+  visibility: var(--playervis);
+  font-size: var(--playerfsizehv);
   overflow: hidden;
 }
-#card-hands-list-container.minimal-ui #card-hands-list-hands-wrapper {
-  height: 250px;
+.card-hands-list-container.minimal-ui:is(.player-list-behavior-clicktoggle, .player-list-behavior-autohide:hover, .player-list-behavior-hidden) .card-hands-list-title {
+  margin: 1px;
+  padding-left: 2px;
 }
-#card-hands-list-container.minimal-ui.hidden {
+.card-hands-list-container.minimal-ui.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden), .card-hands-list-container.minimal-ui.player-list-behavior-autohide:not(:hover) {
+  width: var(--players-width);
   padding: 2px;
-  width: 32px;
-  overflow: hidden;
+  opacity: var(--opacity);
   font-size: var(--playerfsize);
 }
-#card-hands-list-container.minimal-ui.hidden #card-hands-list-hands-wrapper {
-  height: 0;
-  display: none;
-}
-#card-hands-list-container.minimal-ui.hidden .card-hands-list-title {
+.card-hands-list-container.minimal-ui.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden) .card-hands-list-title, .card-hands-list-container.minimal-ui.player-list-behavior-autohide:not(:hover) .card-hands-list-title {
   margin: 1px;
   padding-left: 2px;
   display: flex;
@@ -39,15 +48,24 @@
   justify-content: space-between;
   border: none;
 }
-#card-hands-list-container.minimal-ui.hidden .card-hands-list-title > .fa-cards {
+.card-hands-list-container.minimal-ui.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden) .card-hands-list-title > .fa-cards, .card-hands-list-container.minimal-ui.player-list-behavior-autohide:not(:hover) .card-hands-list-title > .fa-cards {
   font-size: 1rem;
   order: 2;
 }
-#card-hands-list-container.minimal-ui.hidden .card-hands-list-title > .card-hands-list-mode {
+.card-hands-list-container.minimal-ui.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden) .card-hands-list-title > .card-hands-list-mode, .card-hands-list-container.minimal-ui.player-list-behavior-autohide:not(:hover) .card-hands-list-title > .card-hands-list-mode {
   margin-bottom: 7px;
   order: 1;
 }
-div#camera-views #card-hands-list-container {
+.card-hands-list-container.minimal-ui.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden) #card-hands-list-hands-wrapper, .card-hands-list-container.minimal-ui.player-list-behavior-autohide:not(:hover) #card-hands-list-hands-wrapper {
+  height: 0;
+  display: none;
+}
+.card-hands-list-container.minimal-ui.collapsed.player-list-behavior-hidden, .card-hands-list-container.minimal-ui.player-list-behavior-autohide {
+  --playerfsize: 0;
+  --players-width: 32px;
+  font-size: var(--playerfsize);
+}
+div#camera-views .card-hands-list-container {
   background: none;
   box-shadow: none;
   margin: 0;
@@ -56,47 +74,47 @@ div#camera-views #card-hands-list-container {
   border: none;
   border-top: 6px solid rgba(0, 0, 0, 0.5);
 }
-#card-hands-list-container #card-hands-list-hands-wrapper {
-  max-height: 40vh;
+.card-hands-list-container #card-hands-list-hands-wrapper {
+  max-height: 300px;
   margin-bottom: 5px;
   padding: 2px;
   overflow-y: auto;
   scrollbar-gutter: stable;
   pointer-events: all;
 }
-#card-hands-list-container.hidden #card-hands-list-hands-wrapper {
+.card-hands-list-container.collapsed #card-hands-list-hands-wrapper {
   max-height: 200px;
 }
-#card-hands-list-container .card-hands-list-title {
+.card-hands-list-container .card-hands-list-title {
   margin: 3px;
   padding: 4px;
   font-size: 1.2em;
   border-bottom: 2px groove var(--color-border-dark-secondary);
   pointer-events: all;
 }
-#card-hands-list-container .card-hands-list-title i {
+.card-hands-list-container .card-hands-list-title i {
   margin: 0 6px;
 }
-#card-hands-list-container .card-hands-list-title .card-hands-list-mode {
+.card-hands-list-container .card-hands-list-title .card-hands-list-mode {
   font-size: var(--font-size-16);
   margin: 0 5px;
   color: var(--color-text-light-primary);
 }
-#card-hands-list-container .card-hands-list-hand {
+.card-hands-list-container .card-hands-list-hand {
   display: grid;
   grid-template-columns: 1fr 18px;
   grid-template-rows: 1fr 68px;
   gap: 0.25em;
   padding: 4px 8px;
 }
-#card-hands-list-container .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
+.card-hands-list-container .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
   border-bottom: 2px groove var(--color-border-dark-secondary);
   margin-bottom: 8px;
 }
-#card-hands-list-container.hidden .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
+.card-hands-list-container.collapsed .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
   border-bottom: none;
 }
-#card-hands-list-container .card-hands-list-name {
+.card-hands-list-container .card-hands-list-name {
   margin: 0;
   grid-row: 1/2;
   grid-column: 1/3;
@@ -106,24 +124,24 @@ div#camera-views #card-hands-list-container {
   cursor: pointer;
   pointer-events: all;
 }
-#card-hands-list-container .card-hands-list-name.is-owner {
+.card-hands-list-container .card-hands-list-name.is-owner {
   color: #c0eddb;
 }
-#card-hands-list-container .card-hands-list-name #context-menu {
+.card-hands-list-container .card-hands-list-name #context-menu {
   white-space: wrap;
   padding: 0.5em;
 }
-#card-hands-list-container .card-hands-list-name #context-menu ol.context-items {
+.card-hands-list-container .card-hands-list-name #context-menu ol.context-items {
   display: grid;
   gap: 0.5em;
 }
-#card-hands-list-container .card-hands-list-name #context-menu li.context-item {
+.card-hands-list-container .card-hands-list-name #context-menu li.context-item {
   display: flex;
   align-items: baseline;
   padding: 0;
   line-height: 1.5;
 }
-#card-hands-list-container .card-hands-list-buttons {
+.card-hands-list-container .card-hands-list-buttons {
   grid-row: 2/3;
   grid-column: 2/3;
   display: flex;
@@ -131,16 +149,16 @@ div#camera-views #card-hands-list-container {
   align-items: center;
   gap: 0.25em;
 }
-#card-hands-list-container .card-hands-list-button {
+.card-hands-list-container .card-hands-list-button {
   color: currentColor;
   cursor: pointer;
   pointer-events: all;
 }
-#card-hands-list-container .card-hands-list-button a:hover,
-#card-hands-list-container .card-hands-list-name a:hover {
+.card-hands-list-container .card-hands-list-button a:hover,
+.card-hands-list-container .card-hands-list-name a:hover {
   text-shadow: 0 0 8px var(--color-shadow-primary);
 }
-#card-hands-list-container .card-hands-list-cards {
+.card-hands-list-container .card-hands-list-cards {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -154,11 +172,11 @@ div#camera-views #card-hands-list-container {
   pointer-events: all;
   white-space: nowrap;
 }
-#card-hands-list-container .card-hands-list-cards:hover {
+.card-hands-list-container .card-hands-list-cards:hover {
   box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
   border: 1px solid var(--color-border-highlight-alt);
 }
-#card-hands-list-container .card-hands-list-card {
+.card-hands-list-container .card-hands-list-card {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +186,7 @@ div#camera-views #card-hands-list-container {
   border-radius: 5px;
   overflow: clip;
 }
-#card-hands-list-container .card-hands-list-card .card-hands-list-card-image {
+.card-hands-list-container .card-hands-list-card .card-hands-list-card-image {
   max-height: 58px;
   object-fit: contain;
   border: none;

@@ -1,6 +1,6 @@
-<aside id="{{moduleId}}-container" class="app {{moduleId}}-container{{#if hidden}} hidden{{/if}}{{#if minimalUi}} minimal-ui{{/if}}">
+<aside id="card-hands" class="app {{moduleId}}-container{{#if collapsed}} collapsed{{/if}}{{#if minimalUi.active}} minimal-ui player-list-behavior-{{minimalUi.playerListBehavior}}{{/if}}">
     <h3 class="{{moduleId}}-title">
-        <i class="fas fa-cards"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if hidden}}up{{else}}down{{/if}}"></i>
+        <i class="fas fa-cards"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if collapsed}}up{{else}}down{{/if}}"></i>
     </h3>
     <section id="{{moduleId}}-hands-wrapper">
         {{#each hands}}

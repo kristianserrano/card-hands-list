@@ -1,4 +1,4 @@
-{{#if (or (not parent.hidden) (and parent.hidden (cardHandsList_Includes parent.favorites id)))}}
+{{#if (or (not parent.collapsed) (and parent.collapsed (cardHandsList_Includes parent.favorites id)))}}
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (cardHandsList_Includes parent.favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
     <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Open')}} {{name}}">
         <a>{{name}}</a>

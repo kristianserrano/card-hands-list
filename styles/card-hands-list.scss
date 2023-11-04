@@ -1,6 +1,6 @@
 $moduleId: card-hands-list;
 
-##{$moduleId}-container {
+.#{$moduleId}-container {
     width: var(--players-width);
     margin: 0 5px 10px 15px;
     padding: 0;
@@ -10,29 +10,41 @@ $moduleId: card-hands-list;
     color: var(--color-text-light-highlight);
 
     &.minimal-ui {
-        margin-bottom: calc(var(--playerbot) / 4);
-        width: var(--playerwidthhv);
-        visibility: var(--playervis);
         box-shadow: 0 var(--hotbarshp) var(--shadowstrength) 2px var(--shadowcolor);
         border: 1px solid var(--bordercolor);
         opacity: var(--opacity);
-        transition: all 0.5s ease-out 0s;
-        overflow: hidden;
+        margin-bottom: calc(var(--playerbot) / 6);
 
-        ##{$moduleId}-hands-wrapper {
-            height: 250px;
+        &.player-list-behavior-clicktoggle {
+            transition: all 0.5s ease-out 0s;
         }
 
-        &.hidden {
-            padding: 2px;
-            width: 32px;
-            overflow: hidden;
-            font-size: var(--playerfsize);
+        &.player-list-behavior-hidden {
+            margin-bottom: -50px;
+        }
 
-            ##{$moduleId}-hands-wrapper {
-                height:0;
-                display: none;
+        &:is(.player-list-behavior-clicktoggle, .player-list-behavior-autohide:hover, .player-list-behavior-hidden) {
+            --playerwidthhv: 200px;
+            --playerfsizehv: inherit;
+            --playervis: visible;
+            width: var(--playerwidthhv);
+            max-height: 450px;
+            visibility: var(--playervis);
+            font-size: var(--playerfsizehv);
+            overflow: hidden;
+
+            .#{$moduleId}-title {
+                margin: 1px;
+                padding-left: 2px;
             }
+        }
+
+        &.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden),
+        &.player-list-behavior-autohide:not(:hover) {
+            width: var(--players-width);
+            padding: 2px;
+            opacity: var(--opacity);
+            font-size: var(--playerfsize);
 
             .#{$moduleId}-title {
                 margin: 1px;
@@ -43,20 +55,29 @@ $moduleId: card-hands-list;
                 justify-content: space-between;
                 border: none;
 
-
                 > .fa-cards {
                     font-size: 1rem;
                     order: 2;
                 }
+
                 > .card-hands-list-mode {
                     margin-bottom: 7px;
                     order: 1;
                 }
             }
 
-
+            ##{$moduleId}-hands-wrapper {
+                height: 0;
+                display: none;
+            }
         }
 
+        &.collapsed.player-list-behavior-hidden,
+        &.player-list-behavior-autohide {
+            --playerfsize: 0;
+            --players-width: 32px;
+            font-size: var(--playerfsize);
+        }
     }
 
     div#camera-views & {
@@ -70,7 +91,7 @@ $moduleId: card-hands-list;
     }
 
     ##{$moduleId}-hands-wrapper {
-        max-height: 40vh;
+        max-height: 300px;
         margin-bottom: 5px;
         padding: 2px;
         overflow-y: auto;
@@ -78,7 +99,7 @@ $moduleId: card-hands-list;
         pointer-events: all;
     }
 
-    &.hidden ##{$moduleId}-hands-wrapper {
+    &.collapsed ##{$moduleId}-hands-wrapper {
         max-height: 200px;
     }
 
@@ -113,7 +134,7 @@ $moduleId: card-hands-list;
         }
     }
 
-    &.hidden {
+    &.collapsed {
         .#{$moduleId}-hand.is-favorite:has(+ :not(.is-favorite)) {
             border-bottom: none;
         }
@@ -139,24 +160,24 @@ $moduleId: card-hands-list;
             padding: 0.5em;
 
             &.expand {
-                &-up, &-down {
+                &-up,
+                &-down {
                     //font-size: .9em;
                 }
             }
 
             ol.context-items {
                 display: grid;
-                gap: .5em;
+                gap: 0.5em;
             }
 
             li.context-item {
                 display: flex;
-                align-items:baseline;
+                align-items: baseline;
                 padding: 0;
                 line-height: 1.5;
             }
         }
-
     }
 
     .#{$moduleId}-buttons {
@@ -229,6 +250,6 @@ $moduleId: card-hands-list;
     }
 }
 .#{$moduleId}-card-text-description {
-  margin: 0;
-  font-size: 0.8em;
+    margin: 0;
+    font-size: 0.8em;
 }
