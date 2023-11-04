@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.8.4
+
+- Fixes error when Minimal UI _isn't_ active.
+
 ## v1.8.3
 
 - Fixes styles for all Minimal UI player list behavior options.
