@@ -50,19 +50,21 @@ export class CardHandsList extends Application {
         // If it's available, set the scroll position in case it was rendered after starring a hand.
         this._scrollPosition = document.getElementById(`${handsModule.id}-hands-wrapper`)?.scrollTop;
         // Return the data for rendering
-        return {
+        const data = {
             hands,
             collapsed: !this._showAllHands,
             isGM: game?.user?.isGM,
             moduleId: handsModule.id,
             translationPrefix: handsModule.translationPrefix,
             favorites: game?.user?.getFlag(handsModule.id, 'favorite-hands'),
-            minimalUi: {
-                active: game.modules.get('minimal-ui')?.active,
-                playerListBehavior: game.settings.get('minimal-ui', 'playerList'),
-            }
+        }
+        data.minimalUi = { active: game.modules.get('minimal-ui')?.active };
 
-        };
+        if (data.minimalUi.active) {
+            data.minimalUi.playerListBehavior = game.settings.get('minimal-ui', 'playerList');
+        }
+
+        return data;
     }
 
     /** @override */
