@@ -4,7 +4,7 @@
         <a>{{name}}</a>
     </h4>
     <div class="{{parent.moduleId}}-buttons">
-        {{#if (eq parent.system 'swade')}}
+        {{#if (and (eq parent.system 'swade') isOwner)}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite"
             data-hand-id="{{id}}"
             data-tooltip="
