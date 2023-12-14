@@ -56,9 +56,14 @@ export class CardHandsList extends Application {
             isGM: game?.user?.isGM,
             moduleId: handsModule.id,
             translationPrefix: handsModule.translationPrefix,
-            favorites: game?.user?.getFlag(handsModule.id, 'favorite-hands'),
+            pinned: game?.user?.getFlag(handsModule.id, 'pinned-hands'),
+            favorite: '',
         }
         data.minimalUi = { active: game.modules.get('minimal-ui')?.active };
+
+        if (game.system.id === 'swade') {
+            data.favorite = game?.user?.getFlag('swade', 'favoriteCardsDoc');
+        }
 
         if (data.minimalUi.active) {
             data.minimalUi.playerListBehavior = game.settings.get('minimal-ui', 'playerList');
@@ -76,6 +81,8 @@ export class CardHandsList extends Application {
         html.find(`.${handsModule.id}-name a`)?.click(this._onOpenCardsHand.bind(this));
         // Favorite the Cards Hand
         html.find(`.${handsModule.id}-favorite a`)?.click(this._onFavoriteHand.bind(this));
+        // Pin the Cards Hand
+        html.find(`.${handsModule.id}-pin a`)?.click(this._onPinHand.bind(this));
         // Draw a Card
         html.find(`.${handsModule.id}-draw a`)?.click(this._onDrawCard.bind(this));
         // Open the Card Card
@@ -95,26 +102,6 @@ export class CardHandsList extends Application {
         const contextOptions = this._getHandContextOptions();
         Hooks.call("getHandContextOptions", html, contextOptions);
         new ContextMenu(html, `.${handsModule.id}-name`, contextOptions);
-    }
-
-    // Favorite Cards Hand
-    async _favoriteHand(handId) {
-        // Set the user flag key
-        const flagKey = 'favorite-hands';
-        // Get the current list of favorited Card Hand IDs from the user flag
-        let favorites = game?.user?.getFlag(handsModule.id, flagKey);
-        // A quick catch for an empty favorites flag
-        if (!favorites) favorites = [];
-        // If the list of favorites includes this Card Hand already...
-        if (favorites.includes(handId)) {
-            // Unfavorite it by remove the Card Hand from the array and updating the user flag
-            favorites.splice(favorites.indexOf(handId), 1);
-            await game?.user?.setFlag(handsModule.id, flagKey, favorites);
-        } else {
-            // Otherwise, add it to the list and update the user flag
-            favorites.push(handId);
-            await game?.user?.setFlag(handsModule.id, flagKey, favorites);
-        }
     }
 
     // Toggle display of the Card Hands hud setting for whether or not to display all Card Hands available
@@ -157,8 +144,42 @@ export class CardHandsList extends Application {
     async _onFavoriteHand(e) {
         // Prevent multiple executions
         e.stopImmediatePropagation();
-        // Favorite the Hand based on its ID.
-        await this._favoriteHand(e.target.parentElement.parentElement.dataset.handId)
+        const favoriteId = e.target.parentElement.parentElement.dataset.handId;
+        const currentFavorite = game.user.getFlag('swade', 'favoriteCardsDoc')
+        if (favoriteId === currentFavorite) {
+            await game.user.unsetFlag('swade', 'favoriteCardsDoc');
+        } else {
+            // Favorite the Hand based on its ID.
+            await game.user.setFlag('swade', 'favoriteCardsDoc', e.target.parentElement.parentElement.dataset.handId);
+        }
+    }
+
+    // Pin Cards Hand
+    async _onPinHand(e) {
+        // Prevent multiple executions
+        e.stopImmediatePropagation();
+        const handId = e.target.parentElement.parentElement.dataset.handId;
+        // Pin the Hand based on its ID.
+        // Set the user flag key
+        const flagKey = 'pinned-hands';
+        // Get the current list of favorited Card Hand IDs from the user flag
+        let pinned = game?.user?.getFlag(handsModule.id, flagKey);
+
+        // A quick catch for an empty pinned flag
+        if (!pinned) {
+            pinned = [];
+        }
+
+        // If the list of favorites includes this Card Hand already...
+        if (pinned.includes(handId)) {
+            // Unfavorite it by remove the Card Hand from the array and updating the user flag
+            pinned.splice(pinned.indexOf(handId), 1);
+        } else {
+            // Otherwise, add it to the list and update the user flag
+            pinned.push(handId);
+        }
+
+        await game?.user?.setFlag(handsModule.id, flagKey, pinned);
     }
 
     // Draw a Card from a Cards Stack

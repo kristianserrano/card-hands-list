@@ -147,7 +147,6 @@ $moduleId: card-hands-list;
         font-size: var(--font-size-14);
         text-overflow: ellipsis;
         white-space: nowrap;
-        //border-bottom: 1px solid currentColor;
         cursor: pointer;
         pointer-events: all;
 
@@ -158,13 +157,6 @@ $moduleId: card-hands-list;
         #context-menu {
             white-space: wrap;
             padding: 0.5em;
-
-            &.expand {
-                &-up,
-                &-down {
-                    //font-size: .9em;
-                }
-            }
 
             ol.context-items {
                 display: grid;

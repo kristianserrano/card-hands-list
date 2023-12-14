@@ -107,11 +107,11 @@ div#camera-views .card-hands-list-container {
   gap: 0.25em;
   padding: 4px 8px;
 }
-.card-hands-list-container .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
+.card-hands-list-container .card-hands-list-hand:is(.is-favorite,.is-pinned):has(+ :not(.is-pinned)) {
   border-bottom: 2px groove var(--color-border-dark-secondary);
   margin-bottom: 8px;
 }
-.card-hands-list-container.collapsed .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
+.card-hands-list-container.collapsed .card-hands-list-hand:is(.is-favorite, .is-pinned):has(+ :not(.is-pinned)) {
   border-bottom: none;
 }
 .card-hands-list-container .card-hands-list-name {

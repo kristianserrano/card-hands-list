@@ -1,22 +1,33 @@
-{{#if (or (not parent.collapsed) (and parent.collapsed (cardHandsList_Includes parent.favorites id)))}}
-<section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (cardHandsList_Includes parent.favorites id)}} is-favorite{{/if}}" data-hand-id="{{id}}">
+{{#if (or (not parent.collapsed) (and parent.collapsed (or (eq parent.favorite id) (cardHandsList_Includes parent.pinned id))))}}
+<section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (eq parent.favorite id)}} is-favorite{{/if}}{{#if (cardHandsList_Includes parent.pinned id)}} is-pinned{{/if}}" data-hand-id="{{id}}">
     <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Open')}} {{name}}">
         <a>{{name}}</a>
     </h4>
     <div class="{{parent.moduleId}}-buttons">
+        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite" data-hand-id="{{id}}" data-tooltip="
+                        {{#if (cardHandsList_Includes parent.favorite id)}}
+                        {{localize (cardHandsList_Concat parent.translationPrefix '.Unfavorite')}}
+                        {{else}}
+                        {{localize (cardHandsList_Concat parent.translationPrefix '.Favorite')}}
+                        {{/if}}
+                    ">
+            <a><i class="{{#if (cardHandsList_Includes parent.favorite id)}}fas{{else}}far{{/if}} fa-star"></i></a>
+        </div>
+        {{#unless (eq parent.favorite id)}}
         <div
-            class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite"
+            class="{{parent.moduleId}}-button {{parent.moduleId}}-pin"
             data-hand-id="{{id}}"
             data-tooltip="
-                {{#if (cardHandsList_Includes parent.favorites id)}}
-                {{localize (cardHandsList_Concat parent.translationPrefix '.Unfavorite')}}
+                {{#if (cardHandsList_Includes parent.pinned id)}}
+                {{localize (cardHandsList_Concat parent.translationPrefix '.Unpin')}}
                 {{else}}
-                {{localize (cardHandsList_Concat parent.translationPrefix '.Favorite')}}
+                {{localize (cardHandsList_Concat parent.translationPrefix '.Pin')}}
                 {{/if}}
             "
         >
-            <a><i class="{{#if (cardHandsList_Includes parent.favorites id)}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
+            <a><i class="{{#if (cardHandsList_Includes parent.pinned id)}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
         </div>
+        {{/unless}}
         {{#if isOwner}}
         <div
             class="{{parent.moduleId}}-button {{parent.moduleId}}-draw"
