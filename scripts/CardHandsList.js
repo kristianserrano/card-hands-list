@@ -115,11 +115,6 @@ export class CardHandsList extends Application {
         this.render(true);
     }
 
-    _onToggleMinimal(e) {
-        const element = e.currentTarget;
-        console.log(element);
-    }
-
     // Open the Cards Hand
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
