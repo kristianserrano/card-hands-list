@@ -57,8 +57,9 @@ export class CardHandsList extends Application {
             moduleId: handsModule.id,
             translationPrefix: handsModule.translationPrefix,
             pinned: game?.user?.getFlag(handsModule.id, 'pinned-hands'),
+            system: game.system.id,
             favorite: '',
-        }
+        };
         data.minimalUi = { active: game.modules.get('minimal-ui')?.active };
 
         if (game.system.id === 'swade') {
@@ -145,7 +146,8 @@ export class CardHandsList extends Application {
         // Prevent multiple executions
         e.stopImmediatePropagation();
         const favoriteId = e.target.parentElement.parentElement.dataset.handId;
-        const currentFavorite = game.user.getFlag('swade', 'favoriteCardsDoc')
+        const currentFavorite = game.user.getFlag('swade', 'favoriteCardsDoc');
+
         if (favoriteId === currentFavorite) {
             await game.user.unsetFlag('swade', 'favoriteCardsDoc');
         } else {
