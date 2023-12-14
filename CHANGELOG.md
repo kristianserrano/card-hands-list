@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.9.0
+
+- Adds support for setting, changing, and unsetting the Favorite Cards Hand in the Savage Worlds Adventure Edition (SWADE) system, which allows you to press `h` to open your favorite hand.
+
 ## v1.8.4
 
 - Fixes error when Minimal UI _isn't_ active.
