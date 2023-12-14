@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.9.2
+
+- Limits favorite option to owned Hands.
+
 ## v1.9.1
 
 - Minor bug fix.
