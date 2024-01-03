@@ -1,5 +1,10 @@
 # Card Hands List
 
+## v1.9.3
+
+- Fixes display bug when Minimal UI is active but camera dock is present in left or right.
+- Adds support for Minimal UI's display toggle (clicking the logo).
+
 ## v1.9.2
 
 - Limits favorite option to owned Hands.
