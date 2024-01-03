@@ -37,6 +37,11 @@ export class CardHandsList extends Application {
         }
         // Set the wrapper's scroll position to the previous position.
         document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = this._scrollPosition;
+
+        if (game.modules.get('minimal-ui')?.active) {
+            const foundryLogo = document.querySelector('#logo');
+            foundryLogo.addEventListener('click', changeCardHandsListDisplay, 'once');
+        }
     }
 
     /** @override */
@@ -326,5 +331,13 @@ export class CardHandsList extends Application {
                 }
             },
         ];
+    }
+};
+
+function changeCardHandsListDisplay() {
+    const cardHandsListElement = document.querySelector('#card-hands');
+
+    if (cardHandsListElement) {
+        cardHandsListElement.style.display = cardHandsListElement.style.display === 'none' ? 'revert' : 'none';
     }
 };
