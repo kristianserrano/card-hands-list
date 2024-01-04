@@ -20,7 +20,7 @@ Hooks.on('init', function () {
     config: true,
     type: Boolean,
     default: false,
-    onChange: () => CONFIG.CardHandsList.render(true)
+    onChange: () => ui.cardHands.render(true)
   });
 });
 
@@ -67,11 +67,11 @@ Hooks.on('setup', async function () {
     });
   });
 
-  CONFIG.CardHandsList = new CardHandsList;
+  ui.cardHands = new CardHandsList;
 });
 
 Hooks.on('ready', async function () {
-  if (game.ready) CONFIG.CardHandsList.render(true);
+  if (game.ready) ui.cardHands.render(true);
 
   // Migrate favorites flag to pinned flag.
   const favoritedHands = game.user.getFlag(handsModule.id, 'favorite-hands');
@@ -84,7 +84,7 @@ Hooks.on('ready', async function () {
 
 // When the Player List is rendered, render the module UI
 Hooks.on('renderPlayerList', async (data) => {
-  if (game.ready) CONFIG.CardHandsList.render(true);
+  if (game.ready) ui.cardHands.render(true);
 });
 
 /* Hooks to listen to changes in settings and Card Hands data */
@@ -98,7 +98,7 @@ const cardHandsListCardHooksArray = [
 // Hooks for Card events
 for (const hook of cardHandsListCardHooksArray) {
   Hooks.on(hook, (data) => {
-    if (data.parent.type === 'hand') CONFIG.CardHandsList.render(true);
+    if (data.parent.type === 'hand') ui.cardHands.render(true);
   });
 }
 
@@ -112,6 +112,6 @@ const cardHandsListCardsHooksArray = [
 // Hooks for Card Stack events
 for (const hook of cardHandsListCardsHooksArray) {
   Hooks.on(hook, (data) => {
-    if (data.type === 'hand') CONFIG.CardHandsList.render(true);
+    if (data.type === 'hand') ui.cardHands.render(true);
   });
 }
