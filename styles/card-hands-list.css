@@ -24,9 +24,6 @@ div#camera-views .card-hands-list-container {
   scrollbar-gutter: stable;
   pointer-events: all;
 }
-.card-hands-list-container.collapsed #card-hands-list-hands-wrapper {
-  max-height: 200px;
-}
 .card-hands-list-container .card-hands-list-title {
   margin: 3px;
   padding: 4px;
@@ -44,7 +41,7 @@ div#camera-views .card-hands-list-container {
 }
 .card-hands-list-container .card-hands-list-hand {
   display: grid;
-  grid-template-columns: 1fr 18px;
+  grid-template-columns: 150px 18px;
   grid-template-rows: 1fr 68px;
   gap: 0.25em;
   padding: 4px 8px;
@@ -53,16 +50,25 @@ div#camera-views .card-hands-list-container {
   border-bottom: 2px groove var(--color-border-dark-secondary);
   margin-bottom: 8px;
 }
+.card-hands-list-container.collapsed #card-hands-list-hands-wrapper {
+  max-height: 110px;
+}
+.card-hands-list-container.collapsed #card-hands-list-hands-wrapper:not(:has(#context-menu)) {
+  scroll-snap-type: y mandatory;
+  scroll-snap-stop: always;
+}
+.card-hands-list-container.collapsed .card-hands-list-hand {
+  scroll-snap-align: end;
+}
 .card-hands-list-container.collapsed .card-hands-list-hand.is-favorite:has(+ :not(.is-favorite)) {
   border-bottom: none;
 }
 .card-hands-list-container .card-hands-list-name {
   margin: 0;
   grid-row: 1/2;
-  grid-column: 1/3;
+  grid-column: 1/2;
   font-size: var(--font-size-14);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-wrap: balance;
   cursor: pointer;
   pointer-events: all;
 }
@@ -82,6 +88,16 @@ div#camera-views .card-hands-list-container {
   align-items: baseline;
   padding: 0;
   line-height: 1.5;
+}
+.card-hands-list-container .card-hands-list-context-menu-link {
+  grid-row: 1/2;
+  grid-column: 2/3;
+  text-align: center;
+}
+.card-hands-list-container .card-hands-list-context-menu-link #context-menu {
+  text-align: left;
+  text-wrap: nowrap;
+  width: min-content;
 }
 .card-hands-list-container .card-hands-list-buttons {
   grid-row: 2/3;
@@ -132,6 +148,9 @@ div#camera-views .card-hands-list-container {
   max-height: 58px;
   object-fit: contain;
   border: none;
+}
+.card-hands-list-container .card-hands-list-context-menu-link .card-hands-list-negative-margin {
+  margin-left: -800%;
 }
 
 div:not(:is(.camera-position-left, .camera-position-right)) .card-hands-list-container.minimal-ui {
