@@ -1,5 +1,5 @@
 
-import { CardHandsList } from './CardHandsList.js';
+import { CardHandsList } from './CardHandsList.mjs';
 /**
  * Card Hands List
  * A Foundry VTT module to display and provide quick access to a player's Card Hands
