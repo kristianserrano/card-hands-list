@@ -15,7 +15,7 @@ export class CardHandsList extends Application {
     /** @override */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${handsModule.id}-container`,
+            id: 'card-hands',
             template: `modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`,
             popOut: false
         });
@@ -24,19 +24,14 @@ export class CardHandsList extends Application {
     /** @override */
     async _render(force = false, options = {}) {
         await super._render(force, options);
-        // Get Players List element
-        const playersListElement = document.querySelector('#players');
-        // Get Card Hands List element
-        const cardHandsListElement = document.querySelector('#card-hands');
+
         // If both exist, move the Card Hands List element to be placed above the Player List element
-        if (playersListElement && cardHandsListElement) {
-            playersListElement.before(cardHandsListElement);
-        } else {
-            // Otherwise, add a new one
-            playersListElement?.before(this.element[0]);
+        if (this.rendered) {
+            ui.players.element[0]?.before(this.element[0]);
         }
+
         // Set the wrapper's scroll position to the previous position.
-        document.getElementById(`${handsModule.id}-hands-wrapper`).scrollTop = this._scrollPosition;
+        document.querySelector(`#${handsModule.id}-hands-wrapper`)?.scrollTo({ top: this._scrollPosition });
 
         if (game.modules.get('minimal-ui')?.active) {
             const foundryLogo = document.querySelector('#logo');
@@ -53,7 +48,7 @@ export class CardHandsList extends Application {
             return -1;
         });
         // If it's available, set the scroll position in case it was rendered after starring a hand.
-        this._scrollPosition = document.getElementById(`${handsModule.id}-hands-wrapper`)?.scrollTop;
+        this._scrollPosition = document.querySelector(`#${handsModule.id}-hands-wrapper`)?.scrollTop ?? 0;
         // Return the data for rendering
         const data = {
             hands,
