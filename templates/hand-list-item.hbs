@@ -3,6 +3,7 @@
     <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Open')}} {{name}}">
         <a>{{name}}</a>
     </h4>
+    <div class="{{parent.moduleId}}-context-menu-link"><i class="fas fa-ellipsis-vertical"></i></div>
     <div class="{{parent.moduleId}}-buttons">
         {{#if (and (eq parent.system 'swade') isOwner)}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite"

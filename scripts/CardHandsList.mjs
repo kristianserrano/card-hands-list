@@ -1,4 +1,5 @@
 import { handsModule } from "./card-hands-list.js";
+import { CardHandContextMenu } from "./CardHandContextMenu.mjs";
 /**
  * The UI element which displays the list of Hands available to the User.
  * @extends {Application}
@@ -96,13 +97,11 @@ export class CardHandsList extends Application {
         cardImages?.on('dragstart', this._onDragCard.bind(this));
         // Drop a Card
         html.find(`.${handsModule.id}-cards`)?.on('drop', this._onDropCard.bind(this));
-        // Configure Ownership
-        //html.find(`.${handsModule.id}-name`)?.on('contextmenu', this._onConfigureOwnership.bind(this));
-
         // Context menu
         const contextOptions = this._getHandContextOptions();
-        Hooks.call("getHandContextOptions", html, contextOptions);
-        new ContextMenu(html, `.${handsModule.id}-name`, contextOptions);
+        // Pull up menu options from link
+        new CardHandContextMenu(html, `.${handsModule.id}-context-menu-link`, contextOptions, { eventName: 'click' });
+
     }
 
     // Toggle display of the Card Hands hud setting for whether or not to display all Card Hands available
