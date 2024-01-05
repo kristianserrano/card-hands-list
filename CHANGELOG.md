@@ -1,5 +1,12 @@
 # Card Hands List
 
+## v1.9.4
+
+- Adds a menu to open context options.
+- Changes collapsed max-height to view one hand at a time.
+- Adds scroll snap while scrolling in the collapsed view.
+- UI improvements.
+
 ## v1.9.3
 
 - Fixes display bug when Minimal UI is active but camera dock is present in left or right.
