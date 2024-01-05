@@ -18,11 +18,17 @@
     }
 
     #card-hands-list-hands-wrapper {
-        max-height: 300px;
+        max-height: 345px;
         margin-bottom: 5px;
         padding: 2px;
         overflow-y: scroll;
         pointer-events: all;
+
+        &:not(:has(#context-menu)) {
+            scroll-snap-type: y mandatory;
+            scroll-snap-stop: always;
+        }
+
     }
 
     .card-hands-list-title {
@@ -51,6 +57,7 @@
         gap: 4px;
         padding: 0 8px 8px 8px;
         margin-bottom: 4px;
+        scroll-snap-align: start;
 
         &:not(:last-of-type){
             border-bottom: 2px groove var(--color-border-dark-secondary);
@@ -60,15 +67,9 @@
     &.collapsed {
         #card-hands-list-hands-wrapper {
             max-height: 112px;
-
-            &:not(:has(#context-menu)) {
-                scroll-snap-type: y mandatory;
-                scroll-snap-stop: always;
-            }
         }
 
         .card-hands-list-hand {
-            scroll-snap-align: center;
             border-bottom: none;
         }
     }
