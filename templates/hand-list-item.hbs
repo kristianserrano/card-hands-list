@@ -1,10 +1,10 @@
 {{#if (or (not parent.collapsed) (and parent.collapsed (or (eq parent.favorite id) (cardHandsList_Includes parent.pinned id))))}}
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (eq parent.favorite id)}} is-favorite{{/if}}{{#if (cardHandsList_Includes parent.pinned id)}} is-pinned{{/if}}" data-hand-id="{{id}}">
-    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{name}}" data-tooltip-direction="UP">
+    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{name}}">
         <a>{{name}}</a>
     </h4>
-    <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Menu')}}" data-tooltip-direction="RIGHT"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
-    <div class="{{parent.moduleId}}-buttons" data-tooltip-direction="RIGHT">
+    <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Menu')}}"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
+    <div class="{{parent.moduleId}}-buttons">
         {{#if (and (eq parent.system 'swade') isOwner)}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite"
             data-hand-id="{{id}}"
@@ -43,7 +43,7 @@
         </div>
         {{/if}}
     </div>
-    <ul class="{{parent.moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}" data-tooltip-direction="RIGHT">
+    <ul class="{{parent.moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}">
         {{#each (cardHandsList_SortCards this.cards 'sort')}}
         <li class="{{../parent.moduleId}}-card">
             <img
