@@ -2,10 +2,10 @@
 
 ## v1.9.4
 
-- Adds a menu to open context options.
-- Changes collapsed max-height to view one hand at a time.
-- Adds scroll snap while scrolling in the collapsed view.
-- UI improvements.
+- Adds a menu to each hand for Hand actions.
+- Changes collapsed max-height to view one Hand at a time and expanded to three at a time.
+- Adds scroll snap while scrolling through the list of Hands.
+- Other minor UI improvements.
 
 ## v1.9.3
 
