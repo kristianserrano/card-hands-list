@@ -17,7 +17,7 @@ div#camera-views .card-hands-list-container {
   border-top: 6px solid rgba(0, 0, 0, 0.5);
 }
 .card-hands-list-container #card-hands-list-hands-wrapper {
-  max-height: 345px;
+  max-height: 355px;
   margin-bottom: 5px;
   padding: 2px;
   overflow-y: scroll;
@@ -25,7 +25,6 @@ div#camera-views .card-hands-list-container {
 }
 .card-hands-list-container #card-hands-list-hands-wrapper:not(:has(#context-menu)) {
   scroll-snap-type: y mandatory;
-  scroll-snap-stop: always;
 }
 .card-hands-list-container .card-hands-list-title {
   margin: 3px;
@@ -51,6 +50,7 @@ div#camera-views .card-hands-list-container {
   padding: 0 8px 8px 8px;
   margin-bottom: 4px;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 .card-hands-list-container .card-hands-list-hand:not(:last-of-type) {
   border-bottom: 2px groove var(--color-border-dark-secondary);

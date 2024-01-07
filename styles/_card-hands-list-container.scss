@@ -18,7 +18,7 @@
     }
 
     #card-hands-list-hands-wrapper {
-        max-height: 345px;
+        max-height: 355px;
         margin-bottom: 5px;
         padding: 2px;
         overflow-y: scroll;
@@ -26,7 +26,6 @@
 
         &:not(:has(#context-menu)) {
             scroll-snap-type: y mandatory;
-            scroll-snap-stop: always;
         }
 
     }
@@ -58,6 +57,7 @@
         padding: 0 8px 8px 8px;
         margin-bottom: 4px;
         scroll-snap-align: start;
+        scroll-snap-stop: always;
 
         &:not(:last-of-type){
             border-bottom: 2px groove var(--color-border-dark-secondary);
