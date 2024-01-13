@@ -43,10 +43,10 @@ div#camera-views .card-hands-list-container {
 }
 .card-hands-list-container .card-hands-list-hand {
   display: grid;
-  grid-template-columns: 150px 18px;
+  grid-template-columns: 1fr 18px;
   grid-template-rows: 2.25em 68px;
   align-items: center;
-  gap: 4px;
+  gap: 0.25em;
   padding: 0 8px 8px 8px;
   margin-bottom: 4px;
   scroll-snap-align: start;
@@ -112,15 +112,15 @@ div#camera-views .card-hands-list-container {
   grid-row: 2/3;
   container-type: size;
   margin: 0;
-  padding: 0 0 2px 0;
+  padding: 2px;
   height: 72px;
   display: flex;
-  gap: 5px;
+  gap: 0.25em;
   list-style-type: none;
   align-items: center;
   justify-content: start;
-  overflow-y: hidden;
-  overflow-x: scroll;
+  overflow-y: clip;
+  overflow-x: auto;
   pointer-events: all;
 }
 .card-hands-list-container .card-hands-list-cards::-webkit-scrollbar-track {
@@ -128,23 +128,21 @@ div#camera-views .card-hands-list-container {
   border-radius: 4px;
 }
 .card-hands-list-container .card-hands-list-card {
-  container-type: size;
-  height: calc(100cqh - 6px);
-  aspect-ratio: 2.5/3.5;
+  flex-basis: 3em;
+  flex-grow: 0;
   flex-shrink: 0;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  border: none;
-  overflow: clip;
 }
 .card-hands-list-container .card-hands-list-card .card-hands-list-card-image {
   border: none;
+  filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.5));
   cursor: zoom-in;
+  transition: filter 1s ease-in;
 }
 .card-hands-list-container .card-hands-list-card .card-hands-list-card-image:hover {
-  box-shadow: 0 0 10px var(--color-shadow-highlight) inset;
-  border: 1px solid var(--color-border-highlight-alt);
+  filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
+  transition: filter 0.2s ease-in;
 }
 .card-hands-list-container .card-hands-list-context-menu-link .card-hands-list-negative-margin {
   margin-left: -800%;
