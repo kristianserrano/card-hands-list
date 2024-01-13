@@ -46,7 +46,7 @@ div#camera-views .card-hands-list-container {
   grid-template-columns: 1fr 18px;
   grid-template-rows: 2.25em 68px;
   align-items: center;
-  gap: 0.25em;
+  gap: 0.5em;
   padding: 0 8px 8px 8px;
   margin-bottom: 4px;
   scroll-snap-align: start;
@@ -128,13 +128,16 @@ div#camera-views .card-hands-list-container {
   border-radius: 4px;
 }
 .card-hands-list-container .card-hands-list-card {
-  flex-basis: 3em;
+  height: 60px;
   flex-grow: 0;
   flex-shrink: 0;
   display: flex;
   align-items: center;
 }
 .card-hands-list-container .card-hands-list-card .card-hands-list-card-image {
+  max-height: 100%;
+  object-position: center;
+  object-fit: contain;
   border: none;
   filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.5));
   cursor: zoom-in;
