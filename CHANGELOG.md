@@ -1,5 +1,12 @@
 # Card Hands List
 
+## v1.9.5
+
+- Changes wrapper height to tightly fit 3 hands without scrolling.
+- Fixes width when docked in camera dock.
+- Fixes borders and shadows for non-rectangular cards.
+- Removes forced aspect ratio.
+
 ## v1.9.4
 
 - Adds a menu to each hand for Hand actions.
