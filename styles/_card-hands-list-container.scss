@@ -150,11 +150,13 @@
     }
 
     .card-hands-list-card {
+        padding: 1px;
         height: 60px;
         flex-grow: 0;
         flex-shrink: 0;
         display: flex;
         align-items: center;
+        justify-content: center;
 
         .card-hands-list-card-image {
             max-height: 100%;
@@ -162,14 +164,13 @@
             object-fit: contain;
             border: none;
             filter: drop-shadow(2px 3px 3px rgba(0,0,0,.5));
-            cursor: zoom-in;
-            transition: filter 1s ease-in;
+            transition: filter 0.5s ease-in;
 
             &:hover {
                 filter:
                     drop-shadow(2px 3px 3px rgba(0,0,0,.5))
                     drop-shadow(0 0 3px var(--color-shadow-highlight));
-                transition: filter 0.2s ease-in;
+                transition: filter 0s ease-in;
             }
         }
     }

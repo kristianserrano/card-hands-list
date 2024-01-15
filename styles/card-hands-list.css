@@ -128,11 +128,13 @@ div#camera-views .card-hands-list-container {
   border-radius: 4px;
 }
 .card-hands-list-container .card-hands-list-card {
+  padding: 1px;
   height: 60px;
   flex-grow: 0;
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .card-hands-list-container .card-hands-list-card .card-hands-list-card-image {
   max-height: 100%;
@@ -140,12 +142,11 @@ div#camera-views .card-hands-list-container {
   object-fit: contain;
   border: none;
   filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.5));
-  cursor: zoom-in;
-  transition: filter 1s ease-in;
+  transition: filter 0.5s ease-in;
 }
 .card-hands-list-container .card-hands-list-card .card-hands-list-card-image:hover {
   filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
-  transition: filter 0.2s ease-in;
+  transition: filter 0s ease-in;
 }
 .card-hands-list-container .card-hands-list-context-menu-link .card-hands-list-negative-margin {
   margin-left: -800%;
