@@ -1,63 +1,9 @@
-const { series, parallel, src, dest, watch, filter } = require('gulp');
+const { series, src, dest } = require('gulp');
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
-const stringify = require('json-stringify-pretty-compact');
 const archiver = require('archiver');
-const sass = require('gulp-sass')(require('sass'));
 const argv = require('yargs').argv;
-const flatMap = require('flat-map').default;
-const scaleImages = require('gulp-scale-images');
-
-function getConfig() {
-    const configPath = path.resolve(process.cwd(), 'foundryconfig.json');
-    let config;
-
-    if (fs.existsSync(configPath)) {
-        config = fs.readJSONSync(configPath);
-        return config;
-    } else {
-        return;
-    }
-}
-
-const computeFileName = (output, scale, cb) => {
-    const fileName = [
-        path.basename(output.path, output.extname),
-        scale.format || output.extname
-    ].join('.');
-    cb(null, fileName);
-};
-
-function processImageFile(file, cb) {
-    const webpFile = file.clone();
-    webpFile.scale = {
-        maxHeight: 1080,
-        format: 'webp',
-        fit: 'inside',
-        metadata: false
-    };
-    cb(null, webpFile);
-}
-
-function convertToWebp(cb) {
-    src('./**/*.png')
-        .pipe(flatMap(processImageFile))
-        .pipe(scaleImages(computeFileName))
-        .pipe(dest('./'));
-    cb();
-}
-
-function buildSASS() {
-    return src('./**/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(dest('./'));
-}
-
-function copyPacks() {
-    return src('./dist/packs/*')
-        .pipe(dest('./packs/'));
-}
 
 async function clean() {
     const name = path.basename(path.resolve('.'));
@@ -114,10 +60,6 @@ function getManifest() {
     }
 
     return json;
-}
-
-function buildWatch() {
-    watch('styles/**/*.scss', { ignoreInitial: false }, buildSASS);
 }
 
 // Link build to User Data folder
@@ -213,117 +155,12 @@ async function packageBuild() {
     });
 }
 
-function updateManifest(cb) {
-    const packageJson = fs.readJSONSync('package.json');
-    const config = getConfig(),
-        manifest = getManifest(),
-        downloadURL = config.downloadURL;
-    //manifestRoot = manifest.root
-
-    if (!config) cb(Error(chalk.red('foundryconfig.json not found')));
-    if (!manifest) cb(Error(chalk.red('Manifest JSON not found')));
-    if (!downloadURL)
-        cb(
-            Error(
-                chalk.red(
-                    'Download URL not configured in foundryconfig.json'
-                )
-            )
-        );
-    try {
-        const version = argv.update || argv.u;
-
-        /* Update version */
-
-        const versionMatch = /^(\d{1,}).(\d{1,}).(\d{1,})$/;
-        const currentVersion = manifest.file.version;
-        let targetVersion = '';
-
-        if (!version) {
-            cb(Error('Missing version number'));
-        }
-
-        if (versionMatch.test(version)) {
-            targetVersion = version;
-        } else {
-            targetVersion = currentVersion.replace(
-                versionMatch,
-                (substring, major, minor, patch) => {
-                    console.log(
-                        substring,
-                        Number(major) + 1,
-                        Number(minor) + 1,
-                        Number(patch) + 1
-                    );
-                    if (version === 'major') {
-                        return `${Number(major) + 1}.0.0`;
-                    } else if (version === 'minor') {
-                        return `${major}.${Number(minor) + 1}.0`;
-                    } else if (version === 'patch') {
-                        return `${major}.${minor}.${Number(patch) + 1}`;
-                    } else {
-                        return '';
-                    }
-                }
-            );
-        }
-
-        if (targetVersion === '') {
-            return cb(Error(chalk.red('Error: Incorrect version arguments.')));
-        }
-
-        packageJson.version = targetVersion;
-        manifest.file.version = targetVersion;
-        console.log(`Version number updated to to '${targetVersion}'`);
-
-        // Update URLs
-
-        //const moduleURL = `${rawURL}/latest`
-        //const zipURL = `${rawURL}/package`
-        //const result = `${zipURL}/${manifest.file.name}-v${manifest.file.version}.zip`
-
-        manifest.file.update = `${downloadURL}/${manifest.file.id}/${manifest.name}`;
-        manifest.file.download = `${downloadURL}/${manifest.file.id}/${manifest.file.version}/${manifest.file.id}-${manifest.file.version}.zip`;
-        manifest.file.manifest = `${downloadURL}/${manifest.file.id}/${manifest.file.version}/module.json`;
-
-        const prettyProjectJson = stringify(manifest.file, {
-            maxLength: 35,
-            indent: '\t',
-        });
-
-        fs.writeJSONSync('package.json', packageJson, { spaces: '\t' });
-        fs.writeFileSync(
-            path.join(manifest.root, manifest.name),
-            prettyProjectJson,
-            'utf8'
-        );
-
-        return cb();
-    } catch (err) {
-        cb(err);
-    }
-}
-
-const execBuild = parallel(buildSASS);
-
-exports.webp = convertToWebp;
 exports.build = series(
     clean,
-    execBuild
 );
-exports.watch = buildWatch;
 exports.clean = clean;
 exports.link = linkUserData;
 exports.package = series(
     clean,
-    execBuild,
-    packageBuild
-);
-exports.update = updateManifest; //$ gulp --update="<major || minor || patch>"
-exports.copypacks = copyPacks;
-exports.publish = series(
-    clean,
-    //updateManifest,
-    execBuild,
     packageBuild
 );

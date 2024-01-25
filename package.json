@@ -11,7 +11,6 @@
 	"scripts": {
 		"package": "gulp package",
 		"build": "gulp build && gulp link",
-		"build:watch": "gulp watch",
 		"link": "gulp link"
 	},
 	"author": "Kristian Serrano",
@@ -19,14 +18,10 @@
 	"devDependencies": {
 		"archiver": "^5.3.0",
 		"chalk": "^4.1.2",
-		"flat-map": "^1.0.0",
 		"fs-extra": "^10.0.0",
 		"gulp": "^4.0.2",
-		"gulp-sass": "^5.0.0",
-		"gulp-scale-images": "^2.1.2",
 		"json-stringify-pretty-compact": "^3.0.0",
 		"path": "^0.12.7",
-		"sass": "^1.38.0",
 		"yargs": "^7.1.2"
 	}
 }
