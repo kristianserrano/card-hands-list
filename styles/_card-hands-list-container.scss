@@ -123,6 +123,10 @@
         color: currentColor;
         cursor: pointer;
         pointer-events: all;
+
+        &.--hidden {
+            visibility: hidden;
+        }
     }
 
     :is(.card-hands-list-button, .card-hands-list-name) a:hover {

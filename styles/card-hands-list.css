@@ -106,6 +106,9 @@ div#camera-views #card-hands-list {
   cursor: pointer;
   pointer-events: all;
 }
+#card-hands-list .card-hands-list-button.--hidden {
+  visibility: hidden;
+}
 #card-hands-list :is(.card-hands-list-button, .card-hands-list-name) a:hover {
   text-shadow: 0 0 8px var(--color-shadow-primary);
 }
