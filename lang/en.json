@@ -11,6 +11,7 @@
         "Pin": "Pin",
         "Unpin": "Unpin",
         "Defaults": "Set Defaults",
+        "DefaultsMessage": "Set default card draw options for <strong>{name}</strong>",
         "UnsetDefaults": "Unset Defaults",
         "ObserverLevel": {
             "Name": "Include Hands with Observer Ownership",

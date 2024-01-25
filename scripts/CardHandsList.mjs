@@ -320,7 +320,12 @@ export class CardHandsList extends Application {
                             </div>
                         </div>
                     `;
-                    const content = `<form class="cards-defaults">${deckSelect + modeSelect}</form>`;
+                    const content = `
+                        <p>${game.i18n.format('CARDHANDSLIST.DefaultsMessage', {name: hand.name})}</p>
+                        <form class="cards-defaults">
+                            ${deckSelect + modeSelect}
+                        </form>
+                    `;
                     new Dialog({
                         title: game.i18n.localize("CARDHANDSLIST.Defaults"),
                         content: content,
