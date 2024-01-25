@@ -1,11 +1,9 @@
-.card-hands-list-container {
+#card-hands-list {
     width: var(--players-width);
     margin: 0 5px 10px 15px;
     padding: 0;
-    display: block;
-    z-index: 1;
     border: 1px solid var(--color-border-dark);
-    color: var(--color-text-light-highlight);
+    pointer-events: all;
 
     div#camera-views & {
         background: none;
@@ -18,10 +16,11 @@
     }
 
     #card-hands-list-hands-wrapper {
-        max-height: 355px;
+        container-type: size;
+        height: 325px;
         margin-bottom: 5px;
         padding: 2px;
-        overflow-y: scroll;
+        overflow-y: auto;
         pointer-events: all;
 
         &:not(:has(#context-menu)) {
@@ -53,9 +52,9 @@
         grid-template-columns: 1fr 18px;
         grid-template-rows: 2.25em 68px;
         align-items: center;
-        gap: 0.5em;
+        gap: 0.25em;
         padding: 0 8px 8px 8px;
-        margin-bottom: 4px;
+        height: calc(100cqh / 3);
         scroll-snap-align: start;
         scroll-snap-stop: always;
 
@@ -66,11 +65,12 @@
 
     &.collapsed {
         #card-hands-list-hands-wrapper {
-            max-height: 112px;
+            height: 110px;
         }
 
         .card-hands-list-hand {
             border-bottom: none;
+            height: 100cqh;
         }
     }
 
@@ -110,9 +110,11 @@
     .card-hands-list-buttons {
         grid-row: 2/3;
         grid-column: 2/3;
-        align-self: start;
+        align-self: center;
         display: flex;
+        height: 100%;
         flex-direction: column;
+        justify-content: space-between;
         align-items: center;
         gap: 4px;
     }
