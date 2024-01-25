@@ -1,5 +1,10 @@
 # Card Hands List
 
+## v1.10.0
+
+- Adds Hand menu option for setting default deck to draw from and draw method.
+- Changes "Flip All" to set all cards in the hand to the same face up/down state.
+
 ## v1.9.5
 
 - Changes wrapper height to tightly fit 3 hands without scrolling.
