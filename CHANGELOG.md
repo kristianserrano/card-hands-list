@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.10.1
+
+- Fixes heights in both collapsed and expanded states.
+
 ## v1.10.0
 
 - Adds Hand menu option for setting default deck to draw from and draw method.
