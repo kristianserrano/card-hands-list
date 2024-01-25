@@ -17,7 +17,6 @@
 
   & #card-hands-list-hands-wrapper {
     container-type: size;
-    margin-bottom: 5px;
     padding: 0 2px 10px 2px;
     overflow-y: auto;
     pointer-events: all;
@@ -27,10 +26,10 @@
       height: 124px;
     }
     &:has(.card-hands-list-hand:nth-child(n+2)) {
-      height: 242px;
+      height: 227px;
     }
     &:has(.card-hands-list-hand:nth-child(n+3)) {
-      height: 360px;
+      height: 338px;
     }
 
     &:has(#context-menu) {
@@ -58,11 +57,11 @@
   }
 
   & .card-hands-list-hand {
-    padding: 4px 8px;
+    padding: 2px 8px;
     display: grid;
     grid-template-columns: 1fr 18px;
     grid-template-rows: 2.25em 72px;
-    gap: 4px;
+    gap: 0 4px;
     align-items: center;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -77,7 +76,7 @@
       height: auto;
 
       &:has(.card-hands-list-hand) {
-        height: 126px;
+        height: 118px;
       }
     }
 
