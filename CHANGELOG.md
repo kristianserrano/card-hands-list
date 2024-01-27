@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.10.2
+
+- Overhauls Minimal UI support with new setting to select display behavior modes (autohide and always show).
+
 ## v1.10.1
 
 - Fixes heights in both collapsed and expanded states.
