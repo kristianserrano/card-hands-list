@@ -422,7 +422,7 @@ export class CardHandsList extends Application {
 };
 
 function changeCardHandsListDisplay() {
-    const cardHandsListElement = document.querySelector('#card-hands');
+    const cardHandsListElement = document.querySelector('#card-hands-list');
 
     if (cardHandsListElement) {
         cardHandsListElement.style.display = cardHandsListElement.style.display === 'none' ? 'revert' : 'none';
