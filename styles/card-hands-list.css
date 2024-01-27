@@ -1,47 +1,36 @@
 #card-hands-list {
-  width: var(--players-width);
+  --hand-height: 94px;
+  width: 200px;
   margin: 0 5px 10px 15px;
   padding: 0;
   border: 1px solid var(--color-border-dark);
   pointer-events: all;
 
-  & div#camera-views & {
-    background: none;
-    box-shadow: none;
-    margin: 0;
-    width: 100%;
-    border-radius: 0;
-    border: none;
-    border-top: 6px solid rgba(0, 0, 0, 0.5);
-  }
-
   & #card-hands-list-hands-wrapper {
     container-type: size;
-    padding: 0 2px 10px 2px;
+    padding: 0 2px;
     overflow-y: auto;
     pointer-events: all;
     scroll-snap-type: y mandatory;
 
-    &:has(.card-hands-list-hand:only-child) {
-      height: 124px;
+    &:has(.card-hands-list-hand:nth-child(n+1)) {
+      height: var(--hand-height);
     }
     &:has(.card-hands-list-hand:nth-child(n+2)) {
-      height: 227px;
+      height: calc(var(--hand-height) * 2);
     }
     &:has(.card-hands-list-hand:nth-child(n+3)) {
-      height: 338px;
+      height: calc(var(--hand-height) * 3);
     }
 
     &:has(#context-menu) {
       scroll-snap-type: y normal;
     }
-
   }
 
   & .card-hands-list-title {
     margin: 3px;
     padding: 4px;
-    font-size: 1.2em;
     border-bottom: 2px groove var(--color-border-dark-secondary);
     pointer-events: all;
 
@@ -57,10 +46,10 @@
   }
 
   & .card-hands-list-hand {
-    padding: 2px 8px;
+    padding: 4px 8px;
     display: grid;
     grid-template-columns: 1fr 18px;
-    grid-template-rows: 2.25em 72px;
+    grid-template-rows: repeat(2, min-content);
     gap: 0 4px;
     align-items: center;
     scroll-snap-align: start;
@@ -76,18 +65,19 @@
       height: auto;
 
       &:has(.card-hands-list-hand) {
-        height: 118px;
+        height: var(--hand-height);
       }
     }
 
     & .card-hands-list-hand {
       height: auto;
-      border-bottom: none;
+      border: none;
     }
   }
 
   & .card-hands-list-name {
     margin: 0;
+    padding: 4px 2px;
     grid-row: 1/2;
     grid-column: 1/2;
     font-size: var(--font-size-14);
@@ -166,11 +156,6 @@
     overflow-y: clip;
     overflow-x: scroll;
     pointer-events: all;
-
-    &::-webkit-scrollbar-track {
-      box-shadow: none;
-      border-radius: 4px;
-    }
   }
 
   & .card-hands-list-card {
@@ -188,12 +173,10 @@
       object-fit: contain;
       border: none;
       filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
-      transition: filter 0.5s ease-in;
 
       &:hover {
         filter:
           drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
-        transition: filter 0s ease-in;
       }
     }
   }
@@ -203,77 +186,85 @@
   }
 }
 
+div#camera-views #card-hands-list {
+  background: none;
+  box-shadow: none;
+  margin: 0;
+  width: 100%;
+  border-radius: 0;
+  border: none;
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+}
+
 /* Minimal UI Styles */
-div:not(:is(.camera-position-left, .camera-position-right)) .card-hands-list-container {
-  &.minimal-ui {
-    box-shadow: 0 var(--hotbarshp) var(--shadowstrength) 2px var(--shadowcolor);
-    border: 1px solid var(--bordercolor);
+div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.minimal-ui.list-behavior-autohide {
+  margin-bottom: calc(var(--playerbot) / 6);
+  font-size: var(--playerfsizehv);
+  border: 1px solid var(--bordercolor);
+  box-shadow: 0 var(--hotbarshp) var(--shadowstrength) 2px var(--shadowcolor);
+  opacity: var(--opacity);
+
+  /* Hidden */
+  &:not(:hover) {
+    width: 32px;
+    padding: 2px;
     opacity: var(--opacity);
-    margin-bottom: calc(var(--playerbot) / 6);
 
-    &.player-list-behavior-clicktoggle {
-      transition: all 0.5s ease-out 0s;
-    }
+    & .card-hands-list-title {
+      margin: 1px;
+      padding-left: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0em;
+      border: none;
+      border-bottom: none;
 
-    &.player-list-behavior-hidden {
-      margin-bottom: -50px;
-    }
+      & > .fa-cards {
+        font-size: 17.5px;
+        margin: 6px 0 0 0;
+        order: 2;
+      }
 
-    &:is(.player-list-behavior-clicktoggle, .player-list-behavior-autohide:hover, .player-list-behavior-hidden) {
-      --playerwidthhv: 200px;
-      --playerfsizehv: inherit;
-      --playervis: visible;
-      width: var(--playerwidthhv);
-      max-height: 450px;
-      visibility: var(--playervis);
-      font-size: var(--playerfsizehv);
-      overflow: hidden;
-
-      & .card-hands-list-title {
-        margin: 1px;
+      & > .card-hands-list-mode {
         padding-left: 2px;
+        padding-bottom: 4px;
+        margin: 0 5px;
+        order: 1;
+        border-bottom: 2px groove var(--color-border-dark-secondary);
       }
     }
 
-    &.collapsed:is(.player-list-behavior-clicktoggle, .player-list-behavior-hidden),
-    &.player-list-behavior-autohide:not(:hover) {
-      width: var(--players-width);
-      padding: 2px;
-      opacity: var(--opacity);
-      font-size: var(--playerfsize);
+    & #card-hands-list-hands-wrapper:has(.card-hands-list-hand:nth-child(n+1)) {
+      display: none;
+    }
+  }
 
-      & .card-hands-list-title {
-        margin: 1px;
-        padding-left: 2px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        border: none;
+  /* Hidden and hovered... */
+  &:hover {
+    width: 200px;
+    overflow: clip;
 
-        & >.fa-cards {
-          font-size: 1rem;
-          order: 2;
-        }
+    & .card-hands-list-title {
+      display: block;
+      margin: 1px;
+      padding-left: 2px;
+      border-bottom: revert;
 
-        & >.card-hands-list-mode {
-          margin-bottom: 7px;
-          order: 1;
-        }
+      & > .fa-cards {
+        border-bottom: revert;
       }
 
-      & #card-hands-list-hands-wrapper {
-        height: 0;
-        display: none;
+      & > .card-hands-list-mode {
+        order: revert;
       }
     }
+  }
 
-    &.collapsed.player-list-behavior-hidden,
-    &.player-list-behavior-autohide {
-      --playerfsize: 0;
-      --players-width: 32px;
-      font-size: var(--playerfsize);
-    }
+  /* Collapsed and hidden */
+  &.collapsed:not(:hover) #card-hands-list-hands-wrapper {
+    display: none;
   }
 }
 

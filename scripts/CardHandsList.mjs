@@ -63,14 +63,15 @@ export class CardHandsList extends Application {
             system: game.system.id,
             favorite: '',
         };
-        data.minimalUi = { active: game.modules.get('minimal-ui')?.active };
 
         if (game.system.id === 'swade') {
             data.favorite = game?.user?.getFlag('swade', 'favoriteCardsDoc');
         }
 
+        data.minimalUi = { active: game.modules.get('minimal-ui')?.active };
+
         if (data.minimalUi.active) {
-            data.minimalUi.playerListBehavior = game.settings.get('minimal-ui', 'playerList');
+            data.minimalUi.listBehavior = game.settings.get(handsModule.id, 'minimal-ui-behavior');
         }
 
         return data;
@@ -80,7 +81,6 @@ export class CardHandsList extends Application {
     activateListeners(html) {
         // Toggle collapsed state
         html.find(`.${handsModule.id}-title`).click(this._onToggleAllHands.bind(this));
-
         // Open the Cards Hand
         html.find(`.${handsModule.id}-name a`)?.click(this._onOpenCardsHand.bind(this));
         // Favorite the Cards Hand

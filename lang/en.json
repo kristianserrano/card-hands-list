@@ -17,6 +17,10 @@
             "Name": "Include Hands with Observer Ownership",
             "Hint": "Includes hands of which users have Observer-level ownership. Default is Owner-level ownership only."
         },
+        "MinimalUIBehavior": {
+            "Name": "Minimal UI Module Behavior",
+            "Hint": "Set the interaction behavior pattern for the Card Hands list when using Minimal UI."
+        },
         "FaceDown": "Face Down"
     }
 }

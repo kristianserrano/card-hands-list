@@ -22,6 +22,23 @@ Hooks.on('init', function () {
     default: false,
     onChange: () => ui.cardHands.render(true)
   });
+
+  if (game.modules.get('minimal-ui')?.active) {
+    game.settings.register(handsModule.id, 'minimal-ui-behavior', {
+      name: `${handsModule.translationPrefix}.MinimalUIBehavior.Name`,
+      hint: `${handsModule.translationPrefix}.MinimalUIBehavior.Hint`,
+      scope: 'world',
+      config: true,
+      type: String,
+      choices: {
+        "always": game.i18n.localize("MinimalUI.SettingsAlwaysVisible"),
+        "autohide": game.i18n.localize("MinimalUI.SettingsAutoHide"),
+      },
+      default: "always",
+      requiresReload: true,
+    });
+  }
+
 });
 
 Hooks.on('setup', async function () {
