@@ -1,4 +1,4 @@
-{{#if (or (not parent.collapsed) (and parent.collapsed (or (eq parent.favorite id) (cardHandsList_Includes parent.pinned id))))}}
+{{#if (or (not parent.collapsed) (and parent.collapsed (cardHandsList_Includes parent.pinned id)))}}
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (eq parent.favorite id)}} is-favorite{{/if}}{{#if (cardHandsList_Includes parent.pinned id)}} is-pinned{{/if}}" data-hand-id="{{id}}">
     <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{name}}">
         <a>{{name}}</a>
@@ -19,7 +19,7 @@
         </div>
         {{/if}}
         <div
-            class="{{parent.moduleId}}-button {{parent.moduleId}}-pin {{#if (eq parent.favorite id)}}--hidden{{/if}}"
+            class="{{parent.moduleId}}-button {{parent.moduleId}}-pin"
             data-hand-id="{{id}}"
             data-tooltip="
                 {{#if (cardHandsList_Includes parent.pinned id)}}
