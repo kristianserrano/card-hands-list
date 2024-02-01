@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.10.4
+
+- For SWADE system: Separates pinning and favoriting behaviors. Now you can favorite a hand without it necessarily being pinned. This means you can still quickly access your favorite hand by pressing `h` on the keyboard without it having to be displayed in the collapsed list. You can still pin it if you want to include in the collapsed list.
+
 ## v1.10.3
 
 - Minor CSS adjustments for context menu and height of cards.
