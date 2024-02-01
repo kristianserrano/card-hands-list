@@ -25,6 +25,10 @@
 
     &:has(#context-menu) {
       scroll-snap-type: y normal;
+
+      & .card-hands-list-hand {
+        scroll-snap-align: none;
+      }
     }
   }
 
@@ -46,10 +50,11 @@
   }
 
   & .card-hands-list-hand {
+    height: var(--hand-height);
     padding: 4px 8px;
     display: grid;
     grid-template-columns: 1fr 18px;
-    grid-template-rows: repeat(2, min-content);
+    grid-template-rows: min-content auto;
     gap: 0 4px;
     align-items: center;
     scroll-snap-align: start;
@@ -67,11 +72,10 @@
       &:has(.card-hands-list-hand) {
         height: var(--hand-height);
       }
-    }
 
-    & .card-hands-list-hand {
-      height: auto;
-      border: none;
+      & .card-hands-list-hand {
+        border: none;
+      }
     }
   }
 

@@ -31,7 +31,7 @@ export class CardHandContextMenu extends ContextMenu {
             html[0].classList.add('card-hands-list-negative-margin');
             const contextMenuLinks = document.querySelectorAll('.card-hands-list-context-menu-link');
 
-            if (document.querySelectorAll('.card-hands-list-hand').length === 1 || target[0] === contextMenuLinks[0]) {
+            if (document.querySelectorAll('.card-hands-list-hand').length <= 2 || target[0] === contextMenuLinks[0]) {
                 this._expandUp = false;
             }
         }
