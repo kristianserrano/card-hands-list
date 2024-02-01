@@ -1,5 +1,9 @@
 # Card Hands List
 
+## v1.10.3
+
+- Minor CSS adjustments for context menu and height of cards.
+
 ## v1.10.2
 
 - Overhauls Minimal UI support with new setting to select display behavior modes (autohide and always show).
