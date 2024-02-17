@@ -288,3 +288,17 @@ div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.min
   margin: 0;
   font-size: 0.8em;
 }
+
+#tooltip .card-hands-list-tooltip {
+  text-align: left;
+  line-height: 1.4;
+
+  .card-hands-list-tooltip-heading {
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  & a.content-link{
+    color: #000000;
+  }
+}

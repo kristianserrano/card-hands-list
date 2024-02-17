@@ -132,3 +132,8 @@ for (const hook of cardHandsListCardsHooksArray) {
     if (data.type === 'hand') ui.cardHands.render(true);
   });
 }
+
+// Enrich HTML.
+Handlebars.registerHelper('CardHandsList_enrichHTML', (text) => {
+  return TextEditor.enrichHTML(text, {async: false});
+});
