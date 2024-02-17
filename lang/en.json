@@ -1,13 +1,11 @@
 {
     "CARDHANDSLIST": {
         "Heading": "Card Hands",
-        "DrawCard": "Draw a Card",
         "Open": "Open",
         "Menu": "Menu",
         "FlipAll": "Flip All Cards",
-        "Shuffle": "Shuffle Hand",
-        "Favorite": "Favorite",
-        "Unfavorite": "Unfavorite",
+        "Favorite": "Set as Favorite",
+        "Unfavorite": "Unset as Favorite",
         "Pin": "Pin",
         "Unpin": "Unpin",
         "Defaults": "Set Defaults",
@@ -20,7 +18,6 @@
         "MinimalUIBehavior": {
             "Name": "Minimal UI Module Behavior",
             "Hint": "Set the interaction behavior pattern for the Card Hands list when using Minimal UI."
-        },
-        "FaceDown": "Face Down"
+        }
     }
 }
