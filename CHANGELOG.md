@@ -1,4 +1,9 @@
-# Card Hands List
+# Card Hands List Changelog
+
+## v1.10.5
+
+- Adds icon and tooltip to hand title to better indicate that clicking it opens the Card Hand Sheet.
+- Adds horizontal scroll snapping to cards in hands.
 
 ## v1.10.4
 
