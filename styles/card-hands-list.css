@@ -60,6 +60,11 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
 
+    &:hover,
+    & *:hover {
+      scroll-snap-align: always;
+    }
+
     &:not(:last-of-type) {
       border-bottom: 2px groove var(--color-border-dark-secondary);
     }
@@ -159,6 +164,7 @@
     justify-content: start;
     overflow-y: clip;
     overflow-x: scroll;
+    scroll-snap-type: x mandatory;
     pointer-events: all;
   }
 
@@ -170,6 +176,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+
+    &:hover,
+    & *:hover {
+      scroll-snap-align: always;
+    }
 
     & .card-hands-list-card-image {
       max-height: 100%;
