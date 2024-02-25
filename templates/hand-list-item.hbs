@@ -1,7 +1,7 @@
 {{#if (or (not parent.collapsed) (and parent.collapsed (cardHandsList_Includes parent.pinned id)))}}
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand{{#if (eq parent.favorite id)}} is-favorite{{/if}}{{#if (cardHandsList_Includes parent.pinned id)}} is-pinned{{/if}}" data-hand-id="{{id}}">
-    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{name}}">
-        <a>{{name}}</a>
+    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Open')}} {{name}}">
+        <a><i class="fas fa-browser"></i> {{name}}</a>
     </h4>
     <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Menu')}}"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
     <div class="{{parent.moduleId}}-buttons">
