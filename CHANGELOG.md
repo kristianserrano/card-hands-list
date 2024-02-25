@@ -4,6 +4,7 @@
 
 - Adds icon and tooltip to hand title to better indicate that clicking it opens the Card Hand Sheet.
 - Adds horizontal scroll snapping to cards in hands.
+- Adds enriched text in card tooltips for cards that have document links in their descriptions.
 
 ## v1.10.4
 
