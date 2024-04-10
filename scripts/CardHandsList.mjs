@@ -119,8 +119,8 @@ export class CardHandsList extends Application {
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const hand = game.cards.get(e.target.parentElement.parentElement.dataset.handId);
-        await hand.sheet.render(true);
+        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.handId);
+        await hand?.sheet.render(true);
     }
 
     // Open the Card
