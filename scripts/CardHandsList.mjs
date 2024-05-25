@@ -7,7 +7,7 @@ import { CardHandContextMenu } from "./CardHandContextMenu.mjs";
 export class CardHandsList extends Application {
     constructor(options) {
         super(options);
-        this.appid = handsModule.id,
+        this.appid = handsModule.id;
 
         // Toggle for whether to show all Cards Hands or hide them
         this._showAllHands = false;
@@ -177,6 +177,7 @@ export class CardHandsList extends Application {
         }
 
         await game?.user?.setFlag(handsModule.id, flagKey, pinned);
+        this.render(false)
     }
 
     // Draw a Card from a Cards Stack
@@ -292,15 +293,15 @@ export class CardHandsList extends Application {
                     const drawModes = [
                         {
                             label: game.i18n.localize('CARDS.DrawModeRandom'),
-                            value: 2,
+                            value: CONST.CARD_DRAW_MODES.RANDOM,
                         },
                         {
                             label: game.i18n.localize('CARDS.DrawModeTop'),
-                            value: 0,
+                            value: CONST.CARD_DRAW_MODES.TOP,
                         },
                         {
                             label: game.i18n.localize('CARDS.DrawModeBottom'),
-                            value: 1,
+                            value: CONST.CARD_DRAW_MODES.BOTTOM,
                         },
                     ];
 
