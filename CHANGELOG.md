@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v1.12.0
+
+- Adds verified support for Foundry VTT v12.
+
 ## v1.10.5
 
 - Adds icon and tooltip to hand title to better indicate that clicking it opens the Card Hand Sheet.
