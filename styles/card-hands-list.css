@@ -214,12 +214,13 @@
       z-index: 1;
       width: max-content;
       height: 100%;
-      padding: 3px;
+      padding: 2px;
+      display: flex;
       flex: 0;
-      align-content: center;
+      align-items: center;
       justify-content: center;
       font-size: var(--font-size-16);
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.75);
       border-color: var(--color-border-dark);
       box-shadow: 0 0 3px #444;
       cursor: pointer;
