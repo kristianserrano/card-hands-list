@@ -45,7 +45,7 @@ Hooks.on('setup', async function () {
   // Preload the template and render the UI
   loadTemplates([
     `modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`,
-    `modules/${handsModule.id}/templates/hand-list-item.hbs`
+    `modules/${handsModule.id}/templates/hand.hbs`
   ]);
 
 

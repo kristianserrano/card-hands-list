@@ -16,9 +16,11 @@
     &:has(.card-hands-list-hand:nth-child(n+1)) {
       height: var(--hand-height);
     }
+
     &:has(.card-hands-list-hand:nth-child(n+2)) {
       height: calc(var(--hand-height) * 2);
     }
+
     &:has(.card-hands-list-hand:nth-child(n+3)) {
       height: calc(var(--hand-height) * 3);
     }
@@ -151,49 +153,90 @@
   }
 
   & .card-hands-list-cards {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    container-type: size;
+    position: relative;
     grid-column: 1/2;
     grid-row: 2/3;
-    list-style-type: none;
     display: flex;
-    gap: 0.25em;
-    align-items: center;
-    justify-content: start;
-    overflow-y: clip;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    pointer-events: all;
-  }
-
-  & .card-hands-list-card {
-    padding: 1px;
     height: 100%;
-    flex-grow: 0;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
 
-    &:hover,
-    & *:hover {
-      scroll-snap-align: always;
+    & .card-hands-list-cards-list {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      container-type: size;
+      list-style-type: none;
+      display: flex;
+      gap: 0.25em;
+      align-items: center;
+      justify-content: start;
+      overflow-y: clip;
+      overflow-x: scroll;
+      border-radius: 3px;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      pointer-events: all;
+
+      & .card-hands-list-card {
+        height: 100cqh;
+        flex-grow: 0;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+        cursor: pointer;
+
+        &:hover,
+        & *:hover {
+          scroll-snap-align: always;
+        }
+
+        & .card-hands-list-card-image {
+          max-height: 100%;
+          object-position: center;
+          object-fit: contain;
+          border: none;
+          filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
+
+          &:hover {
+            filter:
+              drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
+          }
+        }
+      }
     }
 
-    & .card-hands-list-card-image {
-      max-height: 100%;
-      object-position: center;
-      object-fit: contain;
-      border: none;
-      filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
+    & .horizontal-scroll {
+      position: absolute;
+      z-index: 1;
+      width: max-content;
+      height: 100%;
+      padding: 3px;
+      flex: 0;
+      align-content: center;
+      justify-content: center;
+      font-size: var(--font-size-16);
+      background: rgba(0, 0, 0, 0.8);
+      border-color: var(--color-border-dark);
+      box-shadow: 0 0 3px #444;
+      cursor: pointer;
+      opacity: 0.75;
+      transition: opacity 1s ease-in-out;
 
       &:hover {
-        filter:
-          drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
+        opacity: 1;
+        transition: opacity .125s ease-in-out;
+      }
+
+      &.--left {
+        left: 0;
+      }
+
+      &.--right {
+        right: 0;
       }
     }
   }
@@ -238,13 +281,13 @@ div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.min
       border: none;
       border-bottom: none;
 
-      & > .fa-cards {
+      &>.fa-cards {
         font-size: 17.5px;
         margin: 6px 0 0 0;
         order: 2;
       }
 
-      & > .card-hands-list-mode {
+      &>.card-hands-list-mode {
         padding-left: 2px;
         padding-bottom: 4px;
         margin: 0 5px;
@@ -269,11 +312,11 @@ div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.min
       padding-left: 2px;
       border-bottom: revert;
 
-      & > .fa-cards {
+      &>.fa-cards {
         border-bottom: revert;
       }
 
-      & > .card-hands-list-mode {
+      &>.card-hands-list-mode {
         order: revert;
       }
     }
@@ -311,7 +354,7 @@ div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.min
     margin-bottom: 0.5rem;
   }
 
-  & a.content-link{
+  & a.content-link {
     color: #000000;
   }
 }

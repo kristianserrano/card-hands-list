@@ -6,14 +6,14 @@
         {{!-- First list the favorited hand (if applicable) --}}
         {{#each hands}}
         {{#if (eq ../favorite id)}}
-            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/if}}
         {{/each}}
         {{!-- Now list the pinned hands --}}
         {{#each hands}}
         {{#if (cardHandsList_Includes ../pinned id)}}
         {{#unless (eq ../favorite id)}}
-            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/unless}}
         {{/if}}
         {{/each}}
@@ -21,14 +21,14 @@
         {{#each hands}}
         {{#if isOwner}}
         {{#unless (or (cardHandsList_Includes ../pinned id) (eq ../favorite id))}}
-            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/unless}}
         {{/if}}
         {{/each}}
         {{!-- Lastly, list the remaining unowned hands --}}
         {{#each hands}}
         {{#unless (or isOwner (or (cardHandsList_Includes ../pinned id) (eq ../favorite id)))}}
-            {{> 'modules/card-hands-list/templates/hand-list-item.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
         {{/unless}}
         {{/each}}
     </section>

@@ -41,40 +41,45 @@
         </div>
         {{/if}}
     </div>
-    <ul class="{{parent.moduleId}}-cards" data-hand-id="{{id}}" data-uuid="{{uuid}}">
-        {{#each (cardHandsList_SortCards this.cards 'sort')}}
-        <li class="{{../parent.moduleId}}-card">
-            <img
-                class="{{../parent.moduleId}}-card-image"
-                src="{{img}}"
-                data-card-id="{{id}}"
-                data-uuid="{{uuid}}"
-                data-img="{{img}}"
-                {{#if parent.isOwner}}
-                draggable="true"{{/if}}
-                data-tooltip="
-                    <div class='card-hands-list-tooltip'>
-                    <h4 class='{{../parent.moduleId}}-tooltip-heading'>{{name}}</h4>
-                    {{#unless (eq face null)}}
-                    {{#with (lookup faces face)}}
-                    {{#if text}}
-                    <div class='{{../../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML text}}</div>
-                    {{else}}
-                    {{#if ../description}}
-                    <div class='{{../../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML ../description}}</div>
-                    {{/if}}
-                    {{/if}}
-                    {{/with}}
-                    {{else}}
-                    {{#if back.text}}
-                    <div class='{{../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML back.text}}</div>
-                    {{/if}}
-                    {{/unless}}
-                    </div>
-                "
-            />
-        </li>
-        {{/each}}
-    </ul>
+    <div class="{{parent.moduleId}}-cards">
+        <div class="horizontal-scroll --left"><i class="fas fa-caret-left"></i></div>
+        <ul class="{{parent.moduleId}}-cards-list" data-hand-id="{{id}}" data-uuid="{{uuid}}">
+            {{#each (cardHandsList_SortCards this.cards 'sort')}}
+            <li class="{{../parent.moduleId}}-card">
+                <img
+                    class="{{../parent.moduleId}}-card-image"
+                    src="{{img}}"
+                    data-card-id="{{id}}"
+                    data-uuid="{{uuid}}"
+                    data-img="{{img}}"
+                    {{#if parent.isOwner}}
+                    draggable="true"{{/if}}
+                    data-tooltip="
+                        <div class='card-hands-list-tooltip'>
+                        <h4 class='{{../parent.moduleId}}-tooltip-heading'>{{name}}</h4>
+                        {{#unless (eq face null)}}
+                        {{#with (lookup faces face)}}
+                        {{#if text}}
+                        <div class='{{../../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML text}}</div>
+                        {{else}}
+                        {{#if ../description}}
+                        <div class='{{../../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML ../description}}</div>
+                        {{/if}}
+                        {{/if}}
+                        {{/with}}
+                        {{else}}
+                        {{#if back.text}}
+                        <div class='{{../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML back.text}}</div>
+                        {{/if}}
+                        {{/unless}}
+                        </div>
+                    "
+                />
+            </li>
+            {{/each}}
+        </ul>
+        <div class="horizontal-scroll --right"><i class="fas fa-caret-right"></i></div>
+    </div>
+
 </section>
 {{/if}}

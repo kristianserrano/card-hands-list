@@ -1,7 +1,6 @@
 {
 	"title": "Card Hands List",
 	"id": "card-hands-list",
-	"name": "card-hands-list",
 	"description": "A module to list owned card hands.",
 	"version": "",
 	"url": "",
@@ -51,7 +50,7 @@
 			],
 			"paths": [
 				"templates/card-hands-list-container.hbs",
-				"templates/hand-list-item.hbs",
+				"templates/hand.hbs",
 				"styles/card-hands-list.css",
 				"lang/en.json",
 				"scripts/card-hands-list.js",

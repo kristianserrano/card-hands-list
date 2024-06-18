@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v1.12.1
+
+- Adds horizontal scroll buttons to hands.
+- Fixes spacing in Firefox.
+
 ## v1.12.0
 
 - Adds verified support for Foundry VTT v12.

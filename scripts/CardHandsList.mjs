@@ -81,6 +81,8 @@ export class CardHandsList extends Application {
     activateListeners(html) {
         // Toggle collapsed state
         html.find(`.${handsModule.id}-title`).click(this._onToggleAllHands.bind(this));
+        // Scroll horizontally through cards in hand
+        html.find('.horizontal-scroll').click(this._onHorizontalScroll.bind(this));
         // Open the Cards Hand
         html.find(`.${handsModule.id}-name a`)?.click(this._onOpenCardsHand.bind(this));
         // Favorite the Cards Hand
@@ -115,6 +117,22 @@ export class CardHandsList extends Application {
         this.render(true);
     }
 
+    _onHorizontalScroll(e) {
+        const arrow = e.currentTarget;
+        const card = arrow.parentElement.querySelector(`.${handsModule.id}-card`);
+        const hand = card.parentElement;
+        const cardWidth = card.offsetWidth;
+        const handWidth = hand.offsetWidth;
+
+        if (arrow.classList.contains('--right')) {
+            //hand.scrollLeft += cardWidth * (handWidth / (cardWidth * 2));
+            hand.scrollLeft += handWidth - cardWidth;
+        } else if (arrow.classList.contains('--left')) {
+            //hand.scrollLeft -= cardWidth * (handWidth / (cardWidth * 2));
+            hand.scrollLeft -= handWidth - cardWidth;
+        }
+    }
+
     // Open the Cards Hand
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
@@ -129,11 +147,13 @@ export class CardHandsList extends Application {
         e.preventDefault();
         const card = await fromUuid(e.target.dataset.uuid);
         // Render the image popout
-        const imgPopout = new ImagePopout(card.img, {
-            title: card.name,
-            uuid: card.uuid
-        });
-        await imgPopout.render(true);
+        if (card) {
+            const imgPopout = new ImagePopout(card.img, {
+                title: card.name,
+                uuid: card.uuid
+            });
+            await imgPopout.render(true);
+        }
     }
 
     // Favorite Cards Hand
