@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v1.12.2
+
+- Very minor CSS tweaks/fixes.
+
 ## v1.12.1
 
 - Adds horizontal scroll buttons to hands.
