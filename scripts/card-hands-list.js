@@ -8,7 +8,7 @@ import { CardHandsList } from './CardHandsList.mjs';
 
 export const handsModule = {
   id: 'card-hands-list',
-  translationPrefix: 'CARDHANDSLIST',
+  translationPrefix: 'CardHandsList',
 };
 
 Hooks.on('init', function () {
@@ -38,7 +38,6 @@ Hooks.on('init', function () {
       requiresReload: true,
     });
   }
-
 });
 
 Hooks.on('setup', async function () {
@@ -47,7 +46,6 @@ Hooks.on('setup', async function () {
     `modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`,
     `modules/${handsModule.id}/templates/hand.hbs`
   ]);
-
 
   /* Handlebar Helpers */
   // Handlebar helper for concat but with a namespaced helper name so as not to override the default concat helper
@@ -66,9 +64,8 @@ Hooks.on('setup', async function () {
   });
 
   // Handlebar helper for sorting Cards in the Card Hands list.
-  Handlebars.registerHelper('cardHandsList_SortCards', (objects, property) => {
+  Handlebars.registerHelper('cardHandsList_Sort', (objects, property) => {
     return Array.from(objects).sort((a, b) => {
-      const property = 'sort';
       // Get the value of the property from each object
       const valueA = a[property];
       const valueB = b[property];
@@ -84,11 +81,18 @@ Hooks.on('setup', async function () {
     });
   });
 
+  // Enrich HTML.
+  Handlebars.registerHelper('CardHandsList_enrichHTML', (text) => {
+    return TextEditor.enrichHTML(text, { async: false });
+  });
+
   ui.cardHands = new CardHandsList;
 });
 
 Hooks.on('ready', async function () {
-  if (game.ready) ui.cardHands.render(true);
+  if (game.ready) {
+    await ui.cardHands.render(true);
+  }
 
   // Migrate favorites flag to pinned flag.
   const favoritedHands = game.user.getFlag(handsModule.id, 'favorite-hands');
@@ -99,9 +103,27 @@ Hooks.on('ready', async function () {
   }
 });
 
+Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
+  // Move the Card Hands List element to be placed above the Player List element
+  if (ui.players.element[0].previousElementSibling.id !== html[0]?.id) {
+    ui.players.element[0]?.before(html[0]);
+  }
+
+  // Restore horizontal scroll positions
+  setTimeout(() => {
+    for (const handElement of html[0].querySelectorAll(`.${handsModule.id}-cards-list`)) {
+      const positionToSet = cardHandsList._handScrollPositions.get(handElement.dataset.id) ?? 0;
+      handElement.scrollLeft = positionToSet;
+    }
+  }, "1");
+});
+
 // When the Player List is rendered, render the module UI
 Hooks.on('renderPlayerList', async (data) => {
-  if (game.ready) ui.cardHands.render(true);
+  // Move the Card Hands List element to be placed above the Player List element
+  if (ui.players.element[0].previousElementSibling !== ui.cardHands.element[0]) {
+    ui.players.element[0]?.before(ui.cardHands.element[0]);
+  }
 });
 
 /* Hooks to listen to changes in settings and Card Hands data */
@@ -114,8 +136,12 @@ const cardHandsListCardHooksArray = [
 
 // Hooks for Card events
 for (const hook of cardHandsListCardHooksArray) {
-  Hooks.on(hook, (data) => {
-    if (data.parent.type === 'hand') ui.cardHands.render(true);
+  Hooks.on(hook, async (data) => {
+    if (data.parent.type === 'hand') {
+      const handElement = document.querySelector(`.${handsModule.id}-cards-list[data-id="${data.parent.id}"]`);
+      ui.cardHands._handScrollPositions.set(data.parent.id, handElement.scrollLeft);
+      await ui.cardHands.render(false);
+    }
   });
 }
 
@@ -128,12 +154,11 @@ const cardHandsListCardsHooksArray = [
 
 // Hooks for Card Stack events
 for (const hook of cardHandsListCardsHooksArray) {
-  Hooks.on(hook, (data) => {
-    if (data.type === 'hand') ui.cardHands.render(true);
+  Hooks.on(hook, async (data) => {
+    if (data.type === 'hand') {
+      const handElement = document.querySelector(`.${handsModule.id}-cards-list[data-id="${data.id}"]`);
+      ui.cardHands._handScrollPositions.set(data.id, handElement?.scrollLeft ?? 0);
+      await ui.cardHands.render(true);
+    }
   });
 }
-
-// Enrich HTML.
-Handlebars.registerHelper('CardHandsList_enrichHTML', (text) => {
-  return TextEditor.enrichHTML(text, {async: false});
-});

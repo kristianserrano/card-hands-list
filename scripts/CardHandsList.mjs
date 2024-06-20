@@ -11,8 +11,8 @@ export class CardHandsList extends Application {
 
         // Toggle for whether to show all Cards Hands or hide them
         this._showAllHands = false;
-        // Current inner Card Hands List scroll position
-        this._scrollPosition = 0;
+        // Current inner Card Hands horizontal scroll positions
+        this._handScrollPositions = new Map();
     }
 
     /** @override */
@@ -20,7 +20,8 @@ export class CardHandsList extends Application {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: handsModule.id,
             template: `modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`,
-            popOut: false
+            popOut: false,
+            scrollY: [`#${handsModule.id}-hands-wrapper`]
         });
     }
 
@@ -28,17 +29,16 @@ export class CardHandsList extends Application {
     async _render(force = false, options = {}) {
         await super._render(force, options);
 
-        // If both exist, move the Card Hands List element to be placed above the Player List element
-        if (this.rendered) {
-            ui.players.element[0]?.before(this.element[0]);
-        }
-
-        // Set the wrapper's scroll position to the previous position.
-        document.querySelector(`#${handsModule.id}-hands-wrapper`)?.scrollTo({ top: this._scrollPosition });
-
         if (game.modules.get('minimal-ui')?.active) {
             const foundryLogo = document.querySelector('#logo');
-            foundryLogo.addEventListener('click', changeCardHandsListDisplay, 'once');
+
+            foundryLogo.addEventListener('click', () => {
+                const cardHandsListElement = document.querySelector('#card-hands-list');
+
+                if (cardHandsListElement) {
+                    cardHandsListElement.style.display = cardHandsListElement.style.display === 'none' ? '' : 'none';
+                }
+            }, 'once');
         }
     }
 
@@ -50,8 +50,11 @@ export class CardHandsList extends Application {
             if (a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) return 1;
             return -1;
         });
-        // If it's available, set the scroll position in case it was rendered after starring a hand.
-        this._scrollPosition = document.querySelector(`#${handsModule.id}-hands-wrapper`)?.scrollTop ?? 0;
+
+        /* for (const hand of document.querySelectorAll(`.${handsModule.id}-cards-list`)) {
+            this._handScrollPositions.set(hand.dataset.id, hand.scrollLeft);
+        } */
+
         // Return the data for rendering
         const data = {
             hands,
@@ -119,25 +122,23 @@ export class CardHandsList extends Application {
 
     _onHorizontalScroll(e) {
         const arrow = e.currentTarget;
-        const card = arrow.parentElement.querySelector(`.${handsModule.id}-card`);
-        const hand = card.parentElement;
-        const cardWidth = card.offsetWidth;
-        const handWidth = hand.offsetWidth;
+        const cardElement = arrow.parentElement.querySelector(`.${handsModule.id}-card`);
+        const handElement = cardElement.parentElement;
 
         if (arrow.classList.contains('--right')) {
-            //hand.scrollLeft += cardWidth * (handWidth / (cardWidth * 2));
-            hand.scrollLeft += handWidth - cardWidth;
+            handElement.scroll({ left: handElement.scrollLeft + handElement.offsetWidth - cardElement.offsetWidth, behavior: 'smooth' });
         } else if (arrow.classList.contains('--left')) {
-            //hand.scrollLeft -= cardWidth * (handWidth / (cardWidth * 2));
-            hand.scrollLeft -= handWidth - cardWidth;
+            handElement.scroll({ left: handElement.scrollLeft - handElement.offsetWidth - cardElement.offsetWidth, behavior: 'smooth' });
         }
+
+        this._handScrollPositions.set(handElement.dataset.id, handElement?.scrollLeft);
     }
 
     // Open the Cards Hand
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.handId);
+        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
         await hand?.sheet.render(true);
     }
 
@@ -160,22 +161,24 @@ export class CardHandsList extends Application {
     async _onFavoriteHand(e) {
         // Prevent multiple executions
         e.stopImmediatePropagation();
-        const favoriteId = e.target.parentElement.parentElement.dataset.handId;
+        const favoriteId = e.target.parentElement.parentElement.dataset.id;
         const currentFavorite = game.user.getFlag('swade', 'favoriteCardsDoc');
 
         if (favoriteId === currentFavorite) {
             await game.user.unsetFlag('swade', 'favoriteCardsDoc');
         } else {
             // Favorite the Hand based on its ID.
-            await game.user.setFlag('swade', 'favoriteCardsDoc', e.target.parentElement.parentElement.dataset.handId);
+            await game.user.setFlag('swade', 'favoriteCardsDoc', e.target.parentElement.parentElement.dataset.id);
         }
+
+        await this.render(false);
     }
 
     // Pin Cards Hand
     async _onPinHand(e) {
         // Prevent multiple executions
         e.stopImmediatePropagation();
-        const handId = e.target.parentElement.parentElement.dataset.handId;
+        const handId = e.target.parentElement.parentElement.dataset.id;
         // Pin the Hand based on its ID.
         // Set the user flag key
         const flagKey = 'pinned-hands';
@@ -197,19 +200,20 @@ export class CardHandsList extends Application {
         }
 
         await game?.user?.setFlag(handsModule.id, flagKey, pinned);
-        this.render(false)
+        this.render(false);
     }
 
     // Draw a Card from a Cards Stack
     async _onDrawCard(e) {
         e.stopImmediatePropagation();
-        const hand = game.cards.get(e.target.parentElement.parentElement.dataset.handId);
+        const hand = game.cards.get(e.target.parentElement.parentElement.dataset.id);
         const defaultDeck = hand.getFlag(handsModule.id, 'default-deck');
         const defaultMode = hand.getFlag(handsModule.id, 'default-draw-mode');
         let cardsDrawn = undefined;
+
         if (defaultDeck && defaultMode) {
             const deck = game.cards.get(defaultDeck);
-            cardsDrawn = await hand.draw(deck, 1, {how: Number(defaultMode)});
+            cardsDrawn = await hand.draw(deck, 1, { how: Number(defaultMode) });
         } else {
             cardsDrawn = await hand.drawDialog();
         }
@@ -229,20 +233,22 @@ export class CardHandsList extends Application {
 
     // Drag a Card in a Cards Hand
     async _onDropCard(e) {
-        // Prevent multiple executions
-        //e.stopImmediatePropagation();
         // Get the data transfer text value
         const textDataTransfer = e.originalEvent ? e.originalEvent.dataTransfer.getData('text/plain') : e.dataTransfer.getData('text/plain');
+
         if (textDataTransfer) {
             // If there's a value, parse it
             const parsedDataTransfer = JSON.parse(textDataTransfer);
-            if (parsedDataTransfer && parsedDataTransfer.type === 'Card') {
+
+            if (parsedDataTransfer?.type === 'Card') {
                 // If there is parsed data, get the document from the UUI
                 const cardDragged = await fromUuid(parsedDataTransfer.uuid);
+
                 if (cardDragged) {
                     // If there's an actual document
                     const dropTarget = await fromUuid(e.target.dataset.uuid);
                     let hand = undefined;
+
                     if (dropTarget.documentName === 'Card') {
                         // If the target is a Card, get its Hand
                         hand = await fromUuid(dropTarget.parent.uuid);
@@ -278,26 +284,28 @@ export class CardHandsList extends Application {
                     return game.user.isGM;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     new DocumentOwnershipConfig(hand).render(true);
                 }
             },
             {
-                name: game.i18n.localize("CARDHANDSLIST.Defaults"),
+                name: game.i18n.localize(`${handsModule.translationPrefix}.Defaults`),
                 icon: '<i class="fas fa-gears"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
-                    // Check if GM
-                    return game?.user.isGM && !hand?.getFlag(handsModule.id, 'default-deck');
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
+                    // Check if owner
+                    return hand.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     const decks = game?.cards?.filter(c => c.type === 'deck');
-                    const deckOptions = [];
+                    const deckOptions = [
+                        `<option value="none" ${!hand?.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${game.i18n.localize(`${handsModule.translationPrefix}.None`)}</option>`
+                    ];
 
                     for (const deck of decks) {
                         deckOptions.push(
-                            `<option value="${deck.id}">${deck.name}</option>`
+                            `<option value="${deck.id}" ${deck.id === hand?.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${deck.name}</option>`
                         );
                     }
 
@@ -342,21 +350,30 @@ export class CardHandsList extends Application {
                         </div>
                     `;
                     const content = `
-                        <p>${game.i18n.format('CARDHANDSLIST.DefaultsMessage', {name: hand.name})}</p>
+                        <p>${game.i18n.format(`${handsModule.translationPrefix}.DefaultsMessage`, { name: hand.name })}</p>
                         <form class="cards-defaults">
                             ${deckSelect + modeSelect}
                         </form>
                     `;
+
                     new Dialog({
-                        title: game.i18n.localize("CARDHANDSLIST.Defaults"),
+                        title: game.i18n.localize(`${handsModule.translationPrefix}.Defaults`),
                         content: content,
                         buttons: {
                             save: {
                                 icon: '<i class="fas fa-save"></i>',
                                 label: game.i18n.localize('Save'),
                                 callback: async (html) => {
-                                    await hand.setFlag(handsModule.id, 'default-deck', html.find('#deck-select').val());
-                                    await hand.setFlag(handsModule.id, 'default-draw-mode', html.find('#draw-mode').val());
+                                    const deckId = html.find('#deck-select').val();
+                                    const mode = Number(html.find('#draw-mode').val());
+
+                                    if (deckId === 'none') {
+                                        await hand.unsetFlag(handsModule.id, 'default-deck');
+                                        await hand.unsetFlag(handsModule.id, 'default-draw-mode');
+                                    } else {
+                                        await hand.setFlag(handsModule.id, 'default-deck', deckId);
+                                        await hand.setFlag(handsModule.id, 'default-draw-mode', mode);
+                                    }
                                 }
                             }
                         },
@@ -365,35 +382,21 @@ export class CardHandsList extends Application {
                 }
             },
             {
-                name: game.i18n.localize("CARDHANDSLIST.UnsetDefaults"),
-                icon: '<i class="fas fa-gears"></i>',
-                condition: el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
-                    // Check if GM
-                    return game?.user.isGM && hand?.getFlag(handsModule.id, 'default-deck');
-                },
-                callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
-                    await hand.unsetFlag(handsModule.id, 'default-deck');
-                    await hand.unsetFlag(handsModule.id, 'default-draw-mode');
-                }
-            },
-            {
-                name: game.i18n.localize("CARDHANDSLIST.FlipAll"),
+                name: game.i18n.localize(`${handsModule.translationPrefix}.FlipAll`),
                 icon: '<i class="fas fa-rotate"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     const someFaceUp = hand.cards.some(c => c.face !== null);
                     const updates = hand.cards.map(c => {
                         return {
                             _id: c.id,
                             face: someFaceUp ? null : 0
-                        }
+                        };
                     });
 
                     await Card.updateDocuments(updates, { parent: hand });
@@ -403,12 +406,12 @@ export class CardHandsList extends Application {
                 name: game.i18n.localize("CARDS.Shuffle"),
                 icon: '<i class="fas fa-shuffle"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     await hand?.shuffle();
                 }
             },
@@ -416,12 +419,12 @@ export class CardHandsList extends Application {
                 name: game.i18n.localize("CARDS.Pass"),
                 icon: '<i class="fas fa-share-square"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     await hand?.passDialog();
                 }
             },
@@ -429,23 +432,15 @@ export class CardHandsList extends Application {
                 name: game.i18n.localize("CARDS.Reset"),
                 icon: '<i class="fas fa-undo"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.handId);
+                    const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
                     await hand?.resetDialog();
                 }
             },
         ];
-    }
-};
-
-function changeCardHandsListDisplay() {
-    const cardHandsListElement = document.querySelector('#card-hands-list');
-
-    if (cardHandsListElement) {
-        cardHandsListElement.style.display = cardHandsListElement.style.display === 'none' ? 'revert' : 'none';
     }
 };

@@ -11,6 +11,7 @@
     padding: 0 2px;
     overflow-y: auto;
     pointer-events: all;
+    scrollbar-width: thin;
     scroll-snap-type: y mandatory;
 
     &:has(.card-hands-list-hand:nth-child(n+1)) {
@@ -59,13 +60,7 @@
     grid-template-rows: min-content auto;
     gap: 0 4px;
     align-items: center;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-
-    &:hover,
-    & *:hover {
-      scroll-snap-align: always;
-    }
+    scroll-snap-align: center;
 
     &:not(:last-of-type) {
       border-bottom: 2px groove var(--color-border-dark-secondary);
@@ -136,20 +131,20 @@
     justify-content: space-between;
     align-items: center;
     gap: 4px;
-  }
 
-  & .card-hands-list-button {
-    color: currentColor;
-    cursor: pointer;
-    pointer-events: all;
+    & .card-hands-list-button {
+      color: currentColor;
+      cursor: pointer;
+      pointer-events: all;
 
-    &.--hidden {
-      visibility: hidden;
+      &.--hidden {
+        visibility: hidden;
+      }
     }
-  }
 
-  & :is(.card-hands-list-button, .card-hands-list-name) a:hover {
-    text-shadow: 0 0 8px var(--color-shadow-primary);
+    & :is(.card-hands-list-button, .card-hands-list-name) a:hover {
+      text-shadow: 0 0 8px var(--color-shadow-primary);
+    }
   }
 
   & .card-hands-list-cards {
@@ -173,7 +168,6 @@
       overflow-y: clip;
       overflow-x: scroll;
       border-radius: 3px;
-      scroll-behavior: smooth;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       pointer-events: all;
@@ -185,7 +179,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        scroll-snap-align: center;
+        scroll-snap-align: none;
         scroll-snap-stop: always;
         cursor: pointer;
 

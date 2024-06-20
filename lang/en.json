@@ -1,5 +1,5 @@
 {
-    "CARDHANDSLIST": {
+    "CardHandsList": {
         "Heading": "Card Hands",
         "Open": "Open",
         "Menu": "Menu",
@@ -9,8 +9,12 @@
         "Pin": "Pin",
         "Unpin": "Unpin",
         "Defaults": "Set Defaults",
-        "DefaultsMessage": "Set default card draw options for <strong>{name}</strong>",
-        "UnsetDefaults": "Unset Defaults",
+        "DefaultsMessage": "Set the default card draw options for <strong>{name}</strong>",
+        "None": "None",
+        "Scroll": {
+            "Right": "Scroll Right",
+            "Left": "Scroll Left"
+        },
         "ObserverLevel": {
             "Name": "Include Hands with Observer Ownership",
             "Hint": "Includes hands of which users have Observer-level ownership. Default is Owner-level ownership only."
