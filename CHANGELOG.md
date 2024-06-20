@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v1.12.3
+
+- Adds retention of horizontal scroll positions when interacting with Cards and Hands.
+- Consolidates Unset and Set Defaults context menu options into one. You can now choose "None" in the dialog to unset the defaults for a Hand.
+
 ## v1.12.2
 
 - Very minor CSS tweaks/fixes.
