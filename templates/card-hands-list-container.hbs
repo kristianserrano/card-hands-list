@@ -1,34 +1,34 @@
 <aside id="{{moduleId}}" class="app {{moduleId}}-container{{#if collapsed}} collapsed{{/if}}{{#if minimalUi.active}} minimal-ui list-behavior-{{minimalUi.listBehavior}}{{/if}}" data-tooltip-direction="RIGHT">
     <h3 class="{{moduleId}}-title">
-        <i class="fas fa-cards"></i> {{localize (cardHandsList_Concat translationPrefix '.Heading')}} <i class="{{moduleId}}-mode fas fa-angle-{{#if collapsed}}up{{else}}down{{/if}}"></i>
+        <i class="fas fa-cards"></i> {{title}} <i class="{{moduleId}}-mode fas fa-angle-{{#if collapsed}}up{{else}}down{{/if}}"></i>
     </h3>
     <section id="{{moduleId}}-hands-wrapper">
         {{!-- First list the favorited hand (if applicable) --}}
         {{#each hands}}
-        {{#if (eq ../favorite id)}}
-            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+        {{#if isFavorite}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
         {{/if}}
         {{/each}}
         {{!-- Now list the pinned hands --}}
         {{#each hands}}
-        {{#if (cardHandsList_Includes ../pinned id)}}
-        {{#unless (eq ../favorite id)}}
-            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+        {{#if isPinned}}
+        {{#unless isFavorite}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
         {{/unless}}
         {{/if}}
         {{/each}}
         {{!-- Next list the remaining owned hands --}}
         {{#each hands}}
         {{#if isOwner}}
-        {{#unless (or (cardHandsList_Includes ../pinned id) (eq ../favorite id))}}
-            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+        {{#unless (or isPinned isFavorite)}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
         {{/unless}}
         {{/if}}
         {{/each}}
         {{!-- Lastly, list the remaining unowned hands --}}
         {{#each hands}}
-        {{#unless (or isOwner (or (cardHandsList_Includes ../pinned id) (eq ../favorite id)))}}
-            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner cardHandsList_IsGM=cardHandsList_IsGM}}
+        {{#unless (or isOwner (or isPinned isFavorite))}}
+            {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
         {{/unless}}
         {{/each}}
     </section>

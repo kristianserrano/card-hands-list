@@ -47,51 +47,12 @@ Hooks.on('setup', async function () {
     `modules/${handsModule.id}/templates/hand.hbs`
   ]);
 
-  /* Handlebar Helpers */
-  // Handlebar helper for concat but with a namespaced helper name so as not to override the default concat helper
-  Handlebars.registerHelper('cardHandsList_Concat', function (string1, string2) {
-    return string1 + string2;
-  });
-
-  // Handlebar helper for determining if the use is a GM
-  Handlebars.registerHelper('cardHandsList_IsGM', function () {
-    return game.user.isGM;
-  });
-
-  // Handlebar helper for searching if an array includes a string
-  Handlebars.registerHelper('cardHandsList_Includes', function (array, str) {
-    return array?.includes(str);
-  });
-
-  // Handlebar helper for sorting Cards in the Card Hands list.
-  Handlebars.registerHelper('cardHandsList_Sort', (objects, property) => {
-    return Array.from(objects).sort((a, b) => {
-      // Get the value of the property from each object
-      const valueA = a[property];
-      const valueB = b[property];
-
-      // Compare the values
-      if (valueA < valueB) {
-        return -1;
-      } else if (valueA > valueB) {
-        return 1;
-      } else {
-        return 0;
-      };
-    });
-  });
-
-  // Enrich HTML.
-  Handlebars.registerHelper('CardHandsList_enrichHTML', (text) => {
-    return TextEditor.enrichHTML(text, { async: false });
-  });
-
-  ui.cardHands = new CardHandsList;
+  ui.cardHands = new CardHandsList();
 });
 
 Hooks.on('ready', async function () {
   if (game.ready) {
-    await ui.cardHands.render(true);
+    await ui.cardHands.render(false);
   }
 
   // Migrate favorites flag to pinned flag.
@@ -106,59 +67,58 @@ Hooks.on('ready', async function () {
 Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
   // Move the Card Hands List element to be placed above the Player List element
   if (ui.players.element[0].previousElementSibling.id !== html[0]?.id) {
-    ui.players.element[0]?.before(html[0]);
+    //ui.players.element[0]?.before(html[0]);
+    //cardHandsList.render(true);
   }
 
-  // Restore horizontal scroll positions
-  setTimeout(() => {
-    for (const handElement of html[0].querySelectorAll(`.${handsModule.id}-cards-list`)) {
-      const positionToSet = cardHandsList._handScrollPositions.get(handElement.dataset.id) ?? 0;
-      handElement.scrollLeft = positionToSet;
+  // Set up observer for knowing when the last card image has been rendered.
+  const handsObserver = new ResizeObserver(entries => {
+    if (entries.toReversed()[0].contentRect.width > 0) {
+      // Restore prior scroll positions
+      cardHandsList._restoreScrollXPositions(html);
+
+      for (const handElement of html[0].querySelectorAll(`.${handsModule.id}-cards-list`)) {
+        for (const arrowButton of handElement.parentElement.querySelectorAll(`.horizontal-scroll`)) {
+          if (handElement.scrollWidth > handElement.offsetWidth) {
+            arrowButton.style.display = 'flex';
+          } else {
+            arrowButton.style.removeProperty('display');
+          }
+        }
+      }
     }
-  }, "1");
+  });
+
+  for (const cardElement of html[0].querySelectorAll(`.${handsModule.id}-card`)) {
+    handsObserver.observe(cardElement);
+  }
 });
 
 // When the Player List is rendered, render the module UI
 Hooks.on('renderPlayerList', async (data) => {
   // Move the Card Hands List element to be placed above the Player List element
-  if (ui.players.element[0].previousElementSibling !== ui.cardHands.element[0]) {
-    ui.players.element[0]?.before(ui.cardHands.element[0]);
+  if (ui.cardHands.element[0] && ui.players.element[0].previousElementSibling !== ui.cardHands.element[0]) {
+    await ui.cardHands.render(true);
   }
 });
 
-/* Hooks to listen to changes in settings and Card Hands data */
-// Array of Card Hooks
-const cardHandsListCardHooksArray = [
-  'createCard',
-  'updateCard',
-  'deleteCard',
-];
-
+/* Hooks to listen to changes in Cards and Hands data */
 // Hooks for Card events
-for (const hook of cardHandsListCardHooksArray) {
+for (const hook of ['createCard', 'updateCard', 'deleteCard']) {
   Hooks.on(hook, async (data) => {
     if (data.parent.type === 'hand') {
-      const handElement = document.querySelector(`.${handsModule.id}-cards-list[data-id="${data.parent.id}"]`);
-      ui.cardHands._handScrollPositions.set(data.parent.id, handElement.scrollLeft);
+      ui.cardHands._saveScrollXPositions(ui.cardHands.element);
       await ui.cardHands.render(false);
     }
   });
 }
 
-// Array of Cards (i.e., Stacks) Hooks
-const cardHandsListCardsHooksArray = [
-  'createCards',
-  'updateCards',
-  'deleteCards',
-];
-
 // Hooks for Card Stack events
-for (const hook of cardHandsListCardsHooksArray) {
+for (const hook of ['createCards', 'updateCards', 'deleteCards']) {
   Hooks.on(hook, async (data) => {
     if (data.type === 'hand') {
-      const handElement = document.querySelector(`.${handsModule.id}-cards-list[data-id="${data.id}"]`);
-      ui.cardHands._handScrollPositions.set(data.id, handElement?.scrollLeft ?? 0);
-      await ui.cardHands.render(true);
+      ui.cardHands._saveScrollXPositions(ui.cardHands.element);
+      await ui.cardHands.render(false);
     }
   });
 }

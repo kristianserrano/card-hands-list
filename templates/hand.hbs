@@ -1,31 +1,31 @@
-{{#if (or (not parent.collapsed) (and parent.collapsed (cardHandsList_Includes parent.pinned id)))}}
+{{#if (or (not parent.collapsed) (and parent.collapsed isPinned))}}
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand
         {{#if (eq parent.favorite id)}} is-favorite{{/if}}
-        {{#if (cardHandsList_Includes parent.pinned id)}} is-pinned{{/if}}" data-id="{{id}}">
-    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and (cardHandsList_IsGM) hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Open')}} {{name}}">
+        {{#if isPinned}} is-pinned{{/if}}" data-id="{{id}}">
+    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
         <a><i class="fas fa-browser fa-flip-horizontal "></i> {{name}}</a>
     </h4>
-    <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Menu')}}"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
+    <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
     <div class="{{parent.moduleId}}-buttons">
         {{#if (and (eq parent.system 'swade') isOwner)}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite" data-id="{{id}}" data-tooltip="
-                {{#if (cardHandsList_Includes parent.favorite id)}}
-                {{localize (cardHandsList_Concat parent.translationPrefix '.Unfavorite')}}
+                {{#if isFavorite}}
+                {{localize (concat parent.translationPrefix '.Unfavorite')}}
                 {{else}}
-                {{localize (cardHandsList_Concat parent.translationPrefix '.Favorite')}}
+                {{localize (concat parent.translationPrefix '.Favorite')}}
                 {{/if}}
         ">
-            <a><i class="{{#if (cardHandsList_Includes parent.favorite id)}}fas{{else}}far{{/if}} fa-star"></i></a>
+            <a><i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i></a>
         </div>
         {{/if}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-pin" data-id="{{id}}" data-tooltip="
-                {{#if (cardHandsList_Includes parent.pinned id)}}
-                {{localize (cardHandsList_Concat parent.translationPrefix '.Unpin')}}
+                {{#if isPinned}}
+                {{localize (concat parent.translationPrefix '.Unpin')}}
                 {{else}}
-                {{localize (cardHandsList_Concat parent.translationPrefix '.Pin')}}
+                {{localize (concat parent.translationPrefix '.Pin')}}
                 {{/if}}
             ">
-            <a><i class="{{#if (cardHandsList_Includes parent.pinned id)}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
+            <a><i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
         </div>
         {{#if isOwner}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-draw" data-id="{{id}}" data-tooltip="{{localize 'CARDS.Draw'}}">
@@ -34,26 +34,26 @@
         {{/if}}
     </div>
     <div class="{{parent.moduleId}}-cards">
-        {{#if cards.size}}<div class="horizontal-scroll --left" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Scroll.Left')}}"><i class="fas fa-caret-left"></i></div>{{/if}}
+        {{#if cards.size}}<div class="card-hands-list-button horizontal-scroll --left"><a><i class="fas fa-caret-left"></i></a></div>{{/if}}
         <ul class="{{parent.moduleId}}-cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
-            {{#each (cardHandsList_Sort cards 'sort')}}
+            {{#each sortedCards}}
             <li class="{{../parent.moduleId}}-card" data-id="{{id}}" data-uuid="{{uuid}}" >
                 <img class="{{../parent.moduleId}}-card-image" src="{{img}}" data-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" {{#if parent.isOwner}} draggable="true" {{/if}} data-tooltip="
                         <div class='card-hands-list-tooltip'>
                         <h4 class='{{../parent.moduleId}}-tooltip-heading'>{{name}}</h4>
                         {{#unless (eq face null)}}
                         {{#with (lookup faces face)}}
-                        {{#if text}}
-                        <div class='{{../../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML text}}</div>
+                        {{#if enrichedText}}
+                        <div class='{{../../parent.moduleId}}-card-text-description'>{{enrichedText}}</div>
                         {{else}}
-                        {{#if ../description}}
-                        <div class='{{../../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML ../description}}</div>
+                        {{#if ../enrichedDescription}}
+                        <div class='{{../../parent.moduleId}}-card-text-description'>{{../enrichedDescription}}</div>
                         {{/if}}
                         {{/if}}
                         {{/with}}
                         {{else}}
-                        {{#if back.text}}
-                        <div class='{{../parent.moduleId}}-card-text-description'>{{CardHandsList_enrichHTML back.text}}</div>
+                        {{#if back.enrichedText}}
+                        <div class='{{../parent.moduleId}}-card-text-description'>{{back.enrichedText}}</div>
                         {{/if}}
                         {{/unless}}
                         </div>
@@ -61,8 +61,7 @@
             </li>
             {{/each}}
         </ul>
-        {{#if cards.size}}<div class="horizontal-scroll --right" data-tooltip="{{localize (cardHandsList_Concat parent.translationPrefix '.Scroll.Right')}}"><i class="fas fa-caret-right"></i></div>{{/if}}
+        {{#if cards.size}}<div class="card-hands-list-button horizontal-scroll --right"><a><i class="fas fa-caret-right"></i></a></div>{{/if}}
     </div>
-
 </section>
 {{/if}}

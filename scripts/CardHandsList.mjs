@@ -8,42 +8,26 @@ export class CardHandsList extends Application {
     constructor(options) {
         super(options);
         this.appid = handsModule.id;
-
         // Toggle for whether to show all Cards Hands or hide them
         this._showAllHands = false;
         // Current inner Card Hands horizontal scroll positions
-        this._handScrollPositions = new Map();
+        this._scrollXPositions = {};
     }
 
     /** @override */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
+            title: game.i18n.localize(`${handsModule.translationPrefix}.Heading`),
             id: handsModule.id,
             template: `modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`,
             popOut: false,
-            scrollY: [`#${handsModule.id}-hands-wrapper`]
+            scrollY: [`#${handsModule.id}-hands-wrapper`],
+            scrollX: [`.${handsModule.id}-cards-list`],
         });
     }
 
     /** @override */
-    async _render(force = false, options = {}) {
-        await super._render(force, options);
-
-        if (game.modules.get('minimal-ui')?.active) {
-            const foundryLogo = document.querySelector('#logo');
-
-            foundryLogo.addEventListener('click', () => {
-                const cardHandsListElement = document.querySelector('#card-hands-list');
-
-                if (cardHandsListElement) {
-                    cardHandsListElement.style.display = cardHandsListElement.style.display === 'none' ? '' : 'none';
-                }
-            }, 'once');
-        }
-    }
-
-    /** @override */
-    getData(options = {}) {
+    async getData(options = {}) {
         // Process hand data by adding extra characteristics
         const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
         const hands = game?.cards?.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel)).sort((a, b) => {
@@ -51,25 +35,42 @@ export class CardHandsList extends Application {
             return -1;
         });
 
-        /* for (const hand of document.querySelectorAll(`.${handsModule.id}-cards-list`)) {
-            this._handScrollPositions.set(hand.dataset.id, hand.scrollLeft);
-        } */
+        const pinnedHands = game?.user?.getFlag(handsModule.id, 'pinned-hands');
+
+        for (const hand of hands) {
+            for (const card of hand.cards) {
+                for (const face of card.faces) {
+                    face.enrichedText = await TextEditor.enrichHTML(face.text);
+                }
+
+                card.enrichedDescription = await TextEditor.enrichHTML(card.description);
+                card.back.enrichedText = await TextEditor.enrichHTML(card.back.text);
+            }
+
+            hand.sortedCards = hand.cards.contents.sort((a, b) => {
+                // Compare the values
+                if (a.sort < b.sort) {
+                    return -1;
+                } else if (a.sort > b.sort) {
+                    return 1;
+                } else {
+                    return 0;
+                };
+            });
+            hand.isPinned = pinnedHands.includes(hand.id);
+            hand.isFavorite = hand.id === game?.user?.getFlag('swade', 'favoriteCardsDoc');
+        }
 
         // Return the data for rendering
         const data = {
+            title: this.title,
             hands,
             collapsed: !this._showAllHands,
             isGM: game?.user?.isGM,
             moduleId: handsModule.id,
             translationPrefix: handsModule.translationPrefix,
-            pinned: game?.user?.getFlag(handsModule.id, 'pinned-hands'),
             system: game.system.id,
-            favorite: '',
         };
-
-        if (game.system.id === 'swade') {
-            data.favorite = game?.user?.getFlag('swade', 'favoriteCardsDoc');
-        }
 
         data.minimalUi = { active: game.modules.get('minimal-ui')?.active };
 
@@ -81,11 +82,54 @@ export class CardHandsList extends Application {
     }
 
     /** @override */
+    async _render(force = false, options = {}) {
+        await super._render(force, options);
+
+        if (this.element.length &&
+            Object.keys(this._scrollXPositions).length === 0 &&
+            this._scrollXPositions['.card-hands-list-cards-list']?.[0] &&
+            this.element.filter('.card-hands-list-cards-list').every(el => el.width() > 0)
+        ) {
+            // Store scroll positions
+            this._saveScrollXPositions(this.element);
+        }
+
+        // Render the inner content
+        const data = await this.getData(this.options);
+        const html = await this._renderInner(data);
+
+        if (ui.players.element[0].previousElementSibling.id !== this.id) {
+            ui.players.element[0]?.before(html[0]);
+            await ui.cardHands.render(true);
+        }
+    }
+
+    _saveScrollXPositions(html) {
+        const selectors = this.options.scrollX || [];
+        this._scrollXPositions = selectors.reduce((pos, sel) => {
+            const el = html.find(sel);
+            pos[sel] = Array.from(el).map(el => el.scrollLeft);
+            return pos;
+        }, {});
+    }
+
+    _restoreScrollXPositions(html) {
+        const selectors = this.options.scrollX || [];
+        const positions = this._scrollXPositions || {};
+
+        for (let sel of selectors) {
+            const el = html.find(sel);
+            el.each((i, el) => el.scrollLeft = positions[sel]?.[i] || 0);
+        }
+    }
+
+    /** @override */
     activateListeners(html) {
         // Toggle collapsed state
         html.find(`.${handsModule.id}-title`).click(this._onToggleAllHands.bind(this));
         // Scroll horizontally through cards in hand
-        html.find('.horizontal-scroll').click(this._onHorizontalScroll.bind(this));
+        html.find('.horizontal-scroll').click(this._onScrollArrow.bind(this));
+        html.find(`.${handsModule.id}-cards-list`).on('wheel', this._onHorizontalScroll.bind(this));
         // Open the Cards Hand
         html.find(`.${handsModule.id}-name a`)?.click(this._onOpenCardsHand.bind(this));
         // Favorite the Cards Hand
@@ -108,6 +152,18 @@ export class CardHandsList extends Application {
         const contextOptions = this._getHandContextOptions();
         // Pull up menu options from link
         new CardHandContextMenu(html, `.${handsModule.id}-context-menu-link`, contextOptions, { eventName: 'click' });
+
+        if (game.modules.get('minimal-ui')?.active) {
+            const foundryLogo = document.querySelector('#logo');
+
+            foundryLogo.addEventListener('click', () => {
+                const cardHandsListElement = document.querySelector('#card-hands-list');
+
+                if (cardHandsListElement) {
+                    cardHandsListElement.style.display = cardHandsListElement.style.display === 'none' ? '' : 'none';
+                }
+            }, 'once');
+        }
     }
 
     // Toggle display of the Card Hands hud setting for whether or not to display all Card Hands available
@@ -120,18 +176,26 @@ export class CardHandsList extends Application {
         this.render(true);
     }
 
-    _onHorizontalScroll(e) {
+    _onScrollArrow(e) {
         const arrow = e.currentTarget;
         const cardElement = arrow.parentElement.querySelector(`.${handsModule.id}-card`);
         const handElement = cardElement.parentElement;
+        let number = handElement.scrollLeft;
 
         if (arrow.classList.contains('--right')) {
-            handElement.scroll({ left: handElement.scrollLeft + handElement.offsetWidth - cardElement.offsetWidth, behavior: 'smooth' });
+            number += cardElement.offsetWidth;
         } else if (arrow.classList.contains('--left')) {
-            handElement.scroll({ left: handElement.scrollLeft - handElement.offsetWidth - cardElement.offsetWidth, behavior: 'smooth' });
+            number -= cardElement.offsetWidth;
         }
 
-        this._handScrollPositions.set(handElement.dataset.id, handElement?.scrollLeft);
+        handElement.scroll({ left: number, behavior: 'smooth' });
+
+        // Store scroll positions
+        this._saveScrollXPositions(this.element);
+    }
+
+    _onHorizontalScroll(e) {
+        this._saveScrollXPositions(this.element);
     }
 
     // Open the Cards Hand
