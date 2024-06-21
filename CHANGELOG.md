@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v1.12.5
+
+- Fixes error thrown when the pinned hands flag hasn't been set for a user yet and trying to determine if a given hand is pinned.
+
 ## v1.12.4
 
 - Adds improvements to retention of horizontal scroll positions within Hands.
