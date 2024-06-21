@@ -1,5 +1,11 @@
 # Card Hands List Changelog
 
+## v1.12.4
+
+- Adds improvements to retention of horizontal scroll positions within Hands.
+- Improves UI and UX of horizontal scrolling within Hands.
+- Massive code cleanup and improvements. If you happen to find any bugs, [please file an issue](https://github.com/kristianserrano/card-hands-list/issues).
+
 ## v1.12.3
 
 - Adds retention of horizontal scroll positions when interacting with Cards and Hands.
