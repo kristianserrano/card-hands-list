@@ -57,7 +57,7 @@ export class CardHandsList extends Application {
                     return 0;
                 };
             });
-            hand.isPinned = pinnedHands.includes(hand.id);
+            hand.isPinned = pinnedHands?.includes(hand.id);
             hand.isFavorite = hand.id === game?.user?.getFlag('swade', 'favoriteCardsDoc');
         }
 
