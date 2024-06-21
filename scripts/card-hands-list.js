@@ -65,12 +65,6 @@ Hooks.on('ready', async function () {
 });
 
 Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
-  // Move the Card Hands List element to be placed above the Player List element
-  if (ui.players.element[0].previousElementSibling.id !== html[0]?.id) {
-    //ui.players.element[0]?.before(html[0]);
-    //cardHandsList.render(true);
-  }
-
   // Set up observer for knowing when the last card image has been rendered.
   const handsObserver = new ResizeObserver(entries => {
     if (entries.toReversed()[0].contentRect.width > 0) {
@@ -94,29 +88,17 @@ Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
   }
 });
 
-// When the Player List is rendered, render the module UI
+// Move the Card Hands List element to be placed above the Player List element if it's not already there.
 Hooks.on('renderPlayerList', async (data) => {
-  // Move the Card Hands List element to be placed above the Player List element
   if (ui.cardHands.element[0] && ui.players.element[0].previousElementSibling !== ui.cardHands.element[0]) {
     await ui.cardHands.render(true);
   }
 });
 
-/* Hooks to listen to changes in Cards and Hands data */
-// Hooks for Card events
-for (const hook of ['createCard', 'updateCard', 'deleteCard']) {
+// Hooks for Card(s) events
+for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'updateCards', 'deleteCards']) {
   Hooks.on(hook, async (data) => {
-    if (data.parent.type === 'hand') {
-      ui.cardHands._saveScrollXPositions(ui.cardHands.element);
-      await ui.cardHands.render(false);
-    }
-  });
-}
-
-// Hooks for Card Stack events
-for (const hook of ['createCards', 'updateCards', 'deleteCards']) {
-  Hooks.on(hook, async (data) => {
-    if (data.type === 'hand') {
+    if (data.parent?.type === 'hand' || data.type === 'hand') {
       ui.cardHands._saveScrollXPositions(ui.cardHands.element);
       await ui.cardHands.render(false);
     }
