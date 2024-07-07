@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v1.12.6
+
+- Fixes duplicate Card Hands List app window when left or right A/V Dock is toggled.
+- Fixes collapse/expand even listener getting dropped when app window is appended to Players List after A/V Dock is toggled.
+
 ## v1.12.5
 
 - Fixes error thrown when the pinned hands flag hasn't been set for a user yet and trying to determine if a given hand is pinned.

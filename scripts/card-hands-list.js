@@ -91,6 +91,7 @@ Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
 // Move the Card Hands List element to be placed above the Player List element if it's not already there.
 Hooks.on('renderPlayerList', async (data) => {
   if (ui.cardHands.element[0] && ui.players.element[0].previousElementSibling !== ui.cardHands.element[0]) {
+    ui.players.element[0].before(ui.cardHands.element[0]);
     await ui.cardHands.render(true);
   }
 });
