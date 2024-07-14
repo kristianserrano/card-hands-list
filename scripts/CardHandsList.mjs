@@ -58,7 +58,8 @@ export class CardHandsList extends Application {
                 };
             });
             hand.isPinned = pinnedHands?.includes(hand.id);
-            hand.isFavorite = hand.id === game?.user?.getFlag('swade', 'favoriteCardsDoc');
+            const favoriteHand = game.system.id === 'swade' ? game?.user?.getFlag('swade', 'favoriteCardsDoc') : null;
+            hand.isFavorite = hand.id === favoriteHand;
         }
 
         // Return the data for rendering
