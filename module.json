@@ -1,25 +1,25 @@
 {
-	"title": "Card Hands List",
 	"id": "card-hands-list",
-	"description": "A module to list owned card hands.",
+	"title": "Card Hands List",
+	"authors": [
+		{
+			"name": "Kristian Serrano",
+			"url": "https://immaterialplane.com",
+			"discord": "kristianserrano"
+		}
+	],
+	"description": "A module to list owned Card Hands.",
 	"version": "",
 	"url": "",
 	"download": "",
 	"manifest": "",
+	"changelog": "",
+	"readme": "",
+	"bugs": "",
 	"compatibility": {
 		"minimum": "11",
 		"verified": "12"
 	},
-	"authors": [
-		{
-			"name": "Kristian Serrano",
-			"email": "kristianserrano@gmail.com",
-			"url": "https://immaterialplane.com",
-			"discord": "Kristian Serrano#5077",
-			"mastodon": "@KristianSerrano@savageworlds.social",
-			"reddit": "u/kristianserrano"
-		}
-	],
 	"esmodules": [
 		"scripts/card-hands-list.js"
 	],
