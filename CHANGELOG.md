@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v1.12.7
+
+- Fixes error thrown used with a system other than SWADE due to attempt to find a "favorited" hand from the SWADE system settings.
+
 ## v1.12.6
 
 - Fixes duplicate Card Hands List app window when left or right A/V Dock is toggled.
