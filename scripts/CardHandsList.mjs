@@ -99,8 +99,8 @@ export class CardHandsList extends Application {
         const data = await this.getData(this.options);
         const html = await this._renderInner(data);
 
-        if (ui.players.element[0].previousElementSibling.id !== this.id) {
-            ui.players.element[0]?.before(html[0]);
+        if (ui.players.element.previousElementSibling.id !== this.id) {
+            ui.players.element?.before(html[0]);
             await ui.cardHands.render(true);
         }
     }
