@@ -1,67 +1,75 @@
-{{#if (or (not parent.collapsed) (and parent.collapsed isPinned))}}
-<section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand
-        {{#if (eq parent.favorite id)}} is-favorite{{/if}}
-        {{#if isPinned}} is-pinned{{/if}}" data-id="{{id}}">
-    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
-        <a><i class="fas fa-browser fa-flip-horizontal "></i> {{name}}</a>
-    </h4>
-    <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
-    <div class="{{parent.moduleId}}-buttons">
-        {{#if (and (eq parent.system 'swade') isOwner)}}
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite" data-id="{{id}}" data-tooltip="
-                {{#if isFavorite}}
-                {{localize (concat parent.translationPrefix '.Unfavorite')}}
-                {{else}}
-                {{localize (concat parent.translationPrefix '.Favorite')}}
-                {{/if}}
-        ">
-            <a><i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i></a>
-        </div>
+<li id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand {{#if (eq parent.favorite id)}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
+    <span class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}} ellipsis" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
+        {{name}}
+    </span>
+    <button class="{{parent.moduleId}}-button {{parent.moduleId}}-pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
+        {{#if isPinned}}
+        {{localize (concat parent.translationPrefix '.Unpin')}}
+        {{else}}
+        {{localize (concat parent.translationPrefix '.Pin')}}
         {{/if}}
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-pin" data-id="{{id}}" data-tooltip="
-                {{#if isPinned}}
-                {{localize (concat parent.translationPrefix '.Unpin')}}
-                {{else}}
-                {{localize (concat parent.translationPrefix '.Pin')}}
-                {{/if}}
-            ">
-            <a><i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
-        </div>
+    ">
+        <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
+    </button>
+    <div class="{{parent.moduleId}}-buttons">
         {{#if isOwner}}
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-draw" data-id="{{id}}" data-tooltip="{{localize 'CARDS.Draw'}}">
-            <a><i class="far fa-cards-blank"></i></a>
-        </div>
+        <button class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" type="button" data-id="{{id}}" data-action="getHandContextOptions" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}">
+            <i class="fas fa-ellipsis-vertical"></i>
+        </button>
+        {{/if}}
+        {{#if (and (eq parent.system 'swade') isOwner)}}
+        <button class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite" type="button" data-action="favoriteHand" data-id="{{id}}" data-tooltip="{{#if isFavorite}}{{localize (concat parent.translationPrefix '.Unfavorite')}}{{else}}{{localize (concat parent.translationPrefix '.Favorite')}}{{/if}}">
+            <i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+        </button>
+        {{/if}}
+        {{#if isOwner}}
+        <button class="{{parent.moduleId}}-button {{parent.moduleId}}-draw" type="button" data-action="drawCard" data-id="{{id}}" data-tooltip="{{localize 'CARDS.Draw'}}">
+            <i class="far fa-cards-blank"></i>
+        </button>
         {{/if}}
     </div>
     <div class="{{parent.moduleId}}-cards">
-        {{#if cards.size}}<div class="card-hands-list-button horizontal-scroll --left"><a><i class="fas fa-caret-left"></i></a></div>{{/if}}
-        <ul class="{{parent.moduleId}}-cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
+        {{#if cards.size}}
+        <button class="card-hands-list-button horizontal-scroll --left" type="button" data-action="scrollArrow">
+            <i class="fas fa-caret-left"></i>
+        </button>
+        {{/if}}
+        <ol class="{{parent.moduleId}}-cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
             {{#each sortedCards}}
-            <li class="{{../parent.moduleId}}-card" data-id="{{id}}" data-uuid="{{uuid}}" >
+            <li class="{{../parent.moduleId}}-card" data-id="{{id}}" data-uuid="{{uuid}}" data-action="openCard">
                 <img class="{{../parent.moduleId}}-card-image" src="{{img}}" data-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" {{#if parent.isOwner}} draggable="true" {{/if}} data-tooltip="
                         <div class='card-hands-list-tooltip'>
-                        <h4 class='{{../parent.moduleId}}-tooltip-heading'>{{name}}</h4>
-                        {{#unless (eq face null)}}
-                        {{#with (lookup faces face)}}
-                        {{#if enrichedText}}
-                        <div class='{{../../parent.moduleId}}-card-text-description'>{{enrichedText}}</div>
-                        {{else}}
-                        {{#if ../enrichedDescription}}
-                        <div class='{{../../parent.moduleId}}-card-text-description'>{{../enrichedDescription}}</div>
-                        {{/if}}
-                        {{/if}}
-                        {{/with}}
-                        {{else}}
-                        {{#if back.enrichedText}}
-                        <div class='{{../parent.moduleId}}-card-text-description'>{{back.enrichedText}}</div>
-                        {{/if}}
-                        {{/unless}}
+                            <h3 class='{{../parent.moduleId}}-tooltip-heading'>{{name}}</h3>
+                            {{#unless (eq face null)}}
+                            {{#with (lookup faces face)}}
+                            {{#if enrichedText}}
+                            <div class='{{../../parent.moduleId}}-card-text-description'>
+                                {{enrichedText}}
+                            </div>
+                            {{else}}
+                            {{#if ../enrichedDescription}}
+                            <div class='{{../../parent.moduleId}}-card-text-description'>
+                                {{../enrichedDescription}}
+                            </div>
+                            {{/if}}
+                            {{/if}}
+                            {{/with}}
+                            {{else}}
+                            {{#if back.enrichedText}}
+                            <div class='{{../parent.moduleId}}-card-text-description'>
+                                {{back.enrichedText}}
+                            </div>
+                            {{/if}}
+                            {{/unless}}
                         </div>
                     " />
             </li>
             {{/each}}
-        </ul>
-        {{#if cards.size}}<div class="card-hands-list-button horizontal-scroll --right"><a><i class="fas fa-caret-right"></i></a></div>{{/if}}
+        </ol>
+        {{#if cards.size}}
+        <button class="card-hands-list-button horizontal-scroll --right" type="button" data-action="scrollArrow">
+            <i class="fas fa-caret-right"></i>
+        </button>
+        {{/if}}
     </div>
-</section>
-{{/if}}
+</li>
