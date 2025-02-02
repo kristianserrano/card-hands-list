@@ -17,8 +17,8 @@
 	"readme": "",
 	"bugs": "",
 	"compatibility": {
-		"minimum": "11",
-		"verified": "12"
+		"minimum": "13",
+		"verified": "13"
 	},
 	"esmodules": [
 		"modules/card-hands-list.mjs"
