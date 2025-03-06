@@ -9,7 +9,6 @@ export class CardHandContextMenu extends ContextMenu {
     #expandUp = false;
 
     _setPosition(contextMenuElement, target) {
-        console.log(this)
         const handElement = target.closest(`.${handsModule.id}-hand`);
         const containerElement = target.closest(`.${handsModule.id}-wrapper`);
 
