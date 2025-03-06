@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v2.00.1
+
+- Fixes references to localized strings for cards actions.
+- Removes erroneous console log.
+
 ## v2.00.0
 
 - Complete rewrite for Foundry VTT v13 using ApplicationV2.
