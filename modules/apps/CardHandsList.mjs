@@ -390,7 +390,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                     const deckSelect = `
                         <div class="form-group">
-                            <label for="deck-select">${game.i18n.localize('CARDS.CardsDeck')}</label>
+                            <label for="deck-select">${game.i18n.localize('CARDS.ACTIONS.CardsDeck')}</label>
                             <div class="form-fields">
                                 <select id="deck-select">${deckOptions.join('')}}</select>
                             </div>
@@ -399,15 +399,15 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                     const drawModes = [
                         {
-                            label: game.i18n.localize('CARDS.DrawModeRandom'),
+                            label: game.i18n.localize('CARDS.ACTIONS.DrawModeRandom'),
                             value: CONST.CARD_DRAW_MODES.RANDOM,
                         },
                         {
-                            label: game.i18n.localize('CARDS.DrawModeTop'),
+                            label: game.i18n.localize('CARDS.ACTIONS.DrawModeTop'),
                             value: CONST.CARD_DRAW_MODES.TOP,
                         },
                         {
-                            label: game.i18n.localize('CARDS.DrawModeBottom'),
+                            label: game.i18n.localize('CARDS.ACTIONS.DrawModeBottom'),
                             value: CONST.CARD_DRAW_MODES.BOTTOM,
                         },
                     ];
@@ -422,7 +422,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                     const modeSelect = `
                         <div class="form-group">
-                            <label for="draw-mode" >${game.i18n.localize('CARDS.DrawMode')}</label>
+                            <label for="draw-mode" >${game.i18n.localize('CARDS.ACTIONS.DrawMode')}</label>
                             <div class="form-fields">
                                 <select id="draw-mode">${modeOptions.join('')}</select>
                             </div>
@@ -479,7 +479,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
             },
             {
-                name: game.i18n.localize("CARDS.Shuffle"),
+                name: game.i18n.localize("CARDS.ACTIONS.Shuffle"),
                 icon: '<i class="fas fa-shuffle"></i>',
                 condition: el => {
                     const hand = game?.cards?.get(el[0].dataset.id);
@@ -492,7 +492,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
             },
             {
-                name: game.i18n.localize("CARDS.Pass"),
+                name: game.i18n.localize("CARDS.ACTIONS.Pass"),
                 icon: '<i class="fas fa-share-square"></i>',
                 condition: el => {
                     const hand = game?.cards?.get(el[0].dataset.id);
@@ -505,7 +505,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
             },
             {
-                name: game.i18n.localize("CARDS.Reset"),
+                name: game.i18n.localize("CARDS.ACTIONS.Reset"),
                 icon: '<i class="fas fa-undo"></i>',
                 condition: el => {
                     const hand = game?.cards?.get(el[0].dataset.id);
