@@ -1,15 +1,16 @@
 
-import { CardHandsList } from './CardHandsList.mjs';
+import { CardHandsList } from './apps/CardHandsList.mjs';
 /**
  * Card Hands List
  * A Foundry VTT module to display and provide quick access to a player's Card Hands
  * Developer: Kristian Serrano
  */
-
 export const handsModule = {
   id: 'card-hands-list',
   translationPrefix: 'CardHandsList',
 };
+
+//CONFIG.debug.hooks = true;
 
 Hooks.on('init', function () {
   // Register the ownership level option
@@ -52,7 +53,7 @@ Hooks.on('setup', async function () {
 
 Hooks.on('ready', async function () {
   if (game.ready) {
-    await ui.cardHands.render(false);
+    await ui.cardHands.render({ force: true });
   }
 
   // Migrate favorites flag to pinned flag.
@@ -64,14 +65,14 @@ Hooks.on('ready', async function () {
   }
 });
 
-Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
+Hooks.on('renderCardHandsList', (cardHandsList, element, context, options) => {
   // Set up observer for knowing when the last card image has been rendered.
   const handsObserver = new ResizeObserver(entries => {
     if (entries.toReversed()[0].contentRect.width > 0) {
       // Restore prior scroll positions
-      cardHandsList._restoreScrollXPositions(html);
+      cardHandsList._restoreScrollXPositions();
 
-      for (const handElement of html[0].querySelectorAll(`.${handsModule.id}-cards-list`)) {
+      for (const handElement of element.querySelectorAll(`.${handsModule.id}-cards-list`)) {
         for (const arrowButton of handElement.parentElement.querySelectorAll(`.horizontal-scroll`)) {
           if (handElement.scrollWidth > handElement.offsetWidth) {
             arrowButton.style.display = 'flex';
@@ -83,25 +84,25 @@ Hooks.on('renderCardHandsList', (cardHandsList, html, data) => {
     }
   });
 
-  for (const cardElement of html[0].querySelectorAll(`.${handsModule.id}-card`)) {
+  for (const cardElement of element.querySelectorAll(`.${handsModule.id}-card`)) {
     handsObserver.observe(cardElement);
   }
 });
 
 // Move the Card Hands List element to be placed above the Player List element if it's not already there.
-Hooks.on('renderPlayerList', async (data) => {
-  if (ui.cardHands.element[0] && ui.players.element[0].previousElementSibling !== ui.cardHands.element[0]) {
-    ui.players.element[0].before(ui.cardHands.element[0]);
-    await ui.cardHands.render(true);
+/* Hooks.on('renderPlayerList', async (data) => {
+  if (ui.cardHands.element && ui.players.element.previousElementSibling !== ui.cardHands.element[0]) {
+    ui.players.element.before(ui.cardHands.element[0]);
+    await ui.cardHands.render({ force: false });
   }
-});
+}); */
 
 // Hooks for Card(s) events
 for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'updateCards', 'deleteCards']) {
   Hooks.on(hook, async (data) => {
     if (data.parent?.type === 'hand' || data.type === 'hand') {
       ui.cardHands._saveScrollXPositions(ui.cardHands.element);
-      await ui.cardHands.render(false);
+      await ui.cardHands.render({ force: false });
     }
   });
 }

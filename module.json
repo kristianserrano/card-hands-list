@@ -17,11 +17,11 @@
 	"readme": "",
 	"bugs": "",
 	"compatibility": {
-		"minimum": "11",
-		"verified": "12"
+		"minimum": "13",
+		"verified": "13"
 	},
 	"esmodules": [
-		"scripts/card-hands-list.js"
+		"modules/card-hands-list.mjs"
 	],
 	"styles": [
 		"styles/card-hands-list.css"
@@ -44,6 +44,7 @@
 		"hotReload": {
 			"extensions": [
 				"js",
+				"mjs",
 				"css",
 				"hbs",
 				"json"
@@ -53,8 +54,8 @@
 				"templates/hand.hbs",
 				"styles/card-hands-list.css",
 				"lang/en.json",
-				"scripts/card-hands-list.js",
-				"scripts/CardHandsList.js"
+				"modules/card-hands-list.mjs",
+				"modules/apps/CardHandsList.mjs"
 			]
 		}
 	}
