@@ -1,15 +1,29 @@
 #card-hands-list {
   --hand-height: 80px;
-  --transition-time: 0.25s;
+  --transition-time: 0.5s;
+  --delay-time: var(--transition-time);
+  margin-bottom: -16px;
   flex: none;
   justify-content: end;
+  row-gap: 8px;
   font-size: var(--font-size-12);
   pointer-events: none;
   position: relative;
   max-height: calc(var(--hand-height) + 4em);
   transition:
-    max-height var(--transition-time) ease-in-out,
-    visibility var(--transition-time) ease-in-out;
+    opacity var(--ui-fade-delay) var(--ui-fade-duration),
+    max-height var(--transition-time) ease-in,
+    visibility var(--transition-time) 0s,
+    margin-bottom var(--transition-time) ease-in;
+
+  &:has(+ #players.expanded) {
+    margin-bottom: -8px;
+    transition:
+      opacity var(--ui-fade-delay) var(--ui-fade-duration),
+      max-height var(--transition-time) ease-in-out,
+      visibility var(--transition-time) 0s,
+      margin-bottom var(--transition-time) 0s;
+  }
 
   & #card-hands-list-observable-hands,
   & #card-hands-list-owned-hands {
@@ -26,11 +40,9 @@
     padding: 0;
     max-height: 0;
     transition:
-        padding var(--transition-time) ease-in-out,
-        max-height var(--transition-time) ease-in-out,
-        visibility var(--transition-time) ease-in-out;
-    transition-delay: var(--transition-time);
-    transition-property: all;
+      padding var(--transition-time) var(--delay-time),
+      max-height var(--transition-time) ease-in-out,
+      visibility var(--transition-time) 0s;
   }
 
   & #card-hands-list-owned-hands {
@@ -39,9 +51,8 @@
     max-height: calc(var(--hand-height) + 3.5em);
     padding: 6px 8px;
     overflow: clip;
-    transition: max-height var(--transition-time) ease-in-out;
-    transition-delay: calc(var(--transition-time) * 2);
-    transition-property: max-height;
+    transition:
+      max-height var(--transition-time) ease-in-out var(--delay-time);
 
     & #card-hands-list-owned-hands-list {
       width: 100%;
@@ -56,21 +67,17 @@
     & #card-hands-list-observable-hands {
       visibility: visible;
       max-height: calc((var(--hand-height) + 1em) * 3);
-      margin-bottom: 8px;
       padding: 6px 8px;
       transition:
-          padding var(--transition-time) ease-in-out,
-          max-height var(--transition-time) ease-in-out,
-          visibility var(--transition-time) ease-in-out;
-      transition-delay: calc(var(--transition-time) * 2.5);
-      transition-property: all;
+        padding var(--transition-time) 0s,
+        max-height var(--transition-time) ease-in-out var(--delay-time),
+        visibility var(--transition-time) var(--delay-time);
     }
 
     & #card-hands-list-owned-hands {
       max-height: calc((var(--hand-height) + 1.75em) * 3);
-      transition: max-height var(--transition-time) ease-in-out;
-      transition-delay: var(--transition-time);
-      transition-property: max-height;
+      transition:
+        max-height var(--transition-time) ease-in-out;
     }
 
     & #card-hands-list-expand {
@@ -384,5 +391,19 @@ div#camera-views #card-hands-list {
     & .fas {
       display: none;
     }
+  }
+}
+
+#players-inactive {
+  padding-top: 0;
+  padding-bottom: 0;
+  transition:
+    max-height 0.5s ease-in-out,
+    visibility 0.5s 0s,
+    padding 0.5s ease-in-out;
+
+  #players.expanded & {
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
