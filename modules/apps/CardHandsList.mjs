@@ -1,7 +1,5 @@
 import { handsModule } from "../card-hands-list.mjs";
-import { CardHandContextMenu } from "../CardHandContextMenu.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-
 export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static DEFAULT_OPTIONS = {
         id: 'card-hands-list',
@@ -520,7 +518,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         ];
 
         // Pull up menu options from link
-        new CardHandContextMenu(this.element, `.${handsModule.id}-context-menu-link`, options, { eventName: 'click' });
+        new ContextMenu(this.element, `.${handsModule.id}-context-menu-link`, options, { fixed: true, eventName: 'click' });
     }
 
     static _sort(array, propertyName) {
