@@ -360,7 +360,6 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                     return game.user.isGM;
                 },
                 callback: async el => {
-                    console.dir(el);
                     const hand = game?.cards?.get(el[0].dataset.id);
                     new DocumentOwnershipConfig(hand).render(true);
                 }
