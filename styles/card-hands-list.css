@@ -11,18 +11,13 @@
   position: relative;
   max-height: calc(var(--hand-height) + 4em);
   transition:
-    opacity var(--ui-fade-delay) var(--ui-fade-duration),
+    opacity var(--ui-fade-duration),
     max-height var(--transition-time) ease-in,
     visibility var(--transition-time) 0s,
     margin-bottom var(--transition-time) ease-in;
 
   &:has(+ #players.expanded) {
     margin-bottom: -8px;
-    transition:
-      opacity var(--ui-fade-delay) var(--ui-fade-duration),
-      max-height var(--transition-time) ease-in-out,
-      visibility var(--transition-time) 0s,
-      margin-bottom var(--transition-time) 0s;
   }
 
   & #card-hands-list-observable-hands,
@@ -40,7 +35,7 @@
     padding: 0;
     max-height: 0;
     transition:
-      padding var(--transition-time) var(--delay-time),
+      padding 0s var(--delay-time),
       max-height var(--transition-time) ease-in-out,
       visibility var(--transition-time) 0s;
   }
@@ -52,7 +47,7 @@
     padding: 6px 8px;
     overflow: clip;
     transition:
-      max-height var(--transition-time) ease-in-out var(--delay-time);
+      max-height var(--transition-time) ease-in-out;
 
     & #card-hands-list-owned-hands-list {
       width: 100%;
@@ -70,14 +65,12 @@
       padding: 6px 8px;
       transition:
         padding var(--transition-time) 0s,
-        max-height var(--transition-time) ease-in-out var(--delay-time),
-        visibility var(--transition-time) var(--delay-time);
+        max-height var(--transition-time) ease-in-out,
+        visibility var(--transition-time) 0s;
     }
 
     & #card-hands-list-owned-hands {
       max-height: calc((var(--hand-height) + 1.75em) * 3);
-      transition:
-        max-height var(--transition-time) ease-in-out;
     }
 
     & #card-hands-list-expand {
