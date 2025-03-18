@@ -261,13 +261,13 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         if (pinned.includes(handId)) {
             // Unfavorite it by remove the Card Hand from the array and updating the user flag
             pinned.splice(pinned.indexOf(handId), 1);
-            icon.classList.remove('fas')
-            icon.classList.add('far')
+            icon.classList.remove('fas');
+            icon.classList.add('far');
         } else {
             // Otherwise, add it to the list and update the user flag
             pinned.push(handId);
             icon.classList.remove('far');
-            icon.classList.add('fas')
+            icon.classList.add('fas');
         }
 
         await game?.user?.setFlag(handsModule.id, flagKey, pinned);
