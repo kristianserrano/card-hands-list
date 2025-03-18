@@ -387,7 +387,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                     const deckSelect = `
                         <div class="form-group">
-                            <label for="deck-select">${game.i18n.localize('CARDS.ACTIONS.CardsDeck')}</label>
+                            <label for="deck-select">${game.i18n.localize('CARDS.CardsDeck')}</label>
                             <div class="form-fields">
                                 <select id="deck-select">${deckOptions.join('')}}</select>
                             </div>
@@ -396,15 +396,15 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                     const drawModes = [
                         {
-                            label: game.i18n.localize('CARDS.ACTIONS.DrawModeRandom'),
+                            label: game.i18n.localize('CARDS.DrawModeRandom'),
                             value: CONST.CARD_DRAW_MODES.RANDOM,
                         },
                         {
-                            label: game.i18n.localize('CARDS.ACTIONS.DrawModeTop'),
+                            label: game.i18n.localize('CARDS.DrawModeTop'),
                             value: CONST.CARD_DRAW_MODES.TOP,
                         },
                         {
-                            label: game.i18n.localize('CARDS.ACTIONS.DrawModeBottom'),
+                            label: game.i18n.localize('CARDS.DrawModeBottom'),
                             value: CONST.CARD_DRAW_MODES.BOTTOM,
                         },
                     ];
@@ -419,7 +419,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                     const modeSelect = `
                         <div class="form-group">
-                            <label for="draw-mode" >${game.i18n.localize('CARDS.ACTIONS.DrawMode')}</label>
+                            <label for="draw-mode" >${game.i18n.localize('CARDS.DrawMode')}</label>
                             <div class="form-fields">
                                 <select id="draw-mode">${modeOptions.join('')}</select>
                             </div>
