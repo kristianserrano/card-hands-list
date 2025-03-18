@@ -1,11 +1,18 @@
 # Card Hands List Changelog
 
-## v2.00.1
+## v2.0.2
+
+- Fixes ContextMenu weirdness with `fixed` option.
+- Fixes CSS transition delay timing issues.
+- Fixes incorrect localization paths.
+- Fixes call to `DocumentOwnershipConfig` failing due to a change in how v13 provides access to that class.
+
+## v2.0.1
 
 - Fixes references to localized strings for cards actions.
 - Removes erroneous console log.
 
-## v2.00.0
+## v2.0.0
 
 - Complete rewrite for Foundry VTT v13 using ApplicationV2.
 
