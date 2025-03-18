@@ -361,7 +361,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 },
                 callback: async el => {
                     const hand = game?.cards?.get(el[0].dataset.id);
-                    new DocumentOwnershipConfig(hand).render(true);
+                    new foundry.applications.apps.DocumentOwnershipConfig({ document: hand }).render({ force: true });
                 }
             },
             {
