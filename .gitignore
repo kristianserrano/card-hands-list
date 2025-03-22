@@ -4,3 +4,5 @@
 /dist/
 foundryconfig.json
 card-hands-list.lock
+tools/fvttLaunch-v12.sh
+tools/fvttLaunch-v13.sh

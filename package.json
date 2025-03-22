@@ -9,6 +9,8 @@
 		"url": "https://gitlab.com/kristianserrano/card-hands-list"
 	},
 	"scripts": {
+		"fvttLaunch-v12": "bash ./tools/fvttLaunch-v12.sh",
+		"fvttLaunch-v13": "bash ./tools/fvttLaunch-v13.sh",
 		"package": "gulp package",
 		"build": "gulp build && gulp link",
 		"link": "gulp link"
