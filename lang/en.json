@@ -15,6 +15,10 @@
             "Name": "Include Hands with Observer Ownership",
             "Hint": "Includes hands of which users have Observer-level ownership. Default is Owner-level ownership only."
         },
+        "ExplicitOwnership": {
+            "Name": "Use Explicitly Defined Ownership for GMs",
+            "Hint": "Enable this setting to hide Hands from GMs. When enabled, Hand visibility for GMs will based on the Default or user-specific ownership level set on each hand."
+        },
         "MinimalUIBehavior": {
             "Name": "Minimal UI Module Behavior",
             "Hint": "Set the interaction behavior pattern for the Card Hands list when using Minimal UI."
