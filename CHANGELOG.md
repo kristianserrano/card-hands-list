@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v1.12.8
+
+- Adds setting to use explicit hand ownership levels for GMs. When enabled, the GM must have either default or specifically assigned ownership of a hand for it to appear in the list.
+
 ## v1.12.7
 
 - Fixes error thrown used with a system other than SWADE due to attempt to find a "favorited" hand from the SWADE system settings.
