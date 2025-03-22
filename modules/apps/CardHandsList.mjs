@@ -32,17 +32,35 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async _prepareContext(options = {}) {
         // Process hand data by adding extra characteristics
-        const ownershipLevel = game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER';
-        const pinnedHands = game?.user?.getFlag(handsModule.id, 'pinned-hands');
-        const hands = game?.cards?.filter((c) => c.type === 'hand' && c.testUserPermission(game.user, ownershipLevel)).sort((a, b) => {
-            if (a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
-                return 1;
-            }
+        const permittedOwnershipLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS[game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER'];
 
-            return -1;
+        function determineOwnership(hand) {
+            // If explicit ownership is enabled, check the user's ownership level or the default level unless set to none.
+            if (game.settings.get(handsModule.id, "explicitOwnership")) {
+                // If the user has only default permissions, set to -1; otherwise, set to the user's level.
+                const userOwnershipLevel = hand.ownership[game.userId] ?? -1;
+                const defaultOwnershipLevel = hand.ownership.default;
+
+                // If the user's ownership level is set to None, return false as they should not be able to see the hand.
+                if (userOwnershipLevel === CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE) return false;
+                // If the default ownership level is higher than the user's, use the default level; otherwise, use the user's level since it is explicitly set.
+                const higherOwnershipLevel = defaultOwnershipLevel > userOwnershipLevel ? defaultOwnershipLevel : userOwnershipLevel;
+                // Return whether the resulting permission level is at or above the permitted level.
+                return higherOwnershipLevel >= permittedOwnershipLevel;
+            } else {
+                // Generically test the user permission. GM's will always have access.
+                return hand.testUserPermission(game.user, permittedOwnershipLevel);
+            }
+        }
+
+        const hands = game?.cards?.filter((c) => c.type === 'hand' && determineOwnership(c));
+        hands.sort((a, b) => {
+            return a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
         });
 
         const gmUser = game.users.find((u) => u.role === 4);
+        // Get the user's pinned hands
+        const pinnedHands = game?.user?.getFlag(handsModule.id, 'pinned-hands');
 
         for (const hand of hands) {
             if (hand.hasPlayerOwner) {
@@ -77,7 +95,6 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                     return 0;
                 };
             });
-
             // Check if this hand is pinned
             hand.isPinned = pinnedHands?.includes(hand.id);
             const favoriteHand = game.system.id === 'swade' ? game?.user?.getFlag('swade', 'favoriteCardsDoc') : null;
