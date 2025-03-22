@@ -23,6 +23,16 @@ Hooks.on('init', function () {
     onChange: () => ui.cardHands.render(true)
   });
 
+  game.settings.register(handsModule.id, 'explicitOwnership', {
+    name: `${handsModule.translationPrefix}.ExplicitOwnership.Name`,
+    hint: `${handsModule.translationPrefix}.ExplicitOwnership.Hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: () => ui.cardHands.render(true)
+  });
+
   if (game.modules.get('minimal-ui')?.active) {
     game.settings.register(handsModule.id, 'minimal-ui-behavior', {
       name: `${handsModule.translationPrefix}.MinimalUIBehavior.Name`,
