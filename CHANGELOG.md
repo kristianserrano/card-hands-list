@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v2.0.3
+
+- Fixes light and dark mode styles.
+
 ## v2.0.2
 
 - Fixes ContextMenu weirdness with `fixed` option.
