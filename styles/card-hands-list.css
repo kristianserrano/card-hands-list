@@ -333,16 +333,6 @@
   }
 }
 
-div#camera-views #card-hands-list {
-  background: none;
-  box-shadow: none;
-  margin: 0;
-  width: 100%;
-  border-radius: 0;
-  border: none;
-  border-top: 6px solid rgba(0, 0, 0, 0.5);
-}
-
 /* Tooltip Styles */
 .card-hands-list-tooltip-heading {
   font-size: 0.9em;
