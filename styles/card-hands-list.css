@@ -25,6 +25,7 @@
     width: 200px;
     height: calc((var(--hand-height) + 1.125em) * 3);
     container-type: size;
+    padding: 6px 8px;
     background: var(--background-color, var(--color-cool-5-75));
     border-radius: 8px;
   }
@@ -32,10 +33,8 @@
   & #card-hands-list-observable-hands {
     container-type: size;
     visibility: hidden;
-    padding: 0;
     max-height: 0;
     transition:
-      padding 0s var(--delay-time),
       max-height var(--transition-time) ease-in-out,
       visibility var(--transition-time) 0s;
   }
@@ -44,7 +43,6 @@
     container-type: size;
     height: calc((var(--hand-height) + 3.75em) * 3);
     max-height: calc(var(--hand-height) + 3.5em);
-    padding: 6px 8px;
     overflow: clip;
     transition:
       max-height var(--transition-time) ease-in-out;
@@ -62,9 +60,7 @@
     & #card-hands-list-observable-hands {
       visibility: visible;
       max-height: calc((var(--hand-height) + 1em) * 3);
-      padding: 6px 8px;
       transition:
-        padding var(--transition-time) 0s,
         max-height var(--transition-time) ease-in-out,
         visibility var(--transition-time) 0s;
     }
