@@ -32,21 +32,19 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async _prepareContext(options = {}) {
         // Process hand data by adding extra characteristics
-        const permittedOwnershipLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS[game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER'];
-
-        function determineOwnership(hand) {
+        function determineOwnership(hand, permittedOwnershipLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS[game.settings.get(handsModule.id, "observerLevel") ? 'OBSERVER' : 'OWNER']) {
             // If explicit ownership is enabled, check the user's ownership level or the default level unless set to none.
             if (game.settings.get(handsModule.id, "explicitOwnership")) {
                 // If the user has only default permissions, set to -1; otherwise, set to the user's level.
                 const userOwnershipLevel = hand.ownership[game.userId] ?? -1;
                 const defaultOwnershipLevel = hand.ownership.default;
-
                 // If the user's ownership level is set to None, return false as they should not be able to see the hand.
                 if (userOwnershipLevel === CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE) return false;
                 // If the default ownership level is higher than the user's, use the default level; otherwise, use the user's level since it is explicitly set.
                 const higherOwnershipLevel = defaultOwnershipLevel > userOwnershipLevel ? defaultOwnershipLevel : userOwnershipLevel;
+                const hasAccess = higherOwnershipLevel >= permittedOwnershipLevel;
                 // Return whether the resulting permission level is at or above the permitted level.
-                return higherOwnershipLevel >= permittedOwnershipLevel;
+                return hasAccess;
             } else {
                 // Generically test the user permission. GM's will always have access.
                 return hand.testUserPermission(game.user, permittedOwnershipLevel);
@@ -57,10 +55,11 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         hands.sort((a, b) => {
             return a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
         });
-
         const gmUser = game.users.find((u) => u.role === 4);
-        // Get the user's pinned hands
-        const pinnedHands = game?.user?.getFlag(handsModule.id, 'pinned-hands');
+        // Categorize the hands.
+        const pinnedHands = hands.filter(c => c.type === 'hand' && game?.user?.getFlag(handsModule.id, 'pinned-hands')?.includes(c.id) && !c.isFavorite);
+        const ownedHands = hands.filter(h => determineOwnership(h, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER));
+        const observableHands = hands.filter(h => !ownedHands.some(owned => owned.id === h.id) && determineOwnership(h, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER));
 
         for (const hand of hands) {
             if (hand.hasPlayerOwner) {
@@ -96,7 +95,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 };
             });
             // Check if this hand is pinned
-            hand.isPinned = pinnedHands?.includes(hand.id);
+            hand.isPinned = pinnedHands?.some(p => p.id === hand.id);
             const favoriteHand = game.system.id === 'swade' ? game?.user?.getFlag('swade', 'favoriteCardsDoc') : null;
             hand.isFavorite = hand.id === favoriteHand;
         }
@@ -105,10 +104,10 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         const context = {
             title: this.title,
             hands,
-            ownedHands: CardHandsList._sort(hands.filter(h => h.owner.id === game.user.id), 'name'),
-            observableHands: CardHandsList._sort(hands.filter(h => h.ownership[game.user.id] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER || (!h.ownership[game.user.id] && h.ownership.default === CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)), 'name'),
+            ownedHands: CardHandsList._sort(ownedHands, 'name'),
+            observableHands: CardHandsList._sort(observableHands, 'name'),
             favoriteHand: hands.find(h => h.isFavorite),
-            pinnedHands: CardHandsList._sort(hands.filter(h => h.isPinned && !h.isFavorite), 'name'),
+            pinnedHands: CardHandsList._sort(pinnedHands, 'name'),
             showObservable: game.settings.get(handsModule.id, "observerLevel"),
             expanded: this.element?.classList.contains('expanded'),
             isGM: game?.user?.role === 4,
@@ -377,7 +376,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                     return game.user.isGM;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     new foundry.applications.apps.DocumentOwnershipConfig({ document: hand }).render({ force: true });
                 }
             },
@@ -385,12 +384,12 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.Defaults`),
                 icon: '<i class="fas fa-gears"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     // Check if owner
                     return hand.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     const decks = game?.cards?.filter(c => c.type === 'deck');
                     const deckOptions = [
                         `<option value="none" ${!hand?.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${game.i18n.localize(`${handsModule.translationPrefix}.None`)}</option>`
@@ -475,12 +474,12 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.FlipAll`),
                 icon: '<i class="fas fa-rotate"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     const someFaceUp = hand.cards.some(c => c.face !== null);
                     const updates = hand.cards.map(c => {
                         return {
@@ -496,12 +495,12 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: game.i18n.localize("CARDS.ACTIONS.Shuffle"),
                 icon: '<i class="fas fa-shuffle"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     await hand?.shuffle();
                 }
             },
@@ -509,12 +508,12 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: game.i18n.localize("CARDS.ACTIONS.Pass"),
                 icon: '<i class="fas fa-share-square"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     await hand?.passDialog();
                 }
             },
@@ -522,19 +521,19 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: game.i18n.localize("CARDS.ACTIONS.Reset"),
                 icon: '<i class="fas fa-undo"></i>',
                 condition: el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     // Check if GM or if user is owner of hand
                     return hand?.isOwner;
                 },
                 callback: async el => {
-                    const hand = game?.cards?.get(el[0].dataset.id);
+                    const hand = game?.cards?.get(el.dataset.id);
                     await hand?.resetDialog();
                 }
             },
         ];
 
         // Pull up menu options from link
-        new ContextMenu(this.element, `.${handsModule.id}-context-menu-link`, options, { fixed: true, eventName: 'click' });
+        new foundry.applications.ux.ContextMenu(this.element, `.${handsModule.id}-context-menu-link`, options, { jQuery: false, fixed: true, eventName: 'click' });
     }
 
     static _sort(array, propertyName) {
