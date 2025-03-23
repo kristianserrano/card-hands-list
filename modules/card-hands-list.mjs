@@ -15,8 +15,8 @@ export const handsModule = {
 Hooks.on('init', function () {
   // Register the ownership level option
   game.settings.register(handsModule.id, 'observerLevel', {
-    name: `${handsModule.translationPrefix}.ObserverLevel.Name`,
-    hint: `${handsModule.translationPrefix}.ObserverLevel.Hint`,
+    name: `${handsModule.translationPrefix}.Settings.ObserverLevel.Name`,
+    hint: `${handsModule.translationPrefix}.Settings.ObserverLevel.Hint`,
     scope: 'world',
     config: true,
     type: Boolean,
@@ -25,8 +25,8 @@ Hooks.on('init', function () {
   });
 
   game.settings.register(handsModule.id, 'explicitOwnership', {
-    name: `${handsModule.translationPrefix}.ExplicitOwnership.Name`,
-    hint: `${handsModule.translationPrefix}.ExplicitOwnership.Hint`,
+    name: `${handsModule.translationPrefix}.Settings.ExplicitOwnership.Name`,
+    hint: `${handsModule.translationPrefix}.Settings.ExplicitOwnership.Hint`,
     scope: 'world',
     config: true,
     type: Boolean,
@@ -98,14 +98,6 @@ Hooks.on('renderCardHandsList', (cardHandsList, element, context, options) => {
     handsObserver.observe(cardElement);
   }
 });
-
-// Move the Card Hands List element to be placed above the Player List element if it's not already there.
-/* Hooks.on('renderPlayerList', async (data) => {
-  if (ui.cardHands.element && ui.players.element.previousElementSibling !== ui.cardHands.element[0]) {
-    ui.players.element.before(ui.cardHands.element[0]);
-    await ui.cardHands.render({ force: false });
-  }
-}); */
 
 // Hooks for Card(s) events
 for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'updateCards', 'deleteCards']) {
