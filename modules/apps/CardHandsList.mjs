@@ -25,8 +25,15 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static PARTS = {
         cardHands: {
             root: true,
-            template: "modules/card-hands-list/templates/card-hands-list-container.hbs",
-            scrollable: ['#card-hands-observable-hands', '#card-hands-owned-hands', '.card-hands-list-cards-list']
+            template: "modules/card-hands-list/templates/container.hbs",
+            scrollable: [
+                '#pinned-hands-list',
+                '#available-hands',
+                '#pinned-hands',
+            ],
+            scrollableX: [
+                '.cards-list',
+            ],
         }
     };
 
@@ -127,6 +134,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     async _onFirstRender(_context, _options) {
+        this.scrollLeftPositions = this.scrollLeftPositions ?? {};
         game.cards.apps.push(this);
         // Append app to UI
         ui.players.element.parentElement.insertBefore(this.element, ui.players.element);
@@ -147,6 +155,10 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         // Drop a Card
         for (const cards of this.element.querySelectorAll(`.${handsModule.id}-cards`)) {
             cards.addEventListener('drop', CardHandsList.#onDropCard.bind(this));
+        }
+
+        if (!foundry.utils.isEmpty(this.scrollLeftPositions)) {
+            this._restoreScrollXPositions();
         }
     }
 
@@ -171,22 +183,33 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         this.toggleExpanded(true);
     }
 
-    _saveScrollXPositions() {
-        const selectors = this.options.scrollX || [];
-        this._scrollXPositions = selectors.reduce((pos, sel) => {
-            const el = this.element.querySelectorAll(sel);
-            pos[sel] = Array.from(el).map(el => el.scrollLeft);
-            return pos;
-        }, {});
+    _saveScrollXPositions(element = null) {
+        if (element) {
+            this.scrollLeftPositions[element.dataset.id] = element.scrollLeft;
+        } else {
+            const selector = CardHandsList.PARTS?.cardHands?.scrollableX;
+            const elements = this.element.querySelectorAll(selector);
+            for (const el of elements) {
+                this.scrollLeftPositions[el.dataset.id] = el.scrollLeft;
+            }
+        }
     }
 
-    _restoreScrollXPositions() {
-        const selectors = this.options.scrollX || [];
-        const positions = this._scrollXPositions || {};
+    async _restoreScrollXPositions(element = null) {
+        if (element) {
+            await CardHandsList.waitForImages(element);
+            element.scrollLeft = this.scrollLeftPositions[element.dataset.id];
+        } else {
+            const selector = CardHandsList.PARTS.cardHands.scrollableX;
+            const elements = this.element.querySelectorAll(selector);
 
-        for (let sel of selectors) {
-            const el = this.element.querySelectorAll(sel);
-            el.each((i, el) => el.scrollLeft = positions[sel]?.[i] || 0);
+            for (const el of elements) {
+                await CardHandsList.waitForImages(el);
+                el.scrollTo({
+                    left: this.scrollLeftPositions[el.dataset.id],
+                    behavior: 'instant',
+                });
+            }
         }
     }
 
@@ -205,13 +228,11 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         handElement.scroll({ left: number, behavior: 'smooth' });
 
         // Store scroll positions
-        this._saveScrollXPositions(this.element);
+        this._saveScrollXPositions(handElement);
     }
 
     static #onHorizontalScroll(event) {
-        if (event.deltaX !== 0) {
-            this._saveScrollXPositions();
-        }
+        this._saveScrollXPositions(event.currentTarget);
     }
 
     // Open the Cards Hand
