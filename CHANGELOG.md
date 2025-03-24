@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v2.1.1
+
+- Changes behavior when left-clicking on a card from viewing the card's current face image to opening the context menu, which is also pulled up on right-click. This gives more choices for actions on what to do with the card, including viewing the current face, rather than just opening an image.
+
 ## v2.1.0
 
 - Overhauls hand ownership identification.
