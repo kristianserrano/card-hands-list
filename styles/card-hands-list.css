@@ -1,388 +1,368 @@
-#card-hands-list {
-  --hand-height: 80px;
-  --transition-time: 0.5s;
-  --delay-time: var(--transition-time);
-  position: relative;
-  margin-bottom: -16px;
-  max-height: calc(var(--hand-height) + 4em);
-  flex: none;
-  justify-content: end;
-  row-gap: 8px;
-  font-size: var(--font-size-12);
-  pointer-events: none;
-  transition:
-    opacity var(--ui-fade-duration),
-    max-height var(--transition-time) ease-in,
-    visibility var(--transition-time) 0s,
-    margin-bottom var(--transition-time) ease-in;
-
-  &:has(+ #players.expanded) {
-    margin-bottom: -8px;
-  }
-
-  & #card-hands-list-observable-hands,
-  & #card-hands-list-owned-hands {
-    width: 200px;
-    height: calc((var(--hand-height) + 1.125em) * 3);
-    container-type: size;
-    padding: 6px 8px;
-    background: var(--background-color, var(--color-cool-5-75));
-    border-radius: 8px;
-  }
-
-  & #card-hands-list-observable-hands {
-    container-type: size;
-    visibility: hidden;
-    max-height: 0;
+@layer card-hands-list {
+  #card-hands-list {
+    --hand-height: 80px;
+    --transition-time: 0.5s;
+    --delay-time: var(--transition-time);
+    position: relative;
+    margin-bottom: -16px;
+    max-height: calc(var(--hand-height) + 4em);
+    flex: none;
+    justify-content: end;
+    row-gap: 8px;
+    font-size: var(--font-size-12);
+    pointer-events: none;
     transition:
-      max-height var(--transition-time) ease-in-out,
-      visibility var(--transition-time) 0s;
-  }
+      opacity var(--ui-fade-duration),
+      max-height var(--transition-time) ease-in,
+      visibility var(--transition-time) 0s,
+      margin-bottom var(--transition-time) ease-in;
 
-  & #card-hands-list-owned-hands {
-    container-type: size;
-    height: calc((var(--hand-height) + 3.75em) * 3);
-    max-height: calc(var(--hand-height) + 3.5em);
-    overflow: clip;
-    transition:
-      max-height var(--transition-time) ease-in-out;
-
-    & #card-hands-list-owned-hands-list {
-      width: 100%;
-      scrollbar-gutter: stable;
-      height: calc(100cqh - 1.75em);
+    &:has(+ #players.expanded) {
+      margin-bottom: -8px;
     }
-  }
 
-  &.expanded {
-    max-height: calc((var(--hand-height) + 1.5em) * 6);
+    .panel {
+      --gap: 8px;
+      container-type: size;
+      width: 200px;
+      height: calc(100cqh - 2.5em);
+      padding: 6px 8px;
+      gap: var(--gap);
+      background: var(--background-color, var(--color-cool-5-75));
+      border-radius: 8px;
+    }
 
-    & #card-hands-list-observable-hands {
-      visibility: visible;
-      max-height: calc((var(--hand-height) + 1em) * 3);
+    #available-hands {
+      visibility: hidden;
+      max-height: 0;
       transition:
         max-height var(--transition-time) ease-in-out,
         visibility var(--transition-time) 0s;
     }
 
-    & #card-hands-list-owned-hands {
-      max-height: calc((var(--hand-height) + 1.75em) * 3);
-    }
+    #pinned-hands {
+      max-height: calc(var(--hand-height) + 4em);
+      overflow: clip;
+      transition:
+        max-height var(--transition-time) ease-in-out;
 
-    & #card-hands-list-expand {
-      transform: rotate(180deg);
-    }
-  }
-
-  & .card-hands-list-wrapper {
-    padding: 0;
-    container-type: size;
-    pointer-events: all;
-    overflow-y: auto;
-    overflow-x: clip;
-    scrollbar-width: thin;
-    scroll-snap-type: y mandatory;
-
-    &:has(#context-menu) {
-      scroll-snap-type: y normal;
-
-      & .card-hands-list-hand {
-        scroll-snap-align: none;
-      }
-    }
-  }
-
-  & .card-hands-list-title {
-    margin: 3px;
-    padding: 4px;
-    border-bottom: 2px groove var(--color-border-dark-secondary);
-    pointer-events: all;
-
-    & i {
-      margin: 0 6px;
-    }
-
-    & .card-hands-list-mode {
-      font-size: var(--font-size-16);
-      margin: 0 5px;
-      color: var(--color-text-light-primary);
-    }
-  }
-
-  & .card-hands-list-hand {
-    height: calc(var(--hand-height) + 0.5em);
-    display: grid;
-    grid-template-columns: 1fr 18px;
-    grid-template-rows: min-content auto;
-    gap: 0 4px;
-    align-items: center;
-    scroll-snap-align: center;
-
-    &:not(:last-of-type) {
-      border-bottom: 2px groove var(--color-border-dark-secondary);
-    }
-
-    & .card-hands-list-name {
-      margin: 0 0 4px 0;
-      display: grid;
-      grid-row: 1/2;
-      grid-column: 1/2;
-      grid-template-columns: 12px 1fr;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      pointer-events: all;
-
-      &::before {
-        content: "";
-        display: block;
-        box-sizing: border-box;
-        width: 12px;
-        height: 12px;
-        background: var(--player-color);
-        border: 1px solid var(--player-border);
-        border-radius: 100%;
-      }
-
-      &.is-owner {
-        color: #c0eddb;
-      }
-    }
-
-    & .card-hands-list-buttons {
-      grid-row: 2/3;
-      grid-column: 2/3;
-      align-self: center;
-      display: flex;
-      height: 100%;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      gap: 4px;
-    }
-
-    & .card-hands-list-button {
-      flex: 0 0 20px;
-      line-height: 20px;
-      color: var(--color-light-1);
-      background: none;
-      border: none;
-      cursor: pointer;
-      pointer-events: all;
-
-      &.--hidden {
-        visibility: hidden;
-      }
-    }
-
-    & .card-hands-list-cards {
-      position: relative;
-      grid-column: 1/2;
-      grid-row: 2/3;
-      display: flex;
-      height: 100%;
-
-      & .card-hands-list-cards-list {
-        margin: 0 1em;
-        padding: 0;
-        height: 100%;
+      #pinned-hands-list {
         width: 100%;
-        container-type: size;
-        list-style-type: none;
-        display: flex;
-        gap: 0.25em;
+        gap: var(--gap);
+        scrollbar-gutter: stable;
+        height: calc(100cqh - 2.5em);
+      }
+    }
+
+    &.expanded {
+      #available-hands {
+        visibility: visible;
+        max-height: calc((var(--hand-height) * 4) - 1.5em);
+        transition:
+          max-height var(--transition-time) ease-in-out,
+          visibility var(--transition-time) 0s;
+      }
+
+      #pinned-hands {
+        max-height: calc((var(--hand-height) + var(--gap) + 1.75em) * 3);
+      }
+
+      #expand {
+        transform: rotate(180deg);
+      }
+    }
+
+    .items {
+      container-type: size;
+      pointer-events: all;
+      overflow-y: auto;
+      overflow-x: clip;
+      scrollbar-width: thin;
+      scroll-snap-type: y mandatory;
+
+      &:has(#context-menu) {
+        scroll-snap-type: y normal;
+
+        .hand {
+          scroll-snap-align: none;
+        }
+      }
+    }
+
+    .title {
+      margin: 3px;
+      padding: 4px;
+      border-bottom: 2px groove var(--color-border-dark-secondary);
+      pointer-events: all;
+
+      i {
+        margin: 0 6px;
+      }
+
+      .mode {
+        font-size: var(--font-size-16);
+        margin: 0 5px;
+        color: var(--color-text-light-primary);
+      }
+    }
+
+    .hand {
+      height: calc(var(--hand-height) + 0.5em);
+      display: grid;
+      grid-template-columns: 1fr 18px;
+      grid-template-rows: min-content auto;
+      gap: 0 4px;
+      align-items: center;
+      scroll-snap-align: center;
+
+      &:not(:last-of-type) {
+        border-bottom: 2px groove var(--color-border-dark-secondary);
+      }
+
+      .name {
+        margin: 0 0 4px 0;
+        display: grid;
+        grid-row: 1/2;
+        grid-column: 1/2;
+        grid-template-columns: 12px 1fr;
         align-items: center;
-        justify-content: start;
-        overflow-y: clip;
-        overflow-x: scroll;
-        border-radius: 3px;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
+        gap: 4px;
+        cursor: pointer;
         pointer-events: all;
 
-        & .card-hands-list-card {
-          height: 100cqh;
-          flex-grow: 0;
-          flex-shrink: 0;
+        &::before {
+          content: "";
+          display: block;
+          box-sizing: border-box;
+          width: 12px;
+          height: 12px;
+          background: var(--player-color);
+          border: 1px solid var(--player-border);
+          border-radius: 100%;
+        }
+
+        &.is-owner {
+          color: #c0eddb;
+        }
+      }
+
+      .buttons {
+        grid-row: 2/3;
+        grid-column: 2/3;
+        align-self: center;
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .button {
+        flex: 0 0 20px;
+        line-height: 20px;
+        color: currentColor;
+        background: none;
+        border: none;
+        cursor: pointer;
+        pointer-events: all;
+        &.--hidden {
+          visibility: hidden;
+        }
+      }
+
+      .cards {
+        grid-column: 1/2;
+        grid-row: 2/3;
+        display: flex;
+        height: 100%;
+
+        .cards-list {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          width: 100%;
+          container-type: size;
+          list-style-type: none;
           display: flex;
+          gap: 0.25em;
           align-items: center;
-          justify-content: center;
-          scroll-snap-align: center;
-          scroll-snap-stop: always;
-          cursor: pointer;
+          justify-content: start;
+          overflow-y: clip;
+          overflow-x: scroll;
+          border-radius: 3px;
+          scroll-snap-type: x mandatory;
+          scrollbar-width: none;
+          pointer-events: all;
 
-          &:hover,
-          & *:hover {
-            scroll-snap-align: always;
-          }
+          .card {
+            height: 100cqh;
+            flex-grow: 0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+            cursor: pointer;
 
-          & .card-hands-list-card-image {
-            max-height: 100%;
-            object-position: center;
-            object-fit: contain;
-            border: none;
-            filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
+            &:hover,
+            *:hover {
+              scroll-snap-align: always;
+            }
 
-            &:hover {
-              filter:
-                drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
+            .card-image {
+              max-height: 100%;
+              object-position: center;
+              object-fit: contain;
+              border: none;
+              filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
+
+              &:hover {
+                filter:
+                  drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
+              }
             }
           }
         }
+
+        .horizontal-scroll {
+          width: max-content;
+          height: 100%;
+          padding: 2px;
+          flex: 0;
+          place-content: center;
+          font-size: var(--font-size-16);
+          cursor: pointer;
+        }
+      }
+    }
+
+    #card-hands-stats {
+      color: var(--color-light-3);
+      font-family: var(--font-monospace);
+      gap: 8px;
+
+
+      #hands-owned {
+        flex: none;
       }
 
-      & .horizontal-scroll {
-        position: absolute;
-        z-index: 1;
+      #hands-observable {
+        flex: 1;
+      }
+
+      label {
+        margin-right: 4px;
+      }
+
+      .owner,
+      .observer {
+        color: #e3e365;
+      }
+
+      button {
+        flex: 0 0 20px;
+        line-height: 20px;
+        background: none;
+        border: none;
+        color: var(--color-light-1);
+        pointer-events: all;
+      }
+
+      #expand {
+        justify-self: end;
+        transition: transform var(--transition-time);
+      }
+    }
+
+    .context-menu-link {
+      grid-row: 1/2;
+      grid-column: 2/3;
+      text-align: center;
+      justify-self: stretch;
+      pointer-events: all;
+      cursor: pointer;
+
+      #context-menu {
         width: max-content;
-        height: 100%;
-        padding: 2px;
-        display: none;
-        flex: 0;
-        align-items: center;
-        justify-content: center;
-        font-size: var(--font-size-16);
-        cursor: pointer;
+        justify-self: start;
+        text-align: left;
+        text-wrap: nowrap;
+        text-shadow: none;
+        overflow: auto;
 
-        &.--left {
-          left: 0;
-        }
-
-        &.--right {
-          right: 0;
+        .collapsed & {
+          margin-top: -1.5em;
+          height: 100cqh;
         }
       }
+    }
+
+    .context-menu-link .negative-margin {
+      margin-left: -800%;
+    }
+
+    .themed.theme-light & {
+      --background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .themed.theme-dark & {
+      --background-color: var(--color-cool-5-75);
     }
   }
 
-  #card-hands-stats {
-    height: 1.5em;
-    margin: 0 0 4px 0;
-    color: var(--color-light-3);
-    font-family: var(--font-monospace);
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    z-index: 1;
+  /* Tooltip Styles */
+  .tooltip-heading {
+    font-size: 0.9em;
+    font-weight: bold;
 
-    & #hands-owned {
-      flex: none;
+    &:has(+ .card-text-description) {
+      margin-bottom: 0.125em;
+      padding-bottom: 0.125em;
+      border-bottom: 1px dotted currentColor;
+    }
+  }
+
+  .card-text-description {
+    margin: 0;
+    font-size: 0.8em;
+  }
+
+  #tooltip .tooltip {
+    text-align: left;
+    line-height: 1.4;
+
+    .tooltip-heading {
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+      color: revert;
     }
 
-    & #hands-observable {
-      flex: 1;
-    }
-
-    & label {
-      margin-right: 4px;
-    }
-
-    & .owner,
-    .observer {
-      color: #e3e365;
-    }
-
-    & button {
-      flex: 0 0 20px;
-      line-height: 20px;
+    a.content-link {
+      padding: 0;
+      display: inline;
+      color: revert;
       background: none;
       border: none;
-      color: var(--color-light-1);
-      pointer-events: all;
-    }
 
-    & #card-hands-list-expand {
-      justify-self: end;
-      transition: transform var(--transition-time);
-    }
-  }
-
-  & .card-hands-list-context-menu-link {
-    grid-row: 1/2;
-    grid-column: 2/3;
-    text-align: center;
-    justify-self: stretch;
-    pointer-events: all;
-    cursor: pointer;
-
-    & #context-menu {
-      width: max-content;
-      justify-self: start;
-      text-align: left;
-      text-wrap: nowrap;
-      text-shadow: none;
-      overflow: auto;
-
-      .collapsed & {
-        margin-top: -1.5em;
-        height: 100cqh;
+      .fas {
+        display: none;
       }
     }
   }
 
-  & .card-hands-list-context-menu-link .card-hands-list-negative-margin {
-    margin-left: -800%;
-  }
+  #players-inactive {
+    padding-top: 0;
+    padding-bottom: 0;
+    transition:
+      max-height 0.5s ease-in-out,
+      visibility 0.5s 0s,
+      padding 0.5s ease-in-out;
 
-  .themed.theme-light & {
-    --background-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .themed.theme-dark & {
-    --background-color: var(--color-cool-5-75);
-  }
-}
-
-/* Tooltip Styles */
-.card-hands-list-tooltip-heading {
-  font-size: 0.9em;
-  font-weight: bold;
-
-  &:has(+ .card-hands-list-card-text-description) {
-    margin-bottom: 0.125em;
-    padding-bottom: 0.125em;
-    border-bottom: 1px dotted currentColor;
-  }
-}
-
-.card-hands-list-card-text-description {
-  margin: 0;
-  font-size: 0.8em;
-}
-
-#tooltip .card-hands-list-tooltip {
-  text-align: left;
-  line-height: 1.4;
-
-  .card-hands-list-tooltip-heading {
-    padding-bottom: 0.25rem;
-    margin-bottom: 0.5rem;
-    color: revert;
-  }
-
-  & a.content-link {
-    padding: 0;
-    display: inline;
-    color: revert;
-    background: none;
-    border: none;
-
-    & .fas {
-      display: none;
+    #players.expanded & {
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
-  }
-}
-
-#players-inactive {
-  padding-top: 0;
-  padding-bottom: 0;
-  transition:
-    max-height 0.5s ease-in-out,
-    visibility 0.5s 0s,
-    padding 0.5s ease-in-out;
-
-  #players.expanded & {
-    padding-top: 6px;
-    padding-bottom: 6px;
   }
 }
