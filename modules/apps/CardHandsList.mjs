@@ -113,12 +113,15 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             observableHands: CardHandsList._sort(observableHands, 'name'),
             favoriteHand: hands.find(h => h.isFavorite),
             pinnedHands: CardHandsList._sort(pinnedHands, 'name'),
+            stats: {
+                owner: hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)).length,
+                observer: hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)).length,
+            },
             showObservable: game.settings.get(handsModule.id, "observerLevel"),
             expanded: this.element?.classList.contains('expanded'),
             isGM: game?.user?.role === 4,
             userColor: game?.user?.color,
             moduleId: handsModule.id,
-            translationPrefix: handsModule.translationPrefix,
             system: game.system.id,
         };
 

@@ -38,12 +38,12 @@
     <div id="card-hands-stats" class="flexrow">
         <div id="hands-owned">
             <label>{{localize 'CardHandsList.Owner'}}</label>
-            <span class="owner">{{ownedHands.length}}</span>
+            <span class="owner">{{stats.owner}}</span>
         </div>
         {{#if showObservable}}
         <div id="hands-observable">
             <label>{{localize 'CardHandsList.Observer'}}</label>
-            <span class="observer">{{observableHands.length}}</span>
+            <span class="observer">{{stats.observer}}</span>
         </div>
         {{/if}}
         <button id="expand" type="button" class="icon fa-solid fa-caret-up" data-action="expand"></button>
