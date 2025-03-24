@@ -1,29 +1,29 @@
-{{!-- {{#if collapsed}} collapsed{{/if}}{{#if minimalUi.active}} minimal-ui list-behavior-{{minimalUi.listBehavior}}{{/if}} --}}
 {{#if (or showObservable isGM)}}
-<ol id="{{moduleId}}-observable-hands" class="{{moduleId}}-wrapper plain scrollable flexcol" data-tooltip-direction="RIGHT">
-    {{#unless isGM}}
-    {{#each observableHands}}
-    {{#unless isPinned}}
-    {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
-    {{/unless}}
-    {{/each}}
-    {{/unless}}
-    {{#if isGM}}
+<ol id="available-hands" class="panel items plain scrollable flexcol" data-tooltip-direction="RIGHT">
+    {{#if ownedHands.length}}
     {{#each ownedHands}}
-    {{#unless isPinned}}
     {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
-    {{/unless}}
+    {{/each}}
+    {{/if}}
+    {{#if (and ownedHands.length observableHands.length)}}
+    <hr />
+    {{/if}}
+    {{#if observableHands.length}}
+    {{#each observableHands}}
+    {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
     {{/each}}
     {{/if}}
 </ol>
 {{/if}}
-<div id="{{moduleId}}-owned-hands" class="flexcol">
-    <ol id="{{moduleId}}-owned-hands-list" class="{{moduleId}}-wrapper plain scrollable flexcol" data-tooltip-direction="RIGHT">
-        {{!-- First list the favorited hand (if applicable) --}}
+<div id="pinned-hands" class="panel flexcol">
+    <ol id="pinned-hands-list" class="container items plain scrollable flexcol" data-tooltip-direction="RIGHT">
+        {{!-- First list the SWADE favorited hand (if applicable) --}}
         {{#if favoriteHand}}
         {{> 'modules/card-hands-list/templates/hand.hbs' this=favoriteHand parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
         {{/if}}
-        {{!-- Now list the pinned hands --}}
+        {{#if (and favoriteHand pinnedHands.length)}}
+        <hr />
+        {{/if}}
         {{#each pinnedHands}}
         {{#if isOwner}}
         {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
@@ -34,23 +34,18 @@
         {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
         {{/unless}}
         {{/each}}        {{!-- Next list the remaining owned hands --}}
-        {{#each ownedHands}}
-        {{#unless (or isFavorite isPinned ../isGM)}}
-        {{> 'modules/card-hands-list/templates/hand.hbs' this=this parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
-        {{/unless}}
-        {{/each}}
     </ol>
     <div id="card-hands-stats" class="flexrow">
         <div id="hands-owned">
-            <label>{{localize 'CardHandsList.Owned'}}</label>
-            <span class="owner" style="color: {{userColor.css}}">{{ownedHands.length}}</span>
+            <label>{{localize 'CardHandsList.Owner'}}</label>
+            <span class="owner">{{ownedHands.length}}</span>
         </div>
         {{#if showObservable}}
         <div id="hands-observable">
-            <label>{{localize 'CardHandsList.Observable'}}</label>
+            <label>{{localize 'CardHandsList.Observer'}}</label>
             <span class="observer">{{observableHands.length}}</span>
         </div>
         {{/if}}
-        <button id="card-hands-list-expand" type="button" class="icon fa-solid fa-caret-up" data-action="expand"></button>
+        <button id="expand" type="button" class="icon fa-solid fa-caret-up" data-action="expand"></button>
     </div>
 </div>

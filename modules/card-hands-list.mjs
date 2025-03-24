@@ -54,7 +54,7 @@ Hooks.on('init', function () {
 Hooks.on('setup', async function () {
   // Preload the template and render the UI
   foundry.applications.handlebars.loadTemplates([
-    `modules/${handsModule.id}/templates/${handsModule.id}-container.hbs`,
+    `modules/${handsModule.id}/templates/container.hbs`,
     `modules/${handsModule.id}/templates/hand.hbs`
   ]);
 
