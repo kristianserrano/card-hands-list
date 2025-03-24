@@ -1,6 +1,6 @@
 <li id="{{id}}" class="hand {{#if (eq parent.favorite id)}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
-    <span class="name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}} ellipsis" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
-        {{name}}
+    <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
+        <i class="fa-solid fa-up-right-from-square"></i> {{name}}
     </span>
     <button class="button pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
         {{#if isPinned}}

@@ -121,10 +121,7 @@
 
       .name {
         margin: 0 0 4px 0;
-        display: grid;
-        grid-row: 1/2;
-        grid-column: 1/2;
-        grid-template-columns: 12px 1fr;
+        display: flex;
         align-items: center;
         gap: 4px;
         cursor: pointer;
@@ -258,7 +255,7 @@
 
       .owner,
       .observer {
-        color: #e3e365;
+        color: currentColor;
       }
 
       button {
@@ -274,33 +271,6 @@
         justify-self: end;
         transition: transform var(--transition-time);
       }
-    }
-
-    .context-menu-link {
-      grid-row: 1/2;
-      grid-column: 2/3;
-      text-align: center;
-      justify-self: stretch;
-      pointer-events: all;
-      cursor: pointer;
-
-      #context-menu {
-        width: max-content;
-        justify-self: start;
-        text-align: left;
-        text-wrap: nowrap;
-        text-shadow: none;
-        overflow: auto;
-
-        .collapsed & {
-          margin-top: -1.5em;
-          height: 100cqh;
-        }
-      }
-    }
-
-    .context-menu-link .negative-margin {
-      margin-left: -800%;
     }
 
     .themed.theme-light & {

@@ -67,16 +67,11 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         const observableHands = hands.filter(hand => !ownedHands.some(owned => owned.id === hand.id) && !pinnedHands.some(pinned => pinned.id === hand.id) && determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER));
 
         for (const hand of hands) {
-            if (hand.hasPlayerOwner) {
-                const playerOwnerIDs = Object.keys(hand.ownership).filter((k) => k !== 'default' && !game.users.get(k)?.isGM);
-                // Check if user is an owner by default or specifically set as owner.
-                const userIsOwner = Object.keys(hand.ownership).some((k) => (k === 'default' || k === game.user.id) && hand.ownership[k] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
-                // If the user is an owner, set as owner.
-                hand.owner = userIsOwner ? game.user : game.users.get(playerOwnerIDs[0]);
-            } else {
-                // If the hand does not have an owner, set the active GM as the owner. If there is not an active GM, assign the GM user.
-                hand.owner = game?.users?.activeGM ?? gmUser;
-            }
+            const playerOwnerIDs = Object.keys(hand.ownership).filter((k) => k !== 'default' && !game.users.get(k)?.isGM);
+            // If the user is an owner, set as owner.
+            hand.owner = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER ? game.user : game.users.get(playerOwnerIDs[0]);
+
+            hand.isExplicitOwner = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
 
             // Enrich the cards' texts
             for (const card of hand.cards) {
