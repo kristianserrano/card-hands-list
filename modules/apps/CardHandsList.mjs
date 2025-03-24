@@ -15,7 +15,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             favoriteHand: CardHandsList.#onFavoriteHand,
             pinHand: CardHandsList.#onPinHand,
             drawCard: CardHandsList.#onDrawCard,
-            openCard: CardHandsList.#onOpenCard,
+            openCardMenu: CardHandsList.#onCardContextMenu,
             scrollArrow: CardHandsList.#onScrollArrow,
             getHandContextOptions: CardHandsList.#onGetHandContextOptions,
 
@@ -239,21 +239,6 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         event.preventDefault();
         const hand = game.cards.get(target.closest(`.hand`)?.dataset.id);
         await hand?.sheet.render(true);
-    }
-
-    // Open the Card
-    static async #onOpenCard(event, target) {
-        // Prevent multiple executions
-        event.preventDefault();
-        const card = await fromUuid(target.dataset.uuid);
-        // Render the image popout
-        if (card) {
-            const imgPopout = new foundry.applications.apps.ImagePopout(card.img, {
-                title: card.name,
-                uuid: card.uuid
-            });
-            await imgPopout.render(true);
-        }
     }
 
     // Favorite Cards Hand
@@ -547,12 +532,26 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             if (!target.contains(event.target)) {
                 handContextMenu.close({ animate: true });
             }
-        }, { once: true });    }
+        }, { once: true });
+    }
 
     static async #onCardContextMenu(event, target) {
         target = event.target;
         const card = await fromUuid(target.dataset.uuid);
         const menuItems = [
+            {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
+                icon: '<i class="fas fa-eye"></i>',
+                condition: el => {
+                    return card.isOwner;
+                },
+                callback: async el => {
+                    await new foundry.applications.apps.ImagePopout(card.img, {
+                        title: card.name,
+                        uuid: card.uuid
+                    }).render(true);
+                }
+            },
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.Flip`),
                 icon: '<i class="fas fa-rotate"></i>',
