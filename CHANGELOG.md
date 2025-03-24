@@ -1,5 +1,15 @@
 # Card Hands List Changelog
 
+## v2.1.0
+
+- Overhauls hand ownership identification.
+- Ports over (from v1.12.8) setting to use explicit hand ownership levels for GMs. When enabled, the GM must have either default or specifically assigned ownership of a hand for it to appear in the list.
+- Now all hands appear in top panel by default and must be pinned to appear in bottom panel.
+- Changes Card right-click behavior from flip to a ContextMenu of options, including flipping the card.
+- Fixes horizontal scroll position being retained every time the app renders.
+- Fixes glitchy ContextMenu behavior.
+- Misc. bug fixes and improvements.
+
 ## v2.0.3
 
 - Fixes light and dark mode styles.
