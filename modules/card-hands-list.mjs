@@ -100,10 +100,10 @@ Hooks.on('renderCardHandsList', (cardHandsList, element, context, options) => {
 });
 
 // Hooks for Card(s) events
-for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'updateCards', 'deleteCards']) {
+//for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'updateCards', 'deleteCards']) {
+for (const hook of ['createCard', 'updateCard', 'deleteCard']) {
   Hooks.on(hook, async (data) => {
     if (data.parent?.type === 'hand' || data.type === 'hand') {
-      ui.cardHands._saveScrollXPositions(ui.cardHands.element);
       await ui.cardHands.render({ force: false });
     }
   });
