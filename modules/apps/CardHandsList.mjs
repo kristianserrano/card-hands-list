@@ -540,6 +540,25 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         const card = await fromUuid(target.dataset.uuid);
         const menuItems = [
             {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.PlayAdventureCard`),
+                icon: '<i class="fas fa-play"></i>',
+                condition: el => {
+
+                    return card.isOwner && game.system.id === 'swade' && game.modules.get('adventure-deck')?.active && card.type === 'adventure';
+                },
+                callback: async el => {
+                    const content = await renderTemplate("modules/adventure-deck/templates/adventurecard-chatcard.hbs", card);
+                    ChatMessage.create({
+                        user: game.user.id,
+                        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                        content: content,
+                        sound: game.settings.get("adventure-deck", "toggleSoundOnPlayCard") ? "systems/swade/assets/card-flip.wav" : ""
+                    });
+                    const discardPile = await game.cards.getName(game.settings.get("adventure-deck", "dumpPileName"));
+                    card.parent.pass(discardPile, [card.id], { chatNotification: false });
+                }
+            },
+            {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
                 icon: '<i class="fas fa-eye"></i>',
                 condition: el => {
