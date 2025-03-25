@@ -233,7 +233,7 @@ export class CardHandsList extends Application {
     async _onOpenCard(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const card = await fromUuid(e.target.dataset.uuid);
+        const card = fromUuidSync(e.target.dataset.uuid);
         // Render the image popout
         if (card) {
             const imgPopout = new ImagePopout(card.img, {
@@ -329,16 +329,16 @@ export class CardHandsList extends Application {
 
             if (parsedDataTransfer?.type === 'Card') {
                 // If there is parsed data, get the document from the UUI
-                const cardDragged = await fromUuid(parsedDataTransfer.uuid);
+                const cardDragged = fromUuidSync(parsedDataTransfer.uuid);
 
                 if (cardDragged) {
                     // If there's an actual document
-                    const dropTarget = await fromUuid(e.target.dataset.uuid);
+                    const dropTarget = fromUuidSync(e.target.dataset.uuid);
                     let hand = undefined;
 
                     if (dropTarget.documentName === 'Card') {
                         // If the target is a Card, get its Hand
-                        hand = await fromUuid(dropTarget.parent.uuid);
+                        hand = fromUuidSync(dropTarget.parent.uuid);
                     } else if (dropTarget.documentName === 'Cards' && dropTarget.type === 'hand') {
                         // If the target is a Hand, set the Hand.
                         hand = dropTarget;
@@ -365,10 +365,9 @@ export class CardHandsList extends Application {
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.PlayAdventureCard`),
                 icon: '<i class="far fa-circle-play"></i>',
-                condition: async el => {
-                    const card = await fromUuid(el[0].dataset.uuid);
-                    return false;
-                    //return card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active;
+                condition: el => {
+                    const card = fromUuidSync(el[0].dataset.uuid);
+                    return card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active;
                 },
                 callback: async el => {
                     const card = await fromUuid(el[0].dataset.uuid);
@@ -386,8 +385,8 @@ export class CardHandsList extends Application {
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
                 icon: '<i class="far fa-eye"></i>',
-                condition: async el => {
-                    const card = await fromUuid(el[0].dataset.uuid);
+                condition: el => {
+                    const card = fromUuidSync(el[0].dataset.uuid);
                     return card.isOwner;
                 },
                 callback: async el => {
@@ -401,8 +400,8 @@ export class CardHandsList extends Application {
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.Flip`),
                 icon: '<i class="fas fa-rotate"></i>',
-                condition: async el => {
-                    const card = await fromUuid(el[0].dataset.uuid);
+                condition: el => {
+                    const card = fromUuidSync(el[0].dataset.uuid);
                     return card.isOwner;
                 },
                 callback: async el => {
@@ -413,8 +412,8 @@ export class CardHandsList extends Application {
             {
                 name: game.i18n.localize('CardHandsList.Pass'),
                 icon: '<i class="fas fa-share-square"></i>',
-                condition: async el => {
-                    const card = await fromUuid(el[0].dataset.uuid);
+                condition: el => {
+                    const card = fromUuidSync(el[0].dataset.uuid);
                     return card.isOwner;
                 },
                 callback: async el => {
@@ -425,8 +424,8 @@ export class CardHandsList extends Application {
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.Discard`),
                 icon: '<i class="fas fa-share-square"></i>',
-                condition: async el => {
-                    const card = await fromUuid(el[0].dataset.uuid);
+                condition: el => {
+                    const card = fromUuidSync(el[0].dataset.uuid);
                     return card.isOwner;
                 },
                 callback: async el => {
@@ -437,8 +436,8 @@ export class CardHandsList extends Application {
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.ReturnToDeck`),
                 icon: '<i class="fas fa-share-square"></i>',
-                condition: async el => {
-                    const card = await fromUuid(el[0].dataset.uuid);
+                condition: el => {
+                    const card = fromUuidSync(el[0].dataset.uuid);
                     return card.isOwner;
                 },
                 callback: async el => {
