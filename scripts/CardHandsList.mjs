@@ -170,13 +170,11 @@ export class CardHandsList extends Application {
         html.find(`.${handsModule.id}-cards`)?.on('drop', this._onDropCard.bind(this));
         // Card Context menu
         const cardContextMenuItems = this._getCardContextOptions();
-        // Pull up menu options from link
+        // Pull up menu options from card
         new ContextMenu(html, `.${handsModule.id}-card`, cardContextMenuItems, { eventName: 'click' });
         new ContextMenu(html, `.${handsModule.id}-card`, cardContextMenuItems, { eventName: 'contextmenu' });
-        // Hand Context menu
-        const handContextMenuItems = this._getHandContextOptions();
         // Pull up menu options from link
-        new ContextMenu(html, `.${handsModule.id}-context-menu-link`, handContextMenuItems, { eventName: 'click' });
+        new ContextMenu(html, `.${handsModule.id}-context-menu-link`, this._getHandContextOptions(), { eventName: 'click' });
 
         if (game.modules.get('minimal-ui')?.active) {
             const foundryLogo = document.querySelector('#logo');
@@ -369,8 +367,8 @@ export class CardHandsList extends Application {
                 icon: '<i class="far fa-circle-play"></i>',
                 condition: async el => {
                     const card = await fromUuid(el[0].dataset.uuid);
-                    console.log(card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active);
-                    return card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active;
+                    return false;
+                    //return card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active;
                 },
                 callback: async el => {
                     const card = await fromUuid(el[0].dataset.uuid);
