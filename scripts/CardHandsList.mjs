@@ -286,13 +286,23 @@ export class CardHandsList extends Application {
         const hand = game.cards.get(e.target.parentElement.parentElement.dataset.id);
         const defaultDeck = hand.getFlag(handsModule.id, 'default-deck');
         const defaultMode = hand.getFlag(handsModule.id, 'default-draw-mode');
-        let cardsDrawn = undefined;
+        const faceDown = hand.getFlag(handsModule.id, 'face-down');
 
-        if (defaultDeck && defaultMode) {
+        if (defaultDeck || defaultMode) {
             const deck = game.cards.get(defaultDeck);
-            cardsDrawn = await hand.draw(deck, 1, { how: Number(defaultMode) });
+            const cardsInHand = hand.cards.contents;
+            const sort = cardsInHand.length ? cardsInHand.reverse()[0].sort + 10 : 0;
+            await hand.draw(deck, 1, {
+                how: Number(defaultMode),
+                updateData: faceDown ? {
+                    face: null,
+                    sort,
+                } : {
+                    sort,
+                },
+            });
         } else {
-            cardsDrawn = await hand.drawDialog();
+            await hand.drawDialog();
         }
     };
 
@@ -351,7 +361,7 @@ export class CardHandsList extends Application {
     }
 
     _getCardContextOptions() {
-         return [
+        return [
             {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.PlayAdventureCard`),
                 icon: '<i class="far fa-circle-play"></i>',
@@ -467,6 +477,7 @@ export class CardHandsList extends Application {
                     const deckOptions = [
                         `<option value="none" ${!hand?.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${game.i18n.localize(`${handsModule.translationPrefix}.None`)}</option>`
                     ];
+                    const drawFaceDown = hand.getFlag(handsModule.id, 'face-down');
 
                     for (const deck of decks) {
                         deckOptions.push(
@@ -498,26 +509,31 @@ export class CardHandsList extends Application {
                         },
                     ];
 
-                    const modeOptions = [];
+                    let modeOptions = '';
 
                     for (const drawMode of drawModes) {
-                        modeOptions.push(
-                            `<option value="${drawMode.value}">${drawMode.label}</option>`
-                        );
+                        modeOptions += `<option value="${drawMode.value}">${drawMode.label}</option>`;
                     }
 
                     const modeSelect = `
                         <div class="form-group">
                             <label for="draw-mode" >${game.i18n.localize('CARDS.DrawMode')}</label>
                             <div class="form-fields">
-                                <select id="draw-mode">${modeOptions.join('')}</select>
+                                <select id="draw-mode">${modeOptions}</select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="face-down">${game.i18n.localize('CARDS.Facedown')}</label>
+                            <div class="form-fields">
+                                <input type="checkbox" id="face-down" name="face-down" ${drawFaceDown ? 'checked' : ''}>
                             </div>
                         </div>
                     `;
                     const content = `
                         <p>${game.i18n.format(`${handsModule.translationPrefix}.DefaultsMessage`, { name: hand.name })}</p>
                         <form class="cards-defaults">
-                            ${deckSelect + modeSelect}
+                            ${deckSelect}
+                            ${modeSelect}
                         </form>
                     `;
 
@@ -531,13 +547,16 @@ export class CardHandsList extends Application {
                                 callback: async (html) => {
                                     const deckId = html.find('#deck-select').val();
                                     const mode = Number(html.find('#draw-mode').val());
+                                    const faceDown = html.find('#face-down').is(':checked');
 
                                     if (deckId === 'none') {
                                         await hand.unsetFlag(handsModule.id, 'default-deck');
                                         await hand.unsetFlag(handsModule.id, 'default-draw-mode');
+                                        await hand.unsetFlag(handsModule.id, 'face-down');
                                     } else {
                                         await hand.setFlag(handsModule.id, 'default-deck', deckId);
                                         await hand.setFlag(handsModule.id, 'default-draw-mode', mode);
+                                        await hand.setFlag(handsModule.id, 'face-down', faceDown);
                                     }
                                 }
                             }
