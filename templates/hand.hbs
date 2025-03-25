@@ -36,7 +36,7 @@
     <div class="{{parent.moduleId}}-cards">
         {{#if cards.size}}<div class="card-hands-list-button horizontal-scroll --left"><a><i class="fas fa-caret-left"></i></a></div>{{/if}}
         <ul class="{{parent.moduleId}}-cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
-            {{#each sortedCards}}
+            {{#each cards}}
             <li class="{{../parent.moduleId}}-card" data-id="{{id}}" data-uuid="{{uuid}}" >
                 <img class="{{../parent.moduleId}}-card-image" src="{{img}}" data-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" {{#if parent.isOwner}} draggable="true" {{/if}} data-tooltip="
                         <div class='card-hands-list-tooltip'>
