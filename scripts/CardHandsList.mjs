@@ -1,5 +1,4 @@
 import { handsModule } from "./card-hands-list.js";
-import { CardHandContextMenu } from "./CardHandContextMenu.mjs";
 /**
  * The UI element which displays the list of Hands available to the User.
  * @extends {Application}
@@ -160,19 +159,24 @@ export class CardHandsList extends Application {
         // Draw a Card
         html.find(`.${handsModule.id}-draw a`)?.click(this._onDrawCard.bind(this));
         // Open the Card Card
-        html.find(`.${handsModule.id}-card`)?.click(this._onOpenCard.bind(this));
+        //html.find(`.${handsModule.id}-card`)?.click(this._onOpenCard.bind(this));
         // Get a collection of card images
-        const cardImages = html.find(`.${handsModule.id}-card-image`);
+        const cardImages = html.find(`.${handsModule.id}-card`);
         // Flip a Card
-        cardImages?.on('contextmenu', this._onFlipCard.bind(this));
+        //cardImages?.on('contextmenu', this._onFlipCard.bind(this));
         // Drag a Card
         cardImages?.on('dragstart', this._onDragCard.bind(this));
         // Drop a Card
         html.find(`.${handsModule.id}-cards`)?.on('drop', this._onDropCard.bind(this));
-        // Context menu
-        const contextOptions = this._getHandContextOptions();
+        // Card Context menu
+        const cardContextMenuItems = this._getCardContextOptions();
         // Pull up menu options from link
-        new CardHandContextMenu(html, `.${handsModule.id}-context-menu-link`, contextOptions, { eventName: 'click' });
+        new ContextMenu(html, `.${handsModule.id}-card`, cardContextMenuItems, { eventName: 'click' });
+        new ContextMenu(html, `.${handsModule.id}-card`, cardContextMenuItems, { eventName: 'contextmenu' });
+        // Hand Context menu
+        const handContextMenuItems = this._getHandContextOptions();
+        // Pull up menu options from link
+        new ContextMenu(html, `.${handsModule.id}-context-menu-link`, handContextMenuItems, { eventName: 'click' });
 
         if (game.modules.get('minimal-ui')?.active) {
             const foundryLogo = document.querySelector('#logo');
@@ -356,6 +360,95 @@ export class CardHandsList extends Application {
                 }
             }
         }
+    }
+
+    _getCardContextOptions() {
+         return [
+            {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.PlayAdventureCard`),
+                icon: '<i class="far fa-circle-play"></i>',
+                condition: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    console.log(card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active);
+                    return card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active;
+                },
+                callback: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    const content = await renderTemplate("modules/adventure-deck/templates/adventurecard-chatcard.hbs", card);
+                    ChatMessage.create({
+                        user: game.user.id,
+                        type: CONST.CHAT_MESSAGE_STYLES.OTHER,
+                        content: content,
+                        sound: game.settings.get("adventure-deck", "toggleSoundOnPlayCard") ? "systems/swade/assets/card-flip.wav" : ""
+                    });
+                    const discardPile = await game.cards.getName(game.settings.get("adventure-deck", "dumpPileName"));
+                    card.parent.pass(discardPile, [card.id], { chatNotification: false });
+                }
+            },
+            {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
+                icon: '<i class="far fa-eye"></i>',
+                condition: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    return card.isOwner;
+                },
+                callback: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    await new ImagePopout(card.img, {
+                        title: card.name,
+                        uuid: card.uuid
+                    }).render(true);
+                }
+            },
+            {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.Flip`),
+                icon: '<i class="fas fa-rotate"></i>',
+                condition: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    return card.isOwner;
+                },
+                callback: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    await card.flip();
+                }
+            },
+            {
+                name: game.i18n.localize('CardHandsList.Pass'),
+                icon: '<i class="fas fa-share-square"></i>',
+                condition: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    return card.isOwner;
+                },
+                callback: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    await card.parent.playDialog(card);
+                }
+            },
+            {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.Discard`),
+                icon: '<i class="fas fa-share-square"></i>',
+                condition: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    return card.isOwner;
+                },
+                callback: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    await card.parent.playDialog(card);
+                }
+            },
+            {
+                name: game.i18n.localize(`${handsModule.translationPrefix}.ReturnToDeck`),
+                icon: '<i class="fas fa-share-square"></i>',
+                condition: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    return card.isOwner;
+                },
+                callback: async el => {
+                    const card = await fromUuid(el[0].dataset.uuid);
+                    await card.recall();
+                }
+            },
+        ];
     }
 
     // Return the default context options available for the Card Hands List application
