@@ -53,6 +53,7 @@
   }
 
   & .card-hands-list-hand {
+    anchor-name: --hand-anchor;
     height: var(--hand-height);
     padding: 4px 8px;
     display: grid;
@@ -64,6 +65,176 @@
 
     &:not(:last-of-type) {
       border-bottom: 2px groove var(--color-border-dark-secondary);
+    }
+
+    &:has(.card-hands-list-context-menu-link.context #context-menu) {
+      margin: -2px 0 2px 0;
+      border-width: 2px 0;
+      border-style: groove;
+      border-color: var(--color-border-highlight);
+    }
+
+    & .card-hands-list-name {
+      margin: 0;
+      padding: 4px 2px;
+      grid-row: 1/2;
+      grid-column: 1/2;
+      font-size: var(--font-size-14);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      pointer-events: all;
+
+      &.is-owner {
+        color: #c0eddb;
+      }
+
+      &:has(+.card-hands-list-context-menu-link.context #context-menu) {
+        text-shadow: 0 0 5px var(--color-shadow-primary);
+      }
+    }
+
+    & .card-hands-list-context-menu-link {
+      grid-row: 1/2;
+      grid-column: 2/3;
+      text-align: center;
+      justify-self: stretch;
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    & .card-hands-list-buttons {
+      grid-row: 2/3;
+      grid-column: 2/3;
+      align-self: center;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+
+    & .card-hands-list-button {
+      color: currentColor;
+      cursor: pointer;
+      pointer-events: all;
+
+      &.--hidden {
+        visibility: hidden;
+      }
+    }
+
+    & :is(.card-hands-list-button, .card-hands-list-name) a:hover {
+      text-shadow: 0 0 8px var(--color-shadow-primary);
+    }
+
+    & .card-hands-list-cards {
+      position: relative;
+      grid-column: 1/2;
+      grid-row: 2/3;
+      display: flex;
+      height: 100%;
+
+      & .card-hands-list-cards-list {
+        margin: 0 1em;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        container-type: size;
+        list-style-type: none;
+        display: flex;
+        gap: 0.25em;
+        align-items: center;
+        justify-content: start;
+        overflow-y: clip;
+        overflow-x: scroll;
+        border-radius: 3px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        pointer-events: all;
+
+        & .card-hands-list-card {
+          anchor-name: --card-anchor;
+          height: 100cqh;
+          flex-grow: 0;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          scroll-snap-align: center;
+          scroll-snap-stop: always;
+          cursor: pointer;
+
+          &:hover,
+          & *:hover {
+            scroll-snap-align: always;
+          }
+
+          &.context {
+            border-width: 2px 0;
+            border-style: solid;
+            border-color: var(--color-border-highlight);
+          }
+
+          & .card-hands-list-card-image {
+            max-height: 100%;
+            object-position: center;
+            object-fit: contain;
+            border: none;
+            filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
+
+            &:hover {
+              filter:
+                drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
+            }
+          }
+        }
+      }
+
+      & .horizontal-scroll {
+        position: absolute;
+        z-index: 1;
+        width: max-content;
+        height: 100%;
+        padding: 2px;
+        display: none;
+        flex: 0;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--font-size-16);
+        cursor: pointer;
+
+        &.--left {
+          left: 0;
+        }
+
+        &.--right {
+          right: 0;
+        }
+      }
+    }
+
+    #context-menu {
+      position-anchor: --card-anchor;
+      position: fixed;
+      right: anchor(top);
+      top: anchor(top);
+      width: fit-content;
+      min-width: 200px;
+      margin-top: -200px;
+      margin-left: 14px;
+      text-align: left;
+
+      .card-hands-list-context-menu-link & {
+        position-anchor: --hand-anchor;
+        position: fixed;
+        margin-top: -200px;
+        margin-left: -3px;
+        left: anchor(left);
+        top: anchor(top);
+      }
     }
   }
 
@@ -79,155 +250,6 @@
         border: none;
       }
     }
-  }
-
-  & .card-hands-list-name {
-    margin: 0;
-    padding: 4px 2px;
-    grid-row: 1/2;
-    grid-column: 1/2;
-    font-size: var(--font-size-14);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    pointer-events: all;
-
-    &.is-owner {
-      color: #c0eddb;
-    }
-  }
-
-  & .card-hands-list-context-menu-link {
-    grid-row: 1/2;
-    grid-column: 2/3;
-    text-align: center;
-    justify-self: stretch;
-    pointer-events: all;
-    cursor: pointer;
-
-    & #context-menu {
-      width: max-content;
-      justify-self: start;
-      text-align: left;
-      text-wrap: nowrap;
-      text-shadow: none;
-      overflow: auto;
-
-      .collapsed & {
-        margin-top: -1.5em;
-        height: 100cqh;
-      }
-    }
-  }
-
-  & .card-hands-list-buttons {
-    grid-row: 2/3;
-    grid-column: 2/3;
-    align-self: center;
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 4px;
-  }
-
-  & .card-hands-list-button {
-    color: currentColor;
-    cursor: pointer;
-    pointer-events: all;
-
-    &.--hidden {
-      visibility: hidden;
-    }
-  }
-
-  & :is(.card-hands-list-button, .card-hands-list-name) a:hover {
-    text-shadow: 0 0 8px var(--color-shadow-primary);
-  }
-
-  & .card-hands-list-cards {
-    position: relative;
-    grid-column: 1/2;
-    grid-row: 2/3;
-    display: flex;
-    height: 100%;
-
-    & .card-hands-list-cards-list {
-      margin: 0 1em;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      container-type: size;
-      list-style-type: none;
-      display: flex;
-      gap: 0.25em;
-      align-items: center;
-      justify-content: start;
-      overflow-y: clip;
-      overflow-x: scroll;
-      border-radius: 3px;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      pointer-events: all;
-
-      & .card-hands-list-card {
-        height: 100cqh;
-        flex-grow: 0;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        scroll-snap-align: center;
-        scroll-snap-stop: always;
-        cursor: pointer;
-
-        &:hover,
-        & *:hover {
-          scroll-snap-align: always;
-        }
-
-        & .card-hands-list-card-image {
-          max-height: 100%;
-          object-position: center;
-          object-fit: contain;
-          border: none;
-          filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .5));
-
-          &:hover {
-            filter:
-              drop-shadow(2px 3px 3px rgba(0, 0, 0, .5)) drop-shadow(0 0 3px var(--color-shadow-highlight));
-          }
-        }
-      }
-    }
-
-    & .horizontal-scroll {
-      position: absolute;
-      z-index: 1;
-      width: max-content;
-      height: 100%;
-      padding: 2px;
-      display: none;
-      flex: 0;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--font-size-16);
-      cursor: pointer;
-
-      &.--left {
-        left: 0;
-      }
-
-      &.--right {
-        right: 0;
-      }
-    }
-  }
-
-  .card-hands-list-context-menu-link .card-hands-list-negative-margin {
-    margin-left: -800%;
   }
 }
 
@@ -266,13 +288,13 @@ div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.min
       border: none;
       border-bottom: none;
 
-      &>.fa-cards {
+      & > .fa-cards {
         font-size: 17.5px;
         margin: 6px 0 0 0;
         order: 2;
       }
 
-      &>.card-hands-list-mode {
+      & > .card-hands-list-mode {
         padding-left: 2px;
         padding-bottom: 4px;
         margin: 0 5px;
@@ -297,11 +319,11 @@ div:not(:is(.camera-position-left, .camera-position-right)) #card-hands-list.min
       padding-left: 2px;
       border-bottom: revert;
 
-      &>.fa-cards {
+      & > .fa-cards {
         border-bottom: revert;
       }
 
-      &>.card-hands-list-mode {
+      & > .card-hands-list-mode {
         order: revert;
       }
     }
