@@ -8,7 +8,7 @@
         "Unfavorite": "Unset as Favorite",
         "Pin": "Pin",
         "Unpin": "Unpin",
-        "Defaults": "Set Defaults",
+        "Defaults": "Configure Draw Settings",
         "DefaultsMessage": "Set the default card draw options for <strong>{name}</strong>",
         "View": "View",
         "Flip": "Flip",
