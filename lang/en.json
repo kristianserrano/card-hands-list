@@ -10,6 +10,12 @@
         "Unpin": "Unpin",
         "Defaults": "Set Defaults",
         "DefaultsMessage": "Set the default card draw options for <strong>{name}</strong>",
+        "View": "View",
+        "Flip": "Flip",
+        "Pass": "Pass",
+        "Discard": "Discard",
+        "PlayAdventureCard": "Play Adventure Card",
+        "ReturnToDeck": "Return to Deck",
         "None": "None",
         "ObserverLevel": {
             "Name": "Include Hands with Observer Ownership",
