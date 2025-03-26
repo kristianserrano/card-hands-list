@@ -17,7 +17,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             drawCard: CardHandsList.#onDrawCard,
             openCardMenu: CardHandsList.#onCardContextMenu,
             scrollArrow: CardHandsList.#onScrollArrow,
-            getHandContextOptions: CardHandsList.#onGetHandContextOptions,
+            getHandContextOptions: CardHandsList.#onHandContextMenu,
 
         },
     };
@@ -300,13 +300,23 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         const hand = game.cards.get(target.parentElement.parentElement.dataset.id);
         const defaultDeck = hand.getFlag(handsModule.id, 'default-deck');
         const defaultMode = hand.getFlag(handsModule.id, 'default-draw-mode');
-        let cardsDrawn = null;
+        const faceDown = hand.getFlag(handsModule.id, 'face-down');
 
-        if (defaultDeck && defaultMode) {
+        if (defaultDeck || defaultMode) {
             const deck = game.cards.get(defaultDeck);
-            cardsDrawn = await hand.draw(deck, 1, { how: Number(defaultMode) });
+            const cardsInHand = hand.cards.contents;
+            const sort = cardsInHand.length ? cardsInHand.reverse()[0].sort + 10 : 0;
+            await hand.draw(deck, 1, {
+                how: Number(defaultMode),
+                updateData: faceDown ? {
+                    face: null,
+                    sort,
+                } : {
+                    sort,
+                },
+            });
         } else {
-            cardsDrawn = await hand.drawDialog();
+            await hand.drawDialog();
         }
     };
 
@@ -359,7 +369,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     // Return the default context options available for the Card Hands List application
-    static async #onGetHandContextOptions(event, target) {
+    static async #onHandContextMenu(event, target) {
         const hand = game.cards.get(target.dataset.id);
         const menuItems = [
             {
@@ -388,6 +398,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                         const deckOptions = [
                             `<option value="none" ${!hand.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${game.i18n.localize(`${handsModule.translationPrefix}.None`)}</option>`
                         ];
+                        const drawFaceDown = hand.getFlag(handsModule.id, 'face-down');
 
                         for (const deck of decks) {
                             deckOptions.push(
@@ -419,26 +430,32 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                             },
                         ];
 
-                        const modeOptions = [];
+
+                        let modeOptions = '';
 
                         for (const drawMode of drawModes) {
-                            modeOptions.push(
-                                `<option value="${drawMode.value}">${drawMode.label}</option>`
-                            );
+                            modeOptions += `<option value="${drawMode.value}">${drawMode.label}</option>`;
                         }
 
                         const modeSelect = `
                             <div class="form-group">
                                 <label for="draw-mode" >${game.i18n.localize('CARDS.DrawMode')}</label>
                                 <div class="form-fields">
-                                    <select id="draw-mode">${modeOptions.join('')}</select>
+                                    <select id="draw-mode">${modeOptions}</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="face-down">${game.i18n.localize('CARDS.Facedown')}</label>
+                                <div class="form-fields">
+                                    <input type="checkbox" id="face-down" name="face-down" ${drawFaceDown ? 'checked' : ''}>
                                 </div>
                             </div>
                         `;
                         const content = `
                             <p>${game.i18n.format(`${handsModule.translationPrefix}.DefaultsMessage`, { name: hand.name })}</p>
                             <form class="cards-defaults">
-                                ${deckSelect + modeSelect}
+                                ${deckSelect}
+                                ${modeSelect}
                             </form>
                         `;
 
@@ -451,13 +468,16 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                                 callback: async (event, target) => {
                                     const deckId = target.closest('form').querySelector('#deck-select').value;
                                     const mode = Number(target.closest('form').querySelector('#draw-mode').value);
+                                    const faceDown = target.closest('form').querySelector('#face-down').checked;
 
                                     if (deckId === 'none') {
                                         await hand.unsetFlag(handsModule.id, 'default-deck');
                                         await hand.unsetFlag(handsModule.id, 'default-draw-mode');
+                                        await hand.unsetFlag(handsModule.id, 'face-down');
                                     } else {
                                         await hand.setFlag(handsModule.id, 'default-deck', deckId);
                                         await hand.setFlag(handsModule.id, 'default-draw-mode', mode);
+                                        await hand.setFlag(handsModule.id, 'face-down', faceDown);
                                     }
                                 }
                             }
@@ -478,7 +498,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                         const updates = hand.cards.map(c => {
                             return {
                                 _id: c.id,
-                                face: someFaceUp ? null : 0
+                                face: c.face === null ? 0 : null,
                             };
                         });
 
@@ -550,7 +570,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                     const content = await renderTemplate("modules/adventure-deck/templates/adventurecard-chatcard.hbs", card);
                     ChatMessage.create({
                         user: game.user.id,
-                        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                        type: CONST.CHAT_MESSAGE_STYLES.OTHER,
                         content: content,
                         sound: game.settings.get("adventure-deck", "toggleSoundOnPlayCard") ? "systems/swade/assets/card-flip.wav" : ""
                     });
@@ -562,7 +582,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
                 icon: '<i class="fas fa-eye"></i>',
                 condition: el => {
-                    return card.isOwner;
+                    return true;
                 },
                 callback: async el => {
                     await new foundry.applications.apps.ImagePopout({
