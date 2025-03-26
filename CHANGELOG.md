@@ -2,9 +2,10 @@
 
 ## v1.12.9
 
-- Changes context menus to use a fixed position outside of the hands list for easier access.
-- Changes card left-click behavior from viewing the current face to pulling up a context menu of actions to perform, including view, flip, pass, discard, and return as well play an Adventure Card if using the Savage Worlds Adventure Edition system along with the Savage Worlds Adventure Deck. Note that Pass and Discard are actually the same action but are separated to help new users unfamiliar with Foundry's Cards interface.
-- Adds an option to configure default card draw settings for a hand to draw face down.
+- Changes ContextMenu to use a fixed position outside of the Hands list for easier interaction.
+- Changes Card left-click behavior from viewing the current face to pulling up a ContextMenu of actions to perform, including View, Flip, Pass, Discard, and Return to Deck as well play an Adventure Card if using the Savage Worlds Adventure Edition system along with the Savage Worlds Adventure Deck module. Note that Pass and Discard are actually the same action but are separated to help new users unfamiliar with Foundry's Cards interface.
+- Changes Flip All in the Hand ContextMenu to respect each Card's current face.
+- Adds an option to configure default Card draw settings for a Hand to draw face down.
 
 ## v1.12.8
 
