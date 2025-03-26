@@ -34,6 +34,13 @@
 
 - Complete rewrite for Foundry VTT v13 using ApplicationV2.
 
+## v1.12.9
+
+- Changes ContextMenu to use a fixed position outside of the Hands list for easier interaction.
+- Changes Card left-click behavior from viewing the current face to pulling up a ContextMenu of actions to perform, including View, Flip, Pass, Discard, and Return to Deck as well play an Adventure Card if using the Savage Worlds Adventure Edition system along with the Savage Worlds Adventure Deck module. Note that Pass and Discard are actually the same action but are separated to help new users unfamiliar with Foundry's Cards interface.
+- Changes Flip All in the Hand ContextMenu to respect each Card's current face.
+- Adds an option to configure default Card draw settings for a Hand to draw face down.
+
 ## v1.12.8
 
 - Adds setting to use explicit hand ownership levels for GMs. When enabled, the GM must have either default or specifically assigned ownership of a hand for it to appear in the list.

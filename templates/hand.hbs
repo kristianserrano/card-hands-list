@@ -35,7 +35,7 @@
         </button>
         {{/if}}
         <ol class="cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
-            {{#each sortedCards}}
+            {{#each cards}}
             <li class="card" data-id="{{id}}" data-uuid="{{uuid}}" data-action="openCardMenu">
                 <img class="card-image" src="{{img}}" data-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" {{#if parent.isOwner}} draggable="true" {{/if}} data-tooltip="
                         <div class='tooltip'>
