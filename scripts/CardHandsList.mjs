@@ -66,6 +66,16 @@ export class CardHandsList extends Application {
                 card.back.enrichedText = await TextEditor.enrichHTML(card.back.text);
             }
 
+            hand.sortedCards = hand.cards.contents.sort((a, b) => {
+                // Compare the values
+                if (a.sort < b.sort) {
+                    return -1;
+                } else if (a.sort > b.sort) {
+                    return 1;
+                } else {
+                    return 0;
+                };
+            });
             hand.isPinned = pinnedHands?.includes(hand.id);
             const favoriteHand = game.system.id === 'swade' ? game?.user?.getFlag('swade', 'favoriteCardsDoc') : null;
             hand.isFavorite = hand.id === favoriteHand;
