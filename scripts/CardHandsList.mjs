@@ -575,14 +575,12 @@ export class CardHandsList extends Application {
                 },
                 callback: async el => {
                     const hand = game?.cards?.get(el[0]?.parentElement?.dataset?.id);
-                    const someFaceUp = hand.cards.some(c => c.face !== null);
                     const updates = hand.cards.map(c => {
                         return {
                             _id: c.id,
-                            face: someFaceUp ? null : 0
+                            face: c.face === null ? 0 : null
                         };
                     });
-
                     await Card.updateDocuments(updates, { parent: hand });
                 }
             },
