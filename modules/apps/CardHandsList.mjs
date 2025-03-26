@@ -565,9 +565,11 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                     return card.isOwner;
                 },
                 callback: async el => {
-                    await new foundry.applications.apps.ImagePopout(card.img, {
-                        title: card.name,
-                        uuid: card.uuid
+                    await new foundry.applications.apps.ImagePopout({
+                        caption: card.name,
+                        showTitle: true,
+                        src: card.img,
+                        uuid: card.uuid,
                     }).render(true);
                 }
             },
