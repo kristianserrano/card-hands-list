@@ -2,6 +2,12 @@
     <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
         <i class="fa-solid fa-up-right-from-square"></i> {{name}}
     </span>
+    {{#if isOwner}}
+    <button class="button context-menu-link" type="button" data-id="{{id}}" data-action="getHandContextOptions" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}">
+        <i class="fas fa-ellipsis-vertical"></i>
+    </button>
+    {{/if}}
+    <div class="buttons">
     <button class="button pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
         {{#if isPinned}}
         {{localize (concat parent.translationPrefix '.Unpin')}}
@@ -11,19 +17,14 @@
     ">
         <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
     </button>
-    <div class="buttons">
-        {{#if isOwner}}
-        <button class="button context-menu-link" type="button" data-id="{{id}}" data-action="getHandContextOptions" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}">
-            <i class="fas fa-ellipsis-vertical"></i>
-        </button>
-        {{/if}}
+
         {{#if (and (eq parent.system 'swade') isOwner)}}
         <button class="button favorite" type="button" data-action="favoriteHand" data-id="{{id}}" data-tooltip="{{#if isFavorite}}{{localize (concat parent.translationPrefix '.Unfavorite')}}{{else}}{{localize (concat parent.translationPrefix '.Favorite')}}{{/if}}">
             <i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
         </button>
         {{/if}}
         {{#if isOwner}}
-        <button class="button draw" type="button" data-action="drawCard" data-id="{{id}}" data-tooltip="{{localize 'CARDS.ACTIONS.Draw'}}">
+        <button class="button draw" type="button" data-action="drawCard" data-id="{{id}}" data-tooltip="{{localize 'CARDS.ACTIONS.ACTIONS.Draw'}}">
             <i class="far fa-cards-blank"></i>
         </button>
         {{/if}}
@@ -36,7 +37,7 @@
         {{/if}}
         <ol class="cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
             {{#each sortedCards}}
-            <li class="card" data-id="{{id}}" data-uuid="{{uuid}}" data-action="openCardMenu">
+            <li class="card" data-id="{{id}}" data-uuid="{{uuid}}" data-action="openCardActions">
                 <img class="card-image" src="{{img}}" data-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" {{#if parent.isOwner}} draggable="true" {{/if}} data-tooltip="
                         <div class='tooltip'>
                             <h3 class='tooltip-heading'>{{name}}</h3>

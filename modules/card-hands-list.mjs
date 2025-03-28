@@ -62,7 +62,7 @@ Hooks.on('setup', async function () {
   ]);
 
   // Register the card actions sheet
-  DocumentSheetConfig.registerSheet(Card, "card-hands-list", CardActionsSheet, { label: "Card Actions", makeDefault: false });
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(Card, "card-hands-list", CardActionsSheet, { label: "Card Actions", makeDefault: false });
   ui.cardHands = new CardHandsList();
 });
 

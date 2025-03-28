@@ -36,7 +36,6 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
 
     async _prepareContext(options = {}) {
         context.object = this.document;
-        context.object.description = await TextEditor.enrichHTML(context.object.description);
         context.buttonActions = this.options.buttonActions;
 
         for (const action of context.buttonActions) {
@@ -65,9 +64,10 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
     }
 
     static async #onViewFace(event, target) {
-        new ImagePopout(this.options.document.img, {
-            title: this.options.document.name,
+        new foundry.applications.apps.ImagePopout({
+            src: this.options.document.img,
+            'window.title': this.options.document.name,
             uuid: this.options.document.uuid,
-        }).render(true);
-    }
+        }).render({ force: true });
+    };
 }

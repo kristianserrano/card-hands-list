@@ -163,6 +163,7 @@
         border: none;
         cursor: pointer;
         pointer-events: all;
+
         &.--hidden {
           visibility: hidden;
         }
@@ -279,6 +280,24 @@
 
     .themed.theme-dark & {
       --background-color: var(--color-cool-5-75);
+    }
+  }
+
+  .card-hands-list-CardActions {
+    max-width: 350px;
+
+    img {
+      cursor: pointer;
+    }
+
+    .sheet-footer {
+      --gap: 4px;
+      gap: var(--gap);
+
+      .card-action {
+        align-self: end;
+        text-wrap: nowrap;
+      }
     }
   }
 
