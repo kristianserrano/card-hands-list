@@ -1,5 +1,5 @@
 
-import { CardHandsList } from './CardHandsList.mjs';
+import { CardHandsList } from './apps/CardHandsList.mjs';
 import { CardActionsSheet } from './apps/CardActionsSheet.mjs';
 
 /**
