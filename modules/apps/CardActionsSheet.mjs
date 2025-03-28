@@ -1,4 +1,4 @@
-import { handsModule } from "../card-hands-list.js";
+import { handsModule } from "../card-hands-list.mjs";
 const { DocumentSheetV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2) {

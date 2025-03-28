@@ -21,7 +21,7 @@
 		"verified": "12"
 	},
 	"esmodules": [
-		"scripts/card-hands-list.js"
+		"modules/card-hands-list.mjs"
 	],
 	"styles": [
 		"styles/card-hands-list.css"
@@ -43,7 +43,7 @@
 	"flags": {
 		"hotReload": {
 			"extensions": [
-				"js",
+				"mjs",
 				"css",
 				"hbs",
 				"json"
@@ -54,9 +54,9 @@
 				"templates/hand.hbs",
 				"styles/card-hands-list.css",
 				"lang/en.json",
-				"scripts/card-hands-list.js",
-				"scripts/CardHandsList.mjs",
-				"scripts/CardActionsSheet.mjs"
+				"modules/card-hands-list.mjs",
+				"modules/apps/CardHandsList.mjs",
+				"modules/apps/CardActionsSheet.mjs"
 			]
 		}
 	}
