@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v1.13.0
+
+- Removes cumbersome ContextMenus and replaces them with a new Card Actions App that opens when the Hand title or a Card is clicked. The App will present the Hand's image or the Card's current face as well as a selection of common actions one might perform. Developers can customize this list in the sheet's render Hook event. See [README](https://github.com/kristianserrano/card-hands-list/blob/main/README.md) for more details.
+- Adds an option in the Hand default settings to set a default discard Pile.
+
 ## v1.12.9
 
 - Changes ContextMenu to use a fixed position outside of the Hands list for easier interaction.
