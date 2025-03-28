@@ -7,19 +7,45 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
 ## Features
 
 - Automatic population of all hands the user owns.
-- A setting to include Card Hands for which the user has at least Observer Ownership.
 - Hand Buttons:
   - Pin a Card Hand to always display it when the Card Hands List UI is collapsed.
   - Directly draw Cards to the respective Card Hand.
-- Hand Context Menu:
-  - Configre Ownership
-  - Flip all Cards in the Hand.
-  - Shuffle the Card Hand.
-  - Pass Cards
-  - Reset Hand
-- Left-click to view the Card image in an Image Popout.
-- Right-click on a Card to flip it.
+  - Favorite a hand when using the Savage Worlds Adventure Edition system to configure it with the keyboard shortcut <kbd>C</kbd>.
 - Drag and drop Cards:
   - From Card Hand to Card Hand in the Card Hands List.
   - Between a Cards sheet and a Hand in the list.
-  - To a scene (i.e., works with [Card Tiles](https://foundryvtt.com/packages/card-tiles)).
+  - To a scene, which works really well with [Complete Card Management](https://foundryvtt.com/packages/complete-card-management) by [MetaMorphic Digital Studio](https://metamorphic-digital.com/).
+- Hand/Card Actions App: Clicking on a Hand or Card will open it in the Card Actions App which allows you to see the current face as well as perform a collection of common actions. Developers can add or remove actions in the `renderCardActionsSheet` hook event in which they are stored in `options.buttonActions`. These actions use the same identical structure as Foundry VTT's [ContextMenuEntry](https://foundryvtt.com/api/interfaces/client.ContextMenuEntry.html). Example:
+
+```js
+Hooks.on('renderCardActionsSheet', (sheet, html) => {
+  if (sheet.document.documentName === 'Card') {
+    const buttonActions = sheet.options.buttonActions;
+    const buttonsToRemove = ['Return to Deck', 'Discard']
+    const removeThese = buttonActions.filter(a => buttonsToRemove.includes(a.name));
+    const newButton = {
+      name: 'Log Me',
+      icon: '<i class="fas fa-terminal"></i>',
+      condition: true,
+      callback: async el => {
+        const card = await fromUuid(el[0].dataset.uuid);
+        console.log(card);
+      }
+    };
+
+    if (!buttonActions.some(a => a.name === newButton.name)){
+      buttonActions.push(newButton);
+      sheet.render();
+    } else if (removeThese.length) {
+      for (const button of removeThese) {
+        buttonActions.splice(buttonActions.indexOf(button), 1);
+      }
+      sheet.render();
+    }
+  }
+});
+```
+
+- Settings:
+  - Include Card Hands with Observer-level ownership.
+  - Use explicit user ownership levels preventing viewability based on user role instead (i.e., a GM won't see every hand by default).

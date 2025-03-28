@@ -1,5 +1,7 @@
 
 import { CardHandsList } from './apps/CardHandsList.mjs';
+import { CardActionsSheet } from './apps/CardActionsSheet.mjs';
+
 /**
  * Card Hands List
  * A Foundry VTT module to display and provide quick access to a player's Card Hands
@@ -55,9 +57,12 @@ Hooks.on('setup', async function () {
   // Preload the template and render the UI
   foundry.applications.handlebars.loadTemplates([
     `modules/${handsModule.id}/templates/container.hbs`,
+    `modules/${handsModule.id}/templates/card-actions-sheet.hbs`,
     `modules/${handsModule.id}/templates/hand.hbs`
   ]);
 
+  // Register the card actions sheet
+  DocumentSheetConfig.registerSheet(Card, "card-hands-list", CardActionsSheet, { label: "Card Actions", makeDefault: false });
   ui.cardHands = new CardHandsList();
 });
 
