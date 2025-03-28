@@ -49,12 +49,14 @@
 				"json"
 			],
 			"paths": [
-				"templates/card-hands-list-container.hbs",
+				"templates/container.hbs",
+				"templates/card-actions-sheet.hbs",
 				"templates/hand.hbs",
 				"styles/card-hands-list.css",
 				"lang/en.json",
 				"scripts/card-hands-list.js",
-				"scripts/CardHandsList.js"
+				"scripts/CardHandsList.mjs",
+				"scripts/CardActionsSheet.mjs"
 			]
 		}
 	}

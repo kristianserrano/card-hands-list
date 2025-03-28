@@ -2,10 +2,9 @@
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand
         {{#if (eq parent.favorite id)}} is-favorite{{/if}}
         {{#if isPinned}} is-pinned{{/if}}" data-id="{{id}}">
-    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
-        <a><i class="fas fa-browser fa-flip-horizontal "></i> {{name}}</a>
+    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-id="{{id}}" data-uuid="{{uuid}}" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
+        <a>{{name}}</a>
     </h4>
-    <div class="{{parent.moduleId}}-button {{parent.moduleId}}-context-menu-link" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}"><a><i class="fas fa-ellipsis-vertical"></i></a></div>
     <div class="{{parent.moduleId}}-buttons">
         {{#if (and (eq parent.system 'swade') isOwner)}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite" data-id="{{id}}" data-tooltip="
