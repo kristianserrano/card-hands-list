@@ -1,6 +1,6 @@
 
 import { CardHandsList } from './CardHandsList.mjs';
-import { CardActionsSheet } from './CardActionsSheet.mjs';
+import { CardActionsSheet } from './apps/CardActionsSheet.mjs';
 
 /**
  * Card Hands List

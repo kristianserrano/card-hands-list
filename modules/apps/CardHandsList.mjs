@@ -1,4 +1,4 @@
-import { handsModule } from "./card-hands-list.js";
+import { handsModule } from "../card-hands-list.js";
 import { CardActionsSheet } from "./CardActionsSheet.mjs";
 /**
  * The UI element which displays the list of Hands available to the User.
