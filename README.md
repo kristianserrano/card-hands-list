@@ -9,7 +9,7 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
 - Automatic population of all hands the user owns.
 - Settings:
   - Include Card Hands with Observer-level ownership.
-  - Use explicit user ownership levels rather than a GM who automatically owns everything.
+  - Use explicit user ownership levels preventing viewability based on user role instead (i.e., a GM won't see every hand by default).
 - Hand Buttons:
   - Pin a Card Hand to always display it when the Card Hands List UI is collapsed.
   - Directly draw Cards to the respective Card Hand.
