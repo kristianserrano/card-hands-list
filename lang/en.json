@@ -2,6 +2,7 @@
     "CardHandsList": {
         "Heading": "Card Hands",
         "ViewHand": "View Hand",
+        "OpenHandActions": "Open Hand Actions",
         "Menu": "Menu",
         "FlipAll": "Flip All",
         "Favorite": "Set as Favorite",
