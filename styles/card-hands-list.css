@@ -171,12 +171,14 @@
         flex: 0;
         align-items: center;
         justify-content: center;
-        background-color: #00000050;
+        background-color: #000000;
         font-size: var(--font-size-16);
+        opacity: 0.5;
         cursor: pointer;
-        transition: background-color 0.25s ease-in-out;
+        transition: opacity 0.25s ease-in-out;
+
         &:hover {
-          background-color: #00000099;
+          opacity:.99;
         }
 
         &.--left {
