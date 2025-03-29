@@ -10,7 +10,7 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
 - Hand Buttons:
   - Pin a Card Hand to always display it when the Card Hands List UI is collapsed.
   - Directly draw Cards to the respective Card Hand.
-  - Favorite a hand when using the Savage Worlds Adventure Edition system to configure it with the keyboard shortcut <kbd>C</kbd>.
+  - Favorite a hand when using the Savage Worlds Adventure Edition system to configure it with the keyboard shortcut <kbd>H</kbd>.
 - Drag and drop Cards:
   - From Card Hand to Card Hand in the Card Hands List.
   - Between a Cards sheet and a Hand in the list.
