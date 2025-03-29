@@ -167,6 +167,21 @@ export class CardHandsList extends Application {
         cardImages?.on('dragstart', this._onDragCard.bind(this));
         // Drop a Card
         html.find(`.${handsModule.id}-cards`)?.on('drop', this._onDropCard.bind(this));
+        // Pull up menu options from link
+/*         new ContextMenu(html, `.${handsModule.id}-name`, this._getHandContextOptions(), {
+            eventName: 'click'
+        });
+        html.find(`.${handsModule.id}-name`)?.click(() => {
+            setTimeout(() => {
+                console.dir(html);
+                const menu = html[0].querySelector('#contextMenu');
+                if (menu) {
+
+                    menu.offsetTop = html.offsetTop - menu.offsetHeight;
+                    menu.offsetLeft = html.offsetLeft + html.offsetWidth;
+                }
+            }, 5000);
+        }); */
 
         if (game.modules.get('minimal-ui')?.active) {
             const foundryLogo = document.querySelector('#logo');
@@ -231,7 +246,7 @@ export class CardHandsList extends Application {
         const card = fromUuidSync(e.target.dataset.uuid);
 
         if (card) {
-            new CardActionsSheet({ document: card, buttonActions: this._getCardContextOptions() }).render(true)
+            new CardActionsSheet({ document: card, buttonActions: this._getCardContextOptions() }).render(true);
         }
     }
 
@@ -683,4 +698,4 @@ export class CardHandsList extends Application {
             },
         ];
     }
-a};
+};
