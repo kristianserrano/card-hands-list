@@ -219,11 +219,11 @@ export class CardHandsList extends Application {
     async _onOpenCardsHand(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
+        const document = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
 
-        if (hand) {
+        if (document) {
             new HandActionsSheet({
-                document: hand,
+                document,
                 buttonActions: CONFIG.CardHandsList.menuItems.handContextOptions,
             }).render(true);
         }
@@ -233,11 +233,11 @@ export class CardHandsList extends Application {
     async _onOpenCard(e) {
         // Prevent multiple executions
         e.preventDefault();
-        const card = fromUuidSync(e.target.dataset.uuid);
+        const document = fromUuidSync(e.target.dataset.uuid);
 
-        if (card) {
+        if (document) {
             new CardActionsSheet({
-                document: card,
+                document,
                 buttonActions: CONFIG.CardHandsList.menuItems.cardContextOptions,
             }).render(true);
         }
