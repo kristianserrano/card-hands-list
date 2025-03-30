@@ -18,29 +18,32 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
 - Hand/Card Actions App: Clicking on a Hand or Card will open it in the Card Actions App which allows you to see the current face as well as perform a collection of common actions. Developers can either add or remove actions `CONFIG.CardHandsList.menuItems.cardContextOptions` or `CONFIG.CardHandsList.menuItems.handContextOptions` in the `renderCardActionsSheet` or `renderHandActionsSheet` hook events or modify `options.buttonActions` in those same hook events. For consistency these actions use the same identical structure as Foundry VTT's [ContextMenuEntry](https://foundryvtt.com/api/interfaces/client.ContextMenuEntry.html), which means they could also be referenced for an actual ContextMenu use case. Example:
 
 ```js
-Hooks.on('renderCardActionsSheet', (sheet, html) => {
-  const buttonActions = sheet.options.buttonActions;
-  const buttonsToRemove = ['Return to Deck', 'Discard'];  // An Array of menu item names.
-  const removeThese = buttonActions.filter(a => buttonsToRemove.includes(a.name));
-  // Create a new Context Menu Item
-  const newButton = {
-    name: 'Log Me',
-    icon: '<i class="fas fa-terminal"></i>',
-    condition: true,
-    callback: async el => {
-      console.log(card); // `card` is passed in already when this method is called.
-    }
-  };
+Hooks.on('renderHandActionsSheet', (sheet, html) => {
+  // If Complete Card Management (CCM) is installed and active, add the scry button.
+  if (game.modules.get('complete-card-management')?.active) {
+    const buttonActions = sheet.options.buttonActions;
+    // Create a CCM Scry Context Menu Item
+    const newButton = {
+      name: game.i18n.localize('CardHandsList.ScryDeck'),
+      icon: "<i class='fa-solid fa-eye'></i>",
+      condition: (el) => {
+        // If the hand has a default deck configured, display the scry button
+        const hand = game.cards.get(el[0].dataset.id);
+        return game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
+      },
+      callback: async (el) => {
+        const hand = game.cards.get(el[0].dataset.id);
+        const deck = game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
+        // Call CCM's scry function.
+        ccm.api.scry(deck);
+      }
+    };
 
-  if (!buttonActions.some(a => a.name === newButton.name)) { // If the new button hasn't already been added during a previous render, add it.
-    buttonActions.push(newButton);
-    sheet.render();
-  } else if (removeThese.length) { // If there are button actions to remove, remove them.
-    for (const button of removeThese) {
-      buttonActions.splice(buttonActions.indexOf(button), 1);
+    // If the new button hasn't already been added during a previous render, add it.
+    if (!buttonActions.some(a => a.name === newButton.name)) {
+      buttonActions.splice(2, 0, newButton);
+      sheet.render();
     }
-
-    sheet.render();
   }
 });
 ```

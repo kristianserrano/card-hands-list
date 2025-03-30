@@ -2,10 +2,19 @@
 <section id="{{parent.moduleId}}-{{id}}" class="{{parent.moduleId}}-hand
         {{#if (eq parent.favorite id)}} is-favorite{{/if}}
         {{#if isPinned}} is-pinned{{/if}}" data-id="{{id}}">
-    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-id="{{id}}" data-uuid="{{uuid}}" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
+    <h4 class="{{parent.moduleId}}-name{{#if isOwner}}{{#unless (and isGM hasPlayerOwner)}} is-owner{{/unless}}{{/if}}" data-id="{{id}}" data-uuid="{{uuid}}" data-tooltip="{{localize (concat parent.translationPrefix '.OpenHandActions')}}">
         <a>{{name}}</a>
     </h4>
     <div class="{{parent.moduleId}}-buttons">
+        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-pin" data-id="{{id}}" data-tooltip="
+                    {{#if isPinned}}
+                    {{localize (concat parent.translationPrefix '.Unpin')}}
+                    {{else}}
+                    {{localize (concat parent.translationPrefix '.Pin')}}
+                    {{/if}}
+                ">
+            <a><i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
+        </div>
         {{#if (and (eq parent.system 'swade') isOwner)}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-favorite" data-id="{{id}}" data-tooltip="
                 {{#if isFavorite}}
@@ -17,26 +26,17 @@
             <a><i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i></a>
         </div>
         {{/if}}
-        <div class="{{parent.moduleId}}-button {{parent.moduleId}}-pin" data-id="{{id}}" data-tooltip="
-                {{#if isPinned}}
-                {{localize (concat parent.translationPrefix '.Unpin')}}
-                {{else}}
-                {{localize (concat parent.translationPrefix '.Pin')}}
-                {{/if}}
-            ">
-            <a><i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i></a>
-        </div>
         {{#if isOwner}}
         <div class="{{parent.moduleId}}-button {{parent.moduleId}}-draw" data-id="{{id}}" data-tooltip="{{localize 'CARDS.Draw'}}">
             <a><i class="far fa-cards-blank"></i></a>
         </div>
         {{/if}}
     </div>
-    <div class="{{parent.moduleId}}-cards">
+    <div class="{{parent.moduleId}}-cards" data-id="{{id}}" data-uuid="{{uuid}}">
         {{#if cards.size}}<div class="card-hands-list-button horizontal-scroll --left"><a><i class="fas fa-caret-left"></i></a></div>{{/if}}
         <ul class="{{parent.moduleId}}-cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
             {{#each sortedCards}}
-            <li class="{{../parent.moduleId}}-card" data-id="{{id}}" data-uuid="{{uuid}}" >
+            <li class="{{../parent.moduleId}}-card" data-id="{{id}}" data-uuid="{{uuid}}">
                 <img class="{{../parent.moduleId}}-card-image" src="{{img}}" data-id="{{id}}" data-uuid="{{uuid}}" data-img="{{img}}" {{#if parent.isOwner}} draggable="true" {{/if}} data-tooltip="
                         <div class='card-hands-list-tooltip'>
                         <h4 class='{{../parent.moduleId}}-tooltip-heading'>{{name}}</h4>

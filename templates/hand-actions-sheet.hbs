@@ -1,0 +1,7 @@
+<ul data-id="{{hand.id}}" data-uuid="{{hand.uuid}}">
+    {{#each hand.sortedCards}}
+    <li class="card-actions-sheet-card">
+        <img src="{{img}}" draggable="true" data-link data-action="openCard" data-id="{{id}}" data-uuid="{{uuid}}" data-tooltip="{{name}}" data-tooltip-direction="CENTER" />
+    </li>
+    {{/each}}
+</ul>

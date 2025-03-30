@@ -1,11 +1,3 @@
-<div class="flexcol document-wrapper" data-id="{{this.object.id}}" data-uuid="{{this.object.uuid}}">
-    <img src="{{object.img}}" data-action="viewFace" data-tooltip="{{object.name}}: {{object.description}}"/>
-    <hr/>
-    <footer class="sheet-footer flexrow">
-        {{#each actions}}
-        {{#if display}}
-        {{{button.outerHTML}}}
-        {{/if}}
-        {{/each}}
-    </footer>
-</div>
+<figure data-id="{{card.id}}" data-uuid="{{card.uuid}}">
+    <img src="{{card.img}}" draggable="true" data-action="viewFace" data-id="{{card.id}}" data-uuid="{{card.uuid}}"/>
+</figure>
