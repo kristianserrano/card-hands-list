@@ -18,7 +18,8 @@
 	"bugs": "",
 	"compatibility": {
 		"minimum": "13",
-		"verified": "13"
+		"verified": "13",
+		"maximum": "13"
 	},
 	"esmodules": [
 		"modules/card-hands-list.mjs"
@@ -49,11 +50,11 @@
 				"json"
 			],
 			"paths": [
-				"templates/container.hbs",
+				"templates/actions-footer.hbs",
 				"templates/card-actions-sheet.hbs",
+				"templates/container.hbs",
 				"templates/hand-actions-sheet.hbs",
 				"templates/hand.hbs",
-				"templates/actions-footer.hbs",
 				"styles/card-hands-list.css",
 				"lang/en.json",
 				"modules/card-hands-list.mjs",
