@@ -34,6 +34,14 @@
 
 - Complete rewrite for Foundry VTT v13 using ApplicationV2.
 
+## v1.13.1
+
+- Adds fallbacks if no action buttons were passed to the Hand or Card Actions Sheets in `options`.
+- Adds conditional actions to open the Card or Hand's configured sheet if it's not the Actions sheet.
+- Adds conditionals to Hand actions based on whether or not the Hand has Cards.
+- Adds Card flip action when right-clicking on a card in the Hand.
+- Adds a Scry Default Deck action if the Complete Card Management module is active.
+
 ## v1.13.0
 
 - Removes cumbersome ContextMenus and replaces them with a new Card and Hand Actions Apps that open when the Hand title or a Card is clicked. The App will present the Hand's cards or the Card's current face as well as a selection of common actions one might perform. Developers can customize this list in the sheet's render Hook event. See [README](https://github.com/kristianserrano/card-hands-list/blob/main/README.md) for more details.

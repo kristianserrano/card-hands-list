@@ -65,9 +65,11 @@ Hooks.on('setup', async function () {
 
   // Register the card actions sheet
   foundry.applications.apps.DocumentSheetConfig.registerSheet(Card, "card-hands-list", CardActionsSheet, {
+    label: 'Card Hands List Card Actions',
     makeDefault: false
   });
-  foundry.applications.apps.DocumentSheetConfig.registerSheet(Card, "card-hands-list", HandActionsSheet, {
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(Cards, "card-hands-list", HandActionsSheet, {
+    label: 'Card Hands List Hand Actions',
     makeDefault: false
   });
   ui.cardHands = new CardHandsList();
@@ -76,18 +78,15 @@ Hooks.on('setup', async function () {
     menuItems: {
       cardContextOptions: [
         {
-          name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
-          icon: '<i class="far fa-eye"></i>',
+          name: game.i18n.localize(`${handsModule.translationPrefix}.OpenCard`),
+          icon: '<i class="fas fa-card-spade"></i>',
           condition: el => {
             const card = fromUuidSync(el.dataset.uuid);
             return card?.isOwner;
           },
           callback: async el => {
             const card = fromUuidSync(el.dataset.uuid);
-            await new ImagePopout(card.img, {
-              title: card.name,
-              uuid: card.uuid
-            }).render(true);
+            await card.sheet.render(true);
           }
         },
         {
@@ -170,12 +169,44 @@ Hooks.on('setup', async function () {
       ],
       handContextOptions: [
         {
-          name: game.i18n.localize('CardHandsList.ViewHand'),
-          icon: '<i class="fas fa-lock"></i>',
+          name: game.i18n.localize('CardHandsList.OpenHand'),
+          icon: '<i class="far fa-cards-blank"></i>',
           condition: true,
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
             hand.sheet.render(true);
+          }
+        },
+        {
+          name: game.i18n.localize('CARDS.Draw'),
+          icon: '<i class="far fa-cards"></i>',
+          condition: el => {
+            const hand = game.cards.get(el.dataset.id);
+            // Check if GM or if user is owner of hand
+            return hand?.isOwner;
+          },
+          callback: async el => {
+            const hand = game.cards.get(el[0].dataset.id);
+            const defaultDeck = hand.getFlag(handsModule.id, 'default-deck');
+            const defaultMode = hand.getFlag(handsModule.id, 'default-draw-mode');
+            const faceDown = hand.getFlag(handsModule.id, 'face-down');
+
+            if (defaultDeck) {
+              const deck = game.cards.get(defaultDeck);
+              const cardsInHand = hand.cards.contents;
+              const sort = cardsInHand.length ? cardsInHand.reverse()[0].sort + 10 : 0;
+              await hand.draw(deck, 1, {
+                how: Number(defaultMode),
+                updateData: faceDown ? {
+                  face: null,
+                  sort,
+                } : {
+                  sort,
+                },
+              });
+            } else {
+              await hand.drawDialog();
+            }
           }
         },
         {
@@ -203,7 +234,7 @@ Hooks.on('setup', async function () {
           condition: el => {
             const hand = game.cards.get(el.dataset.id);
             // Check if GM or if user is owner of hand
-            return hand?.isOwner;
+            return hand?.isOwner && hand.cards.size;
           },
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
@@ -216,7 +247,7 @@ Hooks.on('setup', async function () {
           condition: el => {
             const hand = game.cards.get(el.dataset.id);
             // Check if GM or if user is owner of hand
-            return hand?.isOwner;
+            return hand?.isOwner && hand.cards.size;
           },
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
@@ -229,7 +260,7 @@ Hooks.on('setup', async function () {
           condition: el => {
             const hand = game.cards.get(el.dataset.id);
             // Check if GM or if user is owner of hand
-            return hand?.isOwner && game.cards.get(hand?.getFlag(handsModule.id, 'default-discard-pile'));
+            return hand?.isOwner && hand.cards.size && game.cards.get(hand?.getFlag(handsModule.id, 'default-discard-pile'));
           },
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
@@ -249,7 +280,7 @@ Hooks.on('setup', async function () {
           condition: el => {
             const hand = game.cards.get(el.dataset.id);
             // Check if GM or if user is owner of hand
-            return hand?.isOwner;
+            return hand?.isOwner && hand.cards.size;
           },
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
@@ -448,3 +479,33 @@ for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'up
     }
   });
 }
+
+Hooks.on('renderHandActionsSheet', (sheet, html) => {
+  // If Complete Card Management (CCM) is installed and active, add the scry button.
+  if (game.modules.get('complete-card-management')?.active) {
+    // If the sheet did not have options passed in already, get the actions from CONFIG.
+    const buttonActions = sheet.options.buttonActions ?? CONFIG.CardHandsList.menuItems.handContextOptions;
+    // Create a CCM Scry Context Menu Item
+    const newButton = {
+      name: game.i18n.localize('CardHandsList.ScryDeck'),
+      icon: "<i class='fa-solid fa-eye'></i>",
+      condition: (el) => {
+        // If the hand has a default deck configured, display the scry button
+        const hand = game.cards.get(el[0].dataset.id);
+        return game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
+      },
+      callback: async (el) => {
+        const hand = game.cards.get(el[0].dataset.id);
+        const deck = game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
+        // Call CCM's scry function.
+        ccm.api.scry(deck);
+      }
+    };
+
+    // If the new button hasn't already been added during a previous render, add it.
+    if (!buttonActions.some(a => a.name === newButton.name)) {
+      buttonActions.splice(2, 0, newButton);
+      sheet.render();
+    }
+  }
+});

@@ -1,7 +1,7 @@
 {
     "CardHandsList": {
         "Heading": "Card Hands",
-        "ViewHand": "View Hand",
+        "OpenHand": "Open Hand Sheet",
         "OpenHandActions": "Open Hand Actions",
         "Menu": "Menu",
         "FlipAll": "Flip All",
@@ -11,7 +11,7 @@
         "Unpin": "Unpin",
         "Defaults": "Set Defaults",
         "DefaultsMessage": "Set the default card draw and discard options for <strong>{name}</strong>",
-        "View": "View",
+        "OpenCard": "Open Card Sheet",
         "Flip": "Flip",
         "Pass": "Pass",
         "Discard": "Discard",
