@@ -1,6 +1,6 @@
 # Card Hands List
 
-![Screenshot of Card Hands List showing the UI and context menu](https://raw.githubusercontent.com/kristianserrano/card-hands-list/main/assets/images/card-hands-ui.webp)
+![Screenshot of Card Hands List showing the UI and context menu](https://immaterialplane.s3.amazonaws.com/foundryvtt/card-hands-list-expanded.png)
 
 Card Hands List is a system-agnostic module for Foundry VTT that provides quick access to Card Hands the user owns. The module adds a collapsible list of Card Hands placed above the Players List, blending in with the core Foundry VTT UI.
 
