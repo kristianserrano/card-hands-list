@@ -1,5 +1,13 @@
 # Card Hands List Changelog
 
+## v2.2.0
+
+- Ports over features introduced in v1.13.0 and v1.13.1 (i.e., the Foundry VTT v12 version of Card Hands List).
+- Removes cumbersome ContextMenus and replaces them with a new Card and Hand Actions Apps that open when the Hand title or a Card is clicked. The App will present the Hand's cards or the Card's current face as well as a selection of common actions one might perform. Developers can customize this list in the sheet's render Hook event. See [README](https://github.com/kristianserrano/card-hands-list/blob/main/README.md) for more details.
+- Adds an option in the Hand default settings to set a default discard Pile.
+- Adds Card flip action when right-clicking on a card in the Hand.
+- Adds a "Scry Default Deck" action if the Complete Card Management module is active.
+
 ## v2.1.1
 
 - Changes behavior when left-clicking on a card from viewing the card's current face image to opening the context menu, which is also pulled up on right-click. This gives more choices for actions on what to do with the card, including viewing the current face, rather than just opening an image.
