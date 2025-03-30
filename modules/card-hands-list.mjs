@@ -396,15 +396,19 @@ Hooks.on('setup', async function () {
                   const mode = Number(event.target.closest('.dialog-form').querySelector('#draw-mode').value);
                   const faceDown = event.target.closest('.dialog-form').querySelector('#face-down').checked;
 
-                  if (deckId === 'none' && pileId === 'none') {
+                  if (deckId === 'none') {
                     await hand.unsetFlag(handsModule.id, 'default-deck');
                     await hand.unsetFlag(handsModule.id, 'default-draw-mode');
                     await hand.unsetFlag(handsModule.id, 'face-down');
-                    await hand.unsetFlag(handsModule.id, 'default-discard-pile');
                   } else {
                     await hand.setFlag(handsModule.id, 'default-deck', deckId);
                     await hand.setFlag(handsModule.id, 'default-draw-mode', mode);
                     await hand.setFlag(handsModule.id, 'face-down', faceDown);
+                  }
+
+                  if (pileId === 'none') {
+                    await hand.unsetFlag(handsModule.id, 'default-discard-pile');
+                  } else {
                     await hand.setFlag(handsModule.id, 'default-discard-pile', pileId);
                   }
                 }
