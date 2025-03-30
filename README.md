@@ -21,7 +21,8 @@ Card Hands List is a system-agnostic module for Foundry VTT that provides quick 
 Hooks.on('renderHandActionsSheet', (sheet, html) => {
   // If Complete Card Management (CCM) is installed and active, add the scry button.
   if (game.modules.get('complete-card-management')?.active) {
-    const buttonActions = sheet.options.buttonActions;
+    // Get the button actions from options if available, otherwise get the defaults.
+    const buttonActions = sheet.options.buttonActions ?? CONFIG.CardHandsList.menuItems.handContextOptions;
     // Create a CCM Scry Context Menu Item
     const newButton = {
       name: game.i18n.localize('CardHandsList.ScryDeck'),
