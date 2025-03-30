@@ -488,3 +488,33 @@ for (const hook of ['createCard', 'updateCard', 'deleteCard', 'createCards', 'up
     }
   });
 }
+
+Hooks.on('renderHandActionsSheet', (sheet, html) => {
+  // If Complete Card Management (CCM) is installed and active, add the scry button.
+  if (game.modules.get('complete-card-management')?.active) {
+    // If the sheet did not have options passed in already, get the actions from CONFIG.
+    const buttonActions = sheet.options.buttonActions ?? CONFIG.CardHandsList.menuItems.handContextOptions;
+    // Create a CCM Scry Context Menu Item
+    const newButton = {
+      name: game.i18n.localize('CardHandsList.ScryDeck'),
+      icon: "<i class='fa-solid fa-eye'></i>",
+      condition: (el) => {
+        // If the hand has a default deck configured, display the scry button
+        const hand = game.cards.get(el[0].dataset.id);
+        return game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
+      },
+      callback: async (el) => {
+        const hand = game.cards.get(el[0].dataset.id);
+        const deck = game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
+        // Call CCM's scry function.
+        ccm.api.scry(deck);
+      }
+    };
+
+    // If the new button hasn't already been added during a previous render, add it.
+    if (!buttonActions.some(a => a.name === newButton.name)) {
+      buttonActions.splice(2, 0, newButton);
+      sheet.render();
+    }
+  }
+});
