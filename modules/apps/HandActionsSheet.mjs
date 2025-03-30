@@ -13,11 +13,12 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
             openCard: HandActionsSheet.#onOpenCard,
         },
         window: {
+            contentClasses: ['standard-form'],
             resizable: true,
         },
         position: {
             width: 724,
-            height: 352,
+            height: 410,
             top: 80,
         },
         classes: ['card-hands-list-actions'],

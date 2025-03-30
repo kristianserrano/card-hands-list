@@ -231,6 +231,7 @@
           opacity: 0.5;
           cursor: pointer;
           transition: opacity 0.25s ease-in-out;
+
           &:hover {
             opacity: 0.9;
           }
@@ -238,6 +239,7 @@
           &.--left {
             left: 0;
           }
+
           &.--right {
             right: 0;
           }
@@ -332,14 +334,11 @@
     }
 
     .sheet-footer.flexrow {
-      --gap: 4px;
       position: sticky;
       bottom: 0;
-      gap: var(--gap);
-      align-items: stretch;
 
       .card-action {
-        align-self: end;
+        min-width: fit-content;
         text-wrap: nowrap;
       }
     }

@@ -12,6 +12,7 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
             viewFace: CardActionsSheet.#onViewFace,
         },
         window: {
+            contentClasses: ['standard-form'],
             resizable: true,
         },
         position: {
