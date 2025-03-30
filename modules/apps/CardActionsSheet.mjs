@@ -34,7 +34,7 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
     }
 
     get title() {
-        return this.options.document.name;
+        return this.document.name;
     }
 
     get id() {
@@ -44,10 +44,11 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
     async _preparePartContext(partId, context) {
         switch (partId) {
             case 'card':
-                context.card = this.options.document;
+                context.card = this.document;
                 break;
             case 'actions':
-                for (const action of this.options.buttonActions) {
+                const buttonActions = this.options.buttonActions ?? CONFIG.CardHandsList.menuItems.cardContextOptions;
+                for (const action of buttonActions) {
                     action.button = document.createElement('button');
                     action.button.classList.add('card-action');
                     action.button.type = 'button';
@@ -58,7 +59,12 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
                     action.display = (action.condition instanceof Function) ? action.condition($(action.button)) : action.condition;
                 }
 
-                context.actionButtons = this.options.buttonActions?.filter(a => a.name !== game.i18n.localize(`${handsModule.translationPrefix}.View`));
+                if (this.document.getFlag('core', 'sheetClass') === "card-hands-list.CardActionsSheet") {
+                    context.actionButtons = buttonActions?.filter(a => a.name !== game.i18n.localize(`${handsModule.translationPrefix}.OpenCard`));
+                } else {
+                    context.actionButtons = buttonActions;
+                }
+
                 break;
         }
         return context;

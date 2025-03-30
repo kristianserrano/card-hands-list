@@ -17,7 +17,7 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
         },
         position: {
             width: 724,
-            height: 322,
+            height: 352,
             top: 80,
         },
         classes: ['card-hands-list-actions'],
@@ -36,27 +36,24 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
     };
 
     get title() {
-        return this.options.document.name;
+        return this.document.name;
     }
 
     get id() {
         return `HandActionsSheet-${this.document.id}`;
     }
 
-    async _prepareContext(context, options) {
-
-
-        return context;
-    }
 
     async _preparePartContext(partId, context) {
         switch (partId) {
             case 'hand':
-                context.hand = this.options.document;
-                context.hand.sortedCards = this.options.document.cards.contents.sort((a, b) => a.sort - b.sort);
+                context.hand = this.document;
+                context.hand.sortedCards = this.document.cards.contents.sort((a, b) => a.sort - b.sort);
                 break;
             case 'actions':
-                for (const action of this.options.buttonActions) {
+                const buttonActions = this.options.buttonActions ?? CONFIG.CardHandsList.menuItems.handContextOptions;
+
+                for (const action of buttonActions) {
                     action.button = document.createElement('button');
                     action.button.classList.add('card-action');
                     action.button.type = 'button';
@@ -67,7 +64,12 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
                     action.display = (action.condition instanceof Function) ? action.condition($(action.button)) : action.condition;
                 }
 
-                context.actionButtons = this.options.buttonActions?.filter(a => a.name !== game.i18n.localize(`${handsModule.translationPrefix}.View`));
+                if (this.document.getFlag('core', 'sheetClass') === "card-hands-list.HandActionsSheet") {
+                    context.actionButtons = buttonActions?.filter(a => a.name !== game.i18n.localize(`${handsModule.translationPrefix}.OpenHand`));
+                } else {
+                    context.actionButtons = buttonActions;
+                }
+
                 break;
         }
         return context;
