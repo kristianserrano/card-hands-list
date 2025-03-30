@@ -51,12 +51,15 @@
 			"paths": [
 				"templates/container.hbs",
 				"templates/card-actions-sheet.hbs",
+				"templates/hand-actions-sheet.hbs",
 				"templates/hand.hbs",
+				"templates/actions-footer.hbs",
 				"styles/card-hands-list.css",
 				"lang/en.json",
 				"modules/card-hands-list.mjs",
 				"modules/apps/CardHandsList.mjs",
-				"modules/apps/CardActionsSheet.mjs"
+				"modules/apps/CardActionsSheet.mjs",
+				"modules/apps/HandActionsSheet.mjs"
 			]
 		}
 	}

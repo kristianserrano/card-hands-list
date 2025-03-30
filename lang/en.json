@@ -2,6 +2,7 @@
     "CardHandsList": {
         "Heading": "Card Hands",
         "ViewHand": "View Hand",
+        "OpenHandActions": "Open Hand Actions",
         "Menu": "Menu",
         "FlipAll": "Flip All",
         "Favorite": "Set as Favorite",
@@ -16,6 +17,7 @@
         "Discard": "Discard",
         "DiscardAll": "Discard All",
         "PlayAdventureCard": "Play Adventure Card",
+        "ScryDeck": "Scry Default Deck",
         "ReturnToDeck": "Return to Deck",
         "None": "None",
         "Favorited": "Favorited",

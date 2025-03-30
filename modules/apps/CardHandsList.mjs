@@ -1,5 +1,7 @@
 import { handsModule } from "../card-hands-list.mjs";
 import { CardActionsSheet } from "./CardActionsSheet.mjs";
+import { HandActionsSheet } from "./HandActionsSheet.mjs";
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static DEFAULT_OPTIONS = {
@@ -240,7 +242,10 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         const card = fromUuidSync(target.dataset.uuid);
 
         if (card) {
-            new CardActionsSheet({ document: card, buttonActions: CardHandsList.#getCardContextOptions(card) }).render(true);
+            new CardActionsSheet({
+                document: card,
+                buttonActions: CONFIG.CardHandsList.menuItems.cardContextOptions,
+            }).render(true);
         }
     }
 
@@ -248,8 +253,28 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static async #onOpenHand(event, target) {
         // Prevent multiple executions
         event.preventDefault();
-        const hand = game.cards.get(target.closest(`.hand`)?.dataset.id);
-        await hand?.sheet.render(true);
+        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
+
+        if (hand) {
+            new HandActionsSheet({
+                document: hand,
+                buttonActions: CONFIG.CardHandsList.menuItems.handContextOptions,
+            }).render(true);
+        }
+    }
+
+    // Open the Cards Hand
+    static async #onOpenHand(event, target) {
+        // Prevent multiple executions
+        event.preventDefault();
+        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
+
+        if (hand) {
+            new HandActionsSheet({
+                document: hand,
+                buttonActions: CONFIG.CardHandsList.menuItems.handContextOptions,
+            }).render(true);
+        }
     }
 
     // Favorite Cards Hand
@@ -352,16 +377,8 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                 if (cardDragged) {
                     // If there's an actual document
-                    const dropTarget = await fromUuid(event.target.dataset.uuid);
-                    let hand = undefined;
-
-                    if (dropTarget.documentName === 'Card') {
-                        // If the target is a Card, get its Hand
-                        hand = await fromUuid(dropTarget.parent.uuid);
-                    } else if (dropTarget.documentName === 'Cards' && dropTarget.type === 'hand') {
-                        // If the target is a Hand, set the Hand.
-                        hand = dropTarget;
-                    }
+                    const dropTarget = game.cards.get(event.target.dataset.id);
+                    const hand = dropTarget.documentName === 'Cards' && dropTarget.type === 'hand' ? dropTarget : fromUuidSync(dropTarget.parent.uuid);
 
                     if (cardDragged.parent.id !== hand.id) {
                         // If the Card's parent and the target Card Hand are not the same, pass the Card
@@ -378,335 +395,4 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
     }
-
-    // Return the default context options available for the Card Hands List application
-
-    static #getCardContextOptions(card) {
-        return [
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.View`),
-                icon: '<i class="far fa-eye"></i>',
-                condition: el => {
-                    return card?.isOwner;
-                },
-                callback: async el => {
-                    await new foundry.applications.apps.ImagePopout({
-                        src: card.img,
-                        'window.title': card.name,
-                        uuid: card.uuid
-                    }).render(true);
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.PlayAdventureCard`),
-                icon: '<i class="far fa-circle-play"></i>',
-                condition: el => {
-                    return card.isOwner && game.system.id === 'swade' && card.type === 'adventure' && game.modules.get('adventure-deck')?.active;
-                },
-                callback: async el => {
-                    const content = await renderTemplate("modules/adventure-deck/templates/adventurecard-chatcard.hbs", card);
-                    ChatMessage.create({
-                        user: game.user.id,
-                        type: CONST.CHAT_MESSAGE_STYLES.OTHER,
-                        content: content,
-                        sound: game.settings.get("adventure-deck", "toggleSoundOnPlayCard") ? "systems/swade/assets/card-flip.wav" : ""
-                    });
-                    const discardPile = await game.cards.getName(game.settings.get("adventure-deck", "dumpPileName"));
-
-                    if (discardPile) {
-                        card.parent?.pass(discardPile, [card.id], { chatNotification: false });
-                    }
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.Flip`),
-                icon: '<i class="fas fa-rotate"></i>',
-                condition: el => {
-                    return card?.isOwner;
-                },
-                callback: async el => {
-                    await card.flip();
-                }
-            },
-            {
-                name: game.i18n.localize('CardHandsList.Pass'),
-                icon: '<i class="fas fa-share-square"></i>',
-                condition: el => {
-                    const card = fromUuidSync(el[0].dataset.uuid);
-                    return card?.isOwner;
-                },
-                callback: async el => {
-                    await card.parent.playDialog(card);
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.Discard`),
-                icon: '<i class="fas fa-cards-blank fa-flip-horizontal"></i>',
-                condition: el => {
-                    const card = fromUuidSync(el[0].dataset.uuid);
-                    return card?.isOwner;
-                },
-                callback: async el => {
-                    const defaultDiscardPile = game.cards.get(card.parent.getFlag(handsModule.id, 'default-discard-pile'));
-
-                    if (defaultDiscardPile) {
-                        await card.pass(defaultDiscardPile);
-                    } else {
-                        await card.parent.playDialog(card);
-                    }
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.ReturnToDeck`),
-                icon: '<i class="fas fa-undo"></i>',
-                condition: el => {
-                    const card = fromUuidSync(el[0].dataset.uuid);
-                    return card?.isOwner;
-                },
-                callback: async el => {
-                    await card.recall();
-                }
-            },
-        ];
-    }
-
-    // Return the default context options available for the Card Hands List application
-    static async #onHandContextOptions(event, target) {
-        const hand = game.cards.get(target.dataset.id);
-        const defaultDiscardPile = game.cards.get(hand?.getFlag(handsModule.id, 'default-discard-pile'));
-
-        const menuItems = [
-            {
-                name: game.i18n.localize('CardHandsList.ViewHand'),
-                icon: '<i class="fas fa-lock"></i>',
-                condition: true,
-                callback: async el => {
-                    hand.sheet.render(true);
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.FlipAll`),
-                icon: '<i class="fas fa-rotate"></i>',
-                condition: el => {
-                    // Check if GM or if user is owner of hand
-                    return hand?.isOwner;
-                },
-                callback: async el => {
-                    const updates = hand.cards.map(c => {
-                        return {
-                            _id: c.id,
-                            face: c.face === null ? 0 : null
-                        };
-                    });
-                    await Card.updateDocuments(updates, { parent: hand });
-                }
-            },
-            {
-                name: game.i18n.localize("CARDS.ACTIONS.Shuffle"),
-                icon: '<i class="fas fa-shuffle"></i>',
-                condition: el => {
-                    // Check if GM or if user is owner of hand
-                    return hand?.isOwner;
-                },
-                callback: async el => {
-                    await hand?.shuffle();
-                }
-            },
-            {
-                name: game.i18n.localize("CARDS.ACTIONS.Pass"),
-                icon: '<i class="fas fa-share-square"></i>',
-                condition: el => {
-                    // Check if GM or if user is owner of hand
-                    return hand?.isOwner;
-                },
-                callback: async el => {
-                    await hand?.passDialog();
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.DiscardAll`),
-                icon: '<i class="fas fa-cards-blank fa-flip-horizontal"></i>',
-                condition: el => {
-                    // Check if GM or if user is owner of hand
-                    return hand?.isOwner && defaultDiscardPile;
-                },
-                callback: async el => {
-                    if (defaultDiscardPile) {
-                        const handIds = hand.cards.map(c => c._id);
-                        await hand.pass(defaultDiscardPile, handIds);
-                    } else {
-                        await hand.playDialog(card);
-                    }
-                }
-            },
-            {
-                name: game.i18n.localize("CARDS.ACTIONS.Reset"),
-                icon: '<i class="fas fa-undo"></i>',
-                condition: el => {
-                    // Check if GM or if user is owner of hand
-                    return hand?.isOwner;
-                },
-                callback: async el => {
-                    await hand?.resetDialog();
-                }
-            },
-            {
-                name: game.i18n.localize(`${handsModule.translationPrefix}.Defaults`),
-                icon: '<i class="fas fa-gears"></i>',
-                condition: el => {
-                    // Check if owner
-                    return hand?.isOwner;
-                },
-                callback: async el => {
-                    const decks = game?.cards?.filter(c => c.type === 'deck');
-                    const piles = game?.cards?.filter(c => c.type === 'pile');
-                    const deckOptions = [
-                        `<option value="none" ${!hand?.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${game.i18n.localize(`${handsModule.translationPrefix}.None`)}</option>`
-                    ];
-                    const pileOptions = [
-                        `<option value="none" ${!hand?.getFlag(handsModule.id, 'default-discard-pile') ? 'selected' : ''}>${game.i18n.localize(`${handsModule.translationPrefix}.None`)}</option>`
-                    ];
-                    const drawFaceDown = hand.getFlag(handsModule.id, 'face-down');
-
-                    for (const deck of decks) {
-                        deckOptions.push(
-                            `<option value="${deck.id}" ${deck.id === hand?.getFlag(handsModule.id, 'default-deck') ? 'selected' : ''}>${deck.name}</option>`
-                        );
-                    }
-
-                    for (const pile of piles) {
-                        pileOptions.push(
-                            `<option value="${pile.id}" ${pile.id === hand?.getFlag(handsModule.id, 'default-discard-pile') ? 'selected' : ''}>${pile.name}</option>`
-                        );
-                    }
-
-                    const deckSelect = `
-                        <div class="form-group">
-                            <label for="deck-select">${game.i18n.localize(`${handsModule.translationPrefix}.DefaultDrawDeck`)}</label>
-                            <div class="form-fields">
-                                <select id="deck-select">${deckOptions.join('')}}</select>
-                            </div>
-                        </div>
-                    `;
-                    const pileSelect = `
-                        <div class="form-group">
-                            <label for="pile-select">${game.i18n.localize(`${handsModule.translationPrefix}.DefaultDiscardPile`)}</label>
-                            <div class="form-fields">
-                                <select id="pile-select">${pileOptions.join('')}}</select>
-                            </div>
-                        </div>
-                    `;
-
-                    const drawModes = [
-                        {
-                            label: game.i18n.localize('CARDS.DrawModeRandom'),
-                            value: CONST.CARD_DRAW_MODES.RANDOM,
-                        },
-                        {
-                            label: game.i18n.localize('CARDS.DrawModeTop'),
-                            value: CONST.CARD_DRAW_MODES.TOP,
-                        },
-                        {
-                            label: game.i18n.localize('CARDS.DrawModeBottom'),
-                            value: CONST.CARD_DRAW_MODES.BOTTOM,
-                        },
-                    ];
-
-                    let modeOptions = '';
-
-                    for (const drawMode of drawModes) {
-                        modeOptions += `<option value="${drawMode.value}">${drawMode.label}</option>`;
-                    }
-
-                    const modeSelect = `
-                        <div class="form-group">
-                            <label for="draw-mode" >${game.i18n.localize('CARDS.DrawMode')}</label>
-                            <div class="form-fields">
-                                <select id="draw-mode">${modeOptions}</select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="face-down">${game.i18n.localize('CARDS.Facedown')}</label>
-                            <div class="form-fields">
-                                <input type="checkbox" id="face-down" name="face-down" ${drawFaceDown ? 'checked' : ''}>
-                            </div>
-                        </div>
-                     `;
-                    const content = `
-                        <p>${game.i18n.format(`${handsModule.translationPrefix}.DefaultsMessage`, { name: hand.name })}</p>
-                        <form class="cards-defaults">
-                            ${deckSelect}
-                            ${modeSelect}
-                            ${pileSelect}
-                        </form>
-                    `;
-
-                    new Dialog({
-                        title: game.i18n.localize(`${handsModule.translationPrefix}.Defaults`),
-                        content: content,
-                        buttons: {
-                            save: {
-                                icon: '<i class="fas fa-save"></i>',
-                                label: game.i18n.localize('Save'),
-                                callback: async (html) => {
-                                    const deckId = html.find('#deck-select').val();
-                                    const pileId = html.find('#pile-select').val();
-                                    const mode = Number(html.find('#draw-mode').val());
-                                    const faceDown = html.find('#face-down').is(':checked');
-
-                                    if (deckId === 'none' && pileId === 'none') {
-                                        await hand.unsetFlag(handsModule.id, 'default-deck');
-                                        await hand.unsetFlag(handsModule.id, 'default-draw-mode');
-                                        await hand.unsetFlag(handsModule.id, 'face-down');
-                                        await hand.unsetFlag(handsModule.id, 'default-discard-pile');
-                                    } else {
-                                        await hand.setFlag(handsModule.id, 'default-deck', deckId);
-                                        await hand.setFlag(handsModule.id, 'default-draw-mode', mode);
-                                        await hand.setFlag(handsModule.id, 'face-down', faceDown);
-                                        await hand.setFlag(handsModule.id, 'default-discard-pile', pileId);
-                                    }
-                                }
-                            }
-                        },
-                        default: "save",
-                    }).render(true);
-                }
-            },
-            {
-                name: game.i18n.localize('OWNERSHIP.Configure'),
-                icon: '<i class="fas fa-lock"></i>',
-                condition: game.user.isGM,
-                callback: async el => {
-                    new DocumentOwnershipConfig(hand).render(true);
-                }
-            },
-        ];
-
-        // Pull up menu options from link
-        const handContextMenu = new foundry.applications.ux.ContextMenu(target, '.context-menu-link', menuItems, {
-            jQuery: false,
-            fixed: true,
-            eventName: 'click'
-        });
-        await handContextMenu.render(target, { animate: true });
-        // close the context menu when anything else is clicked.
-        document.addEventListener('click', function (event) {
-            if (!target.contains(event.target)) {
-                handContextMenu.close({ animate: true });
-            }
-        }, { once: true });
-    }
-
-    static _sort(array, propertyName) {
-        return array.sort((a, b) => {
-            // Compare the values
-            if (a[propertyName] < b[propertyName]) {
-                return -1;
-            } else if (a[propertyName] > b[propertyName]) {
-                return 1;
-            } else {
-                return 0;
-            };
-        });
-    }
-}
+};

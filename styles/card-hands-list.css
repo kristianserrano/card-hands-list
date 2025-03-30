@@ -155,12 +155,8 @@
         gap: 4px;
       }
 
-      .button {
-        flex: 0 0 20px;
-        line-height: 20px;
+      & .card-hands-list-button {
         color: currentColor;
-        background: none;
-        border: none;
         cursor: pointer;
         pointer-events: all;
 
@@ -283,75 +279,110 @@
     }
   }
 
-  .card-hands-list-CardActions {
-    max-width: 350px;
+  .card-hands-list-actions {
+    figure {
+      margin: 0;
+    }
 
     img {
       cursor: pointer;
     }
 
-    .sheet-footer {
+    .card-actions-sheet-hand-cards {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 132px);
+      align-content: start;
+      justify-content: center;
+      gap: 4px;
+      list-style-type: none;
+      scroll-snap-type: y mandatory;
+      scroll-snap-align: center;
+      scrollbar-gutter: stable;
+
+      .card-actions-sheet-card {
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        margin: 0;
+
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: contain;
+          object-position: center;
+        }
+      }
+    }
+
+    .sheet-footer.flexrow {
       --gap: 4px;
+      position: sticky;
+      bottom: 0;
       gap: var(--gap);
+      align-items: stretch;
 
       .card-action {
         align-self: end;
         text-wrap: nowrap;
       }
     }
-  }
 
-  /* Tooltip Styles */
-  .tooltip-heading {
-    font-size: 0.9em;
-    font-weight: bold;
-
-    &:has(+ .card-text-description) {
-      margin-bottom: 0.125em;
-      padding-bottom: 0.125em;
-      border-bottom: 1px dotted currentColor;
-    }
-  }
-
-  .card-text-description {
-    margin: 0;
-    font-size: 0.8em;
-  }
-
-  #tooltip .tooltip {
-    text-align: left;
-    line-height: 1.4;
-
+    /* Tooltip Styles */
     .tooltip-heading {
-      padding-bottom: 0.25rem;
-      margin-bottom: 0.5rem;
-      color: revert;
-    }
+      font-size: 0.9em;
+      font-weight: bold;
 
-    a.content-link {
-      padding: 0;
-      display: inline;
-      color: revert;
-      background: none;
-      border: none;
-
-      .fas {
-        display: none;
+      &:has(+ .card-text-description) {
+        margin-bottom: 0.125em;
+        padding-bottom: 0.125em;
+        border-bottom: 1px dotted currentColor;
       }
     }
-  }
 
-  #players-inactive {
-    padding-top: 0;
-    padding-bottom: 0;
-    transition:
-      max-height 0.5s ease-in-out,
-      visibility 0.5s 0s,
-      padding 0.5s ease-in-out;
+    .card-text-description {
+      margin: 0;
+      font-size: 0.8em;
+    }
 
-    #players.expanded & {
-      padding-top: 6px;
-      padding-bottom: 6px;
+    #tooltip .tooltip {
+      text-align: left;
+      line-height: 1.4;
+
+      .tooltip-heading {
+        padding-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        color: revert;
+      }
+
+      a.content-link {
+        padding: 0;
+        display: inline;
+        color: revert;
+        background: none;
+        border: none;
+
+        .fas {
+          display: none;
+        }
+      }
+    }
+
+    #players-inactive {
+      padding-top: 0;
+      padding-bottom: 0;
+      transition:
+        max-height 0.5s ease-in-out,
+        visibility 0.5s 0s,
+        padding 0.5s ease-in-out;
+
+      #players.expanded & {
+        padding-top: 6px;
+        padding-bottom: 6px;
+      }
     }
   }
 }
