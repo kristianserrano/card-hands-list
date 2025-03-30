@@ -297,7 +297,7 @@ export class CardHandsList extends Application {
         const defaultMode = hand.getFlag(handsModule.id, 'default-draw-mode');
         const faceDown = hand.getFlag(handsModule.id, 'face-down');
 
-        if (defaultDeck || defaultMode) {
+        if (defaultDeck) {
             const deck = game.cards.get(defaultDeck);
             const cardsInHand = hand.cards.contents;
             const sort = cardsInHand.length ? cardsInHand.reverse()[0].sort + 10 : 0;
