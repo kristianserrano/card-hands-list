@@ -56,7 +56,7 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
                     action.button.dataset.id = context.card.id;
                     action.button.dataset.uuid = context.card.uuid;
                     action.button.innerHTML = `${action.icon} ${action.name}`;
-                    action.display = (action.condition instanceof Function) ? action.condition($(action.button)) : action.condition;
+                    action.display = (action.condition instanceof Function) ? action.condition(action.button) : action.condition;
                 }
 
                 if (this.document.getFlag('core', 'sheetClass') === "card-hands-list.CardActionsSheet") {

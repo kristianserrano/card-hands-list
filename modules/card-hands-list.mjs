@@ -495,11 +495,11 @@ Hooks.on('renderHandActionsSheet', (sheet, html) => {
       icon: "<i class='fa-solid fa-eye'></i>",
       condition: (el) => {
         // If the hand has a default deck configured, display the scry button
-        const hand = game.cards.get(el[0].dataset.id);
+        const hand = game.cards.get(el.dataset.id);
         return game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
       },
       callback: async (el) => {
-        const hand = game.cards.get(el[0].dataset.id);
+        const hand = game.cards.get(el.dataset.id);
         const deck = game.cards.get(hand.getFlag(handsModule.id, 'default-deck'));
         // Call CCM's scry function.
         ccm.api.scry(deck);
