@@ -89,7 +89,13 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
         }
 
         // Drop a Card
-        this.element.querySelectorAll('.card-actions-sheet-hand-cards .card-actions-sheet-card img').forEach(c => c.addEventListener('drop', this.#onDropCard.bind(this)));
+        this.element.querySelectorAll('.card-actions-sheet-hand-cards .card-actions-sheet-card img').forEach(c => {
+            c.addEventListener('drop', this.#onDropCard.bind(this));
+            c.addEventListener('contextmenu', (e) => {
+                const card = fromUuidSync(e.currentTarget.dataset.uuid);
+                card.flip();
+            });
+        });
         this.element.querySelector('.card-actions-sheet-hand-cards').addEventListener('drop', this.#onDropCard.bind(this));
     }
 
@@ -141,7 +147,7 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
                         const updateData = results.map(r => {
                             r.update._id = r.target._id;
                             return r.update;
-                        })
+                        });
                         await hand.updateEmbeddedDocuments('Card', updateData);
                     }
                 }

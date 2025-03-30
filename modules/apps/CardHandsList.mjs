@@ -166,6 +166,7 @@ export class CardHandsList extends Application {
         const cardImages = html.find(`.${handsModule.id}-card`);
         // Drag a Card
         cardImages?.on('dragstart', this._onDragCard.bind(this));
+        cardImages?.on('contextmenu', this._onFlipCard.bind(this));
         // Drop a Card
         html.find(`.${handsModule.id}-cards`)?.on('drop', this._onDropCard.bind(this));
 
