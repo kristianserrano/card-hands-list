@@ -178,7 +178,7 @@ Hooks.on('setup', async function () {
           }
         },
         {
-          name: game.i18n.localize('CARDS.Draw'),
+          name: game.i18n.localize('CARDS.ACTIONS.Draw'),
           icon: '<i class="far fa-cards"></i>',
           condition: el => {
             const hand = game.cards.get(el.dataset.id);
@@ -186,13 +186,13 @@ Hooks.on('setup', async function () {
             return hand?.isOwner;
           },
           callback: async el => {
-            const hand = game.cards.get(el[0].dataset.id);
-            const defaultDeck = hand.getFlag(handsModule.id, 'default-deck');
+            const hand = game.cards.get(el.dataset.id);
+            const defaultDeckId = hand.getFlag(handsModule.id, 'default-deck');
             const defaultMode = hand.getFlag(handsModule.id, 'default-draw-mode');
             const faceDown = hand.getFlag(handsModule.id, 'face-down');
 
-            if (defaultDeck) {
-              const deck = game.cards.get(defaultDeck);
+            if (defaultDeckId) {
+              const deck = game.cards.get(defaultDeckId);
               const cardsInHand = hand.cards.contents;
               const sort = cardsInHand.length ? cardsInHand.reverse()[0].sort + 10 : 0;
               await hand.draw(deck, 1, {
@@ -215,7 +215,7 @@ Hooks.on('setup', async function () {
           condition: el => {
             const hand = game.cards.get(el.dataset.id);
             // Check if GM or if user is owner of hand
-            return hand?.isOwner;
+            return hand?.isOwner && hand.cards.size;
           },
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
