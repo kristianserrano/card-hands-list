@@ -66,7 +66,8 @@ Hooks.on('setup', async function () {
   DocumentSheetConfig.registerSheet(Card, "card-hands-list", CardActionsSheet, {
     makeDefault: false
   });
-  DocumentSheetConfig.registerSheet(Card, "card-hands-list", HandActionsSheet, {
+  DocumentSheetConfig.registerSheet(Cards, "card-hands-list", HandActionsSheet, {
+    label: 'Card Hands List Hand Actions',
     makeDefault: false
   });
   ui.cardHands = new CardHandsList();
