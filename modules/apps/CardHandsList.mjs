@@ -20,8 +20,6 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             drawCard: CardHandsList.#onDrawCard,
             openCardActions: CardHandsList.#onOpenCardActions,
             scrollArrow: CardHandsList.#onScrollArrow,
-            getHandContextOptions: CardHandsList.#onHandContextOptions,
-
         },
     };
 
@@ -253,27 +251,13 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static async #onOpenHand(event, target) {
         // Prevent multiple executions
         event.preventDefault();
-        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
+        const hand = game.cards.get(target.dataset.id);
 
         if (hand) {
             new HandActionsSheet({
                 document: hand,
                 buttonActions: CONFIG.CardHandsList.menuItems.handContextOptions,
-            }).render(true);
-        }
-    }
-
-    // Open the Cards Hand
-    static async #onOpenHand(event, target) {
-        // Prevent multiple executions
-        event.preventDefault();
-        const hand = game.cards.get(e.target.closest(`.${handsModule.id}-hand`)?.dataset.id);
-
-        if (hand) {
-            new HandActionsSheet({
-                document: hand,
-                buttonActions: CONFIG.CardHandsList.menuItems.handContextOptions,
-            }).render(true);
+            }).render({force: true});
         }
     }
 
@@ -298,7 +282,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static async #onPinHand(event, target) {
         // Prevent multiple executions
         event.stopImmediatePropagation();
-        const handId = target.parentElement.dataset.id;
+        const handId = target.dataset.id;
         // Pin the Hand based on its ID.
         // Set the user flag key
         const flagKey = 'pinned-hands';
@@ -377,7 +361,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
 
                 if (cardDragged) {
                     // If there's an actual document
-                    const dropTarget = game.cards.get(event.target.dataset.id);
+                    const dropTarget = fromUuidSync(event.target.dataset.uuid);
                     const hand = dropTarget.documentName === 'Cards' && dropTarget.type === 'hand' ? dropTarget : fromUuidSync(dropTarget.parent.uuid);
 
                     if (cardDragged.parent.id !== hand.id) {
@@ -394,5 +378,18 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
             }
         }
+    }
+
+    static _sort(array, propertyName) {
+        return array.sort((a, b) => {
+            // Compare the values
+            if (a[propertyName] < b[propertyName]) {
+                return -1;
+            } else if (a[propertyName] > b[propertyName]) {
+                return 1;
+            } else {
+                return 0;
+            };
+        });
     }
 };

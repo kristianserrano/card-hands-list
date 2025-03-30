@@ -79,14 +79,6 @@
       overflow-x: clip;
       scrollbar-width: thin;
       scroll-snap-type: y mandatory;
-
-      &:has(#context-menu) {
-        scroll-snap-type: y normal;
-
-        .hand {
-          scroll-snap-align: none;
-        }
-      }
     }
 
     .title {
@@ -111,7 +103,7 @@
       display: grid;
       grid-template-columns: 1fr 18px;
       grid-template-rows: min-content auto;
-      gap: 0 4px;
+      gap: 4px;
       align-items: center;
       scroll-snap-align: center;
 
@@ -120,7 +112,7 @@
       }
 
       .name {
-        margin: 0 0 4px 0;
+        margin: 0;
         display: flex;
         align-items: center;
         gap: 4px;
@@ -144,15 +136,20 @@
       }
 
       .buttons {
-        grid-row: 2/3;
-        grid-column: 2/3;
-        align-self: center;
-        display: flex;
         height: 100%;
+        padding-top: 0px;
+        grid-row: 1/3;
+        grid-column: 2/3;
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-template-columns: subgrid;
         flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        gap: 4px;
+        justify-items: center;
+        align-items: start;
+
+        .pin {
+          align-self: center;
+        }
       }
 
       & .card-hands-list-button {
@@ -166,6 +163,7 @@
       }
 
       .cards {
+        position: relative;
         grid-column: 1/2;
         grid-row: 2/3;
         display: flex;
@@ -221,13 +219,28 @@
         }
 
         .horizontal-scroll {
+          position: absolute;
+          z-index: 1;
           width: max-content;
           height: 100%;
           padding: 2px;
           flex: 0;
           place-content: center;
+          background-color: #00000099;
           font-size: var(--font-size-16);
+          opacity: 0.5;
           cursor: pointer;
+          transition: opacity 0.25s ease-in-out;
+          &:hover {
+            opacity: 0.9;
+          }
+
+          &.--left {
+            left: 0;
+          }
+          &.--right {
+            right: 0;
+          }
         }
       }
     }

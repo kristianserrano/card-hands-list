@@ -1,39 +1,34 @@
 <li id="{{id}}" class="hand {{#if (eq parent.favorite id)}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
-    <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
+    <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-id="{{id}}" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
         <i class="fa-solid fa-up-right-from-square"></i> {{name}}
     </span>
-    {{#if isOwner}}
-    <button class="button context-menu-link" type="button" data-id="{{id}}" data-action="getHandContextOptions" data-tooltip="{{localize (concat parent.translationPrefix '.Menu')}}">
-        <i class="fas fa-ellipsis-vertical"></i>
-    </button>
-    {{/if}}
     <div class="buttons">
-    <button class="button pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
+        <a class="hand-button pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
         {{#if isPinned}}
         {{localize (concat parent.translationPrefix '.Unpin')}}
         {{else}}
         {{localize (concat parent.translationPrefix '.Pin')}}
         {{/if}}
     ">
-        <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
-    </button>
+            <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
+        </a>
 
         {{#if (and (eq parent.system 'swade') isOwner)}}
-        <button class="button favorite" type="button" data-action="favoriteHand" data-id="{{id}}" data-tooltip="{{#if isFavorite}}{{localize (concat parent.translationPrefix '.Unfavorite')}}{{else}}{{localize (concat parent.translationPrefix '.Favorite')}}{{/if}}">
+        <a class="hand-button favorite" type="button" data-action="favoriteHand" data-id="{{id}}" data-tooltip="{{#if isFavorite}}{{localize (concat parent.translationPrefix '.Unfavorite')}}{{else}}{{localize (concat parent.translationPrefix '.Favorite')}}{{/if}}">
             <i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
-        </button>
+        </a>
         {{/if}}
         {{#if isOwner}}
-        <button class="button draw" type="button" data-action="drawCard" data-id="{{id}}" data-tooltip="{{localize 'CARDS.ACTIONS.ACTIONS.Draw'}}">
+        <a class="hand-button draw" type="button" data-action="drawCard" data-id="{{id}}" data-tooltip="{{localize 'CARDS.ACTIONS.ACTIONS.Draw'}}">
             <i class="far fa-cards-blank"></i>
-        </button>
+        </a>
         {{/if}}
     </div>
     <div class="cards">
         {{#if cards.size}}
-        <button class="button horizontal-scroll --left" type="button" data-action="scrollArrow">
+        <a class="horizontal-scroll --left" type="button" data-action="scrollArrow">
             <i class="fas fa-caret-left"></i>
-        </button>
+        </a>
         {{/if}}
         <ol class="cards-list" data-id="{{id}}" data-uuid="{{uuid}}">
             {{#each sortedCards}}
@@ -68,9 +63,9 @@
             {{/each}}
         </ol>
         {{#if cards.size}}
-        <button class="button horizontal-scroll --right" type="button" data-action="scrollArrow">
+        <a class="horizontal-scroll --right" type="button" data-action="scrollArrow">
             <i class="fas fa-caret-right"></i>
-        </button>
+        </a>
         {{/if}}
     </div>
 </li>

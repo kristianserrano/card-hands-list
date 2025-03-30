@@ -55,7 +55,7 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
                     action.button.dataset.id = context.card.id;
                     action.button.dataset.uuid = context.card.uuid;
                     action.button.innerHTML = `${action.icon} ${action.name}`;
-                    action.display = (action.condition instanceof Function) ? action.condition($(action.button)) : action.condition;
+                    action.display = (action.condition instanceof Function) ? action.condition(action.button) : action.condition;
                 }
 
                 context.actionButtons = this.options.buttonActions?.filter(a => a.name !== game.i18n.localize(`${handsModule.translationPrefix}.View`));
@@ -69,7 +69,7 @@ export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
 
         for (const button of actionButtons) {
             const contextButton = context.actionButtons.find(a => a.name === button.dataset.name);
-            button.addEventListener('click', (event) => contextButton.callback($(button)));
+            button.addEventListener('click', (event) => contextButton.callback(button));
         }
 
         // Drag a Card
