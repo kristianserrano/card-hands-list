@@ -2,6 +2,7 @@
     "CardHandsList": {
         "Heading": "Card Hands",
         "OpenHand": "Open Hand Sheet",
+        "Open": "Open {name}",
         "OpenHandActions": "Open Hand Actions",
         "Menu": "Menu",
         "FlipAll": "Flip All",
