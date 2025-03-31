@@ -1,15 +1,16 @@
-<li id="{{id}}" class="hand {{#if (eq parent.favorite id)}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
+{{#with hand}}
+<li id="{{id}}" class="hand {{#if isFavorite}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
     <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-id="{{id}}" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
         <i class="fa-solid fa-up-right-from-square"></i> {{name}}
     </span>
     <div class="buttons">
         <a class="hand-button pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
-        {{#if isPinned}}
-        {{localize (concat parent.translationPrefix '.Unpin')}}
-        {{else}}
-        {{localize (concat parent.translationPrefix '.Pin')}}
-        {{/if}}
-    ">
+            {{#if isPinned}}
+            {{localize (concat parent.translationPrefix '.Unpin')}}
+            {{else}}
+            {{localize (concat parent.translationPrefix '.Pin')}}
+            {{/if}}
+        ">
             <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
         </a>
         {{#if (and allowFavorite isOwner)}}
@@ -68,3 +69,4 @@
         {{/if}}
     </div>
 </li>
+{{/with}}

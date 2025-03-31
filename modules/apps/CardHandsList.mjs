@@ -58,10 +58,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         }
 
         const hands = game?.cards?.filter((c) => c.type === 'hand' && determineOwnership(c));
-        hands.sort((a, b) => {
-            return a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
-        });
-        const gmUser = game.users.find((u) => u.role === 4);
+        hands.sort((a, b) =>  a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
         // Categorize the hands.
         const pinnedHands = hands.filter(hand => game?.user?.getFlag(handsModule.id, 'pinned-hands')?.includes(hand.id) && !hand.isFavorite);
         const ownedHands = hands.filter(hand => !pinnedHands.some(pinned => pinned.id === hand.id) && determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER));
@@ -71,7 +68,6 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             const playerOwnerIDs = Object.keys(hand.ownership).filter((k) => k !== 'default' && !game.users.get(k)?.isGM);
             // If the user is an owner, set as owner.
             hand.owner = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER ? game.user : game.users.get(playerOwnerIDs[0]);
-
             hand.isExplicitOwner = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
 
             // Enrich the cards' texts
@@ -85,16 +81,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             }
 
             // Sort the cards by sort values
-            hand.sortedCards = hand.cards.contents.sort((a, b) => {
-                // Compare the values
-                if (a.sort < b.sort) {
-                    return -1;
-                } else if (a.sort > b.sort) {
-                    return 1;
-                } else {
-                    return 0;
-                };
-            });
+            hand.sortedCards = hand.cards.contents.sort((a, b) => a.sort - b.sort);
             // Check if this hand is pinned
             hand.isPinned = pinnedHands?.some(p => p.id === hand.id);
             // Handle Favorite hand
@@ -106,15 +93,14 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 hand.isFavorite = hand.id === favoriteHand;
             }
         }
-
         // Return the data for rendering
         const context = {
             title: this.title,
             hands,
-            ownedHands: CardHandsList._sort(ownedHands, 'name'),
-            observableHands: CardHandsList._sort(observableHands, 'name'),
+            ownedHands,
+            observableHands,
             favoriteHand: hands.find(h => h.isFavorite),
-            pinnedHands: CardHandsList._sort(pinnedHands, 'name'),
+            pinnedHands,
             stats: {
                 owner: hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)).length,
                 observer: hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)).length,
@@ -258,7 +244,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             new HandActionsSheet({
                 document,
                 buttonActions: CONFIG.CardHandsList.menuItems.handContextOptions,
-            }).render({force: true});
+            }).render({ force: true });
         }
     }
 
@@ -397,16 +383,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     }
 
-    static _sort(array, propertyName) {
-        return array.sort((a, b) => {
-            // Compare the values
-            if (a[propertyName] < b[propertyName]) {
-                return -1;
-            } else if (a[propertyName] > b[propertyName]) {
-                return 1;
-            } else {
-                return 0;
-            };
-        });
+    static #sort(array, propertyName) {
+        return array.sort((a, b) => a[propertyName].localeCompare(b[propertyName]));
     }
 };
