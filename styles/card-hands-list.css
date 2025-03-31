@@ -30,6 +30,10 @@
       gap: var(--gap);
       background: var(--background-color, var(--color-cool-5-75));
       border-radius: 8px;
+
+      hr {
+        margin: -5px 0;
+      }
     }
 
     #available-hands {
@@ -47,6 +51,7 @@
         max-height var(--transition-time) ease-in-out;
 
       #pinned-hands-list {
+        padding: 0;
         width: 100%;
         gap: var(--gap);
         scrollbar-gutter: stable;
@@ -102,7 +107,7 @@
       height: calc(var(--hand-height) + 0.5em);
       display: grid;
       grid-template-columns: 1fr 18px;
-      grid-template-rows: min-content auto;
+      grid-template-rows: min-content 1fr;
       gap: 4px;
       align-items: center;
       scroll-snap-align: center;
@@ -137,7 +142,7 @@
 
       .buttons {
         height: 100%;
-        padding-top: 8px;
+        padding-top: 1px;
         grid-row: 1/3;
         grid-column: 2/3;
         display: flex;
@@ -306,6 +311,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, 132px);
       align-content: start;
+      align-items: start;
       justify-content: center;
       gap: 4px;
       list-style-type: none;
