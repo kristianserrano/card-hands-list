@@ -139,7 +139,7 @@ export class HandActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2
                     } else if (dropTarget.documentName === 'Card' && cardDragged.parent.id === dropTarget.parent.id) {
                         // If they are the same, order the Cards.
                         const otherCards = hand.cards.filter((c) => c.id !== cardDragged.id);
-                        const results = SortingHelpers.performIntegerSort(cardDragged, {
+                        const results = foundry.utils.SortingHelpers.performIntegerSort(cardDragged, {
                             target: dropTarget,
                             siblings: otherCards,
                             sortBefore: true,
