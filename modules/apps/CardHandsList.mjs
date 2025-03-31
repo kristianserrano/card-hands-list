@@ -121,12 +121,6 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             system: game.system.id,
         };
 
-        context.minimalUi = { active: game.modules.get('minimal-ui')?.active };
-
-        if (context.minimalUi.active) {
-            context.minimalUi.listBehavior = game.settings.get(handsModule.id, 'minimal-ui-behavior');
-        }
-
         return context;
     }
 

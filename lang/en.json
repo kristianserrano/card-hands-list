@@ -35,10 +35,6 @@
                 "Hint": "Enable this setting to hide Hands from GMs. When enabled, Hand visibility for GMs will based on the Default or user-specific ownership level set on each hand."
             }
         },
-        "MinimalUIBehavior": {
-            "Name": "Minimal UI Module Behavior",
-            "Hint": "Set the interaction behavior pattern for the Card Hands list when using Minimal UI."
-        },
         "FlipWarning": "Card Hands List: This card is not yours to flip."
     }
 }
