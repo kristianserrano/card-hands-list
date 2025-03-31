@@ -2,6 +2,7 @@
 
 ## v2.2.1
 
+- Favorite and pinned are now separated more cleanly in that favorite hand is no longer "pinned" by default. Only hands that are actually pinned will appear in the bottom list.
 - Removes legacy code supporting Minimal UI.
 - Adds support for setting Complete Card Management's favorite Hand which syncs with the SWADE system's favorite hand. If you know of another system or module that offers a favorite Hand feature, please submit an issue to the Card Hands List repo.
 - Minor fixes and enhancements.
