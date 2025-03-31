@@ -1,5 +1,11 @@
 # Card Hands List Changelog
 
+## v2.2.1
+
+- Removes legacy code supporting Minimal UI.
+- Adds support for setting Complete Card Management's favorite Hand which syncs with the SWADE system's favorite hand. If you know of another system or module that offers a favorite Hand feature, please submit an issue to the Card Hands List repo.
+- Minor fixes and enhancements.
+
 ## v2.2.0
 
 - Ports over features introduced in v1.13.0 and v1.13.1 (i.e., the Foundry VTT v12 version of Card Hands List).
