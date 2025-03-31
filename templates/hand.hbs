@@ -1,6 +1,5 @@
-{{#with hand}}
 <li id="{{id}}" class="hand {{#if isFavorite}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
-    <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-id="{{id}}" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
+    <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-id="{{id}}" data-action="openHand" data-tooltip="{{localize 'CardHandsList.Open' name=name }}">
         {{name}}
     </span>
     <div class="cards">
@@ -91,4 +90,3 @@
         {{/if}}
     </div>
 </li>
-{{/with}}

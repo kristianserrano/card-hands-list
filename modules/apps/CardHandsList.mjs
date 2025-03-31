@@ -58,11 +58,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         }
 
         const hands = game?.cards?.filter((c) => c.type === 'hand' && determineOwnership(c));
-        hands.sort((a, b) =>  a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
-        // Categorize the hands.
-        const pinnedHands = hands.filter(hand => game?.user?.getFlag(handsModule.id, 'pinned-hands')?.includes(hand.id) && !hand.isFavorite);
-        const ownedHands = hands.filter(hand => !pinnedHands.some(pinned => pinned.id === hand.id) && determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER));
-        const observableHands = hands.filter(hand => !ownedHands.some(owned => owned.id === hand.id) && !pinnedHands.some(pinned => pinned.id === hand.id) && determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER));
+        hands.sort((a, b) => a.ownership[game.userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
 
         for (const hand of hands) {
             const playerOwnerIDs = Object.keys(hand.ownership).filter((k) => k !== 'default' && !game.users.get(k)?.isGM);
@@ -83,10 +79,11 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             // Sort the cards by sort values
             hand.sortedCards = hand.cards.contents.sort((a, b) => a.sort - b.sort);
             // Check if this hand is pinned
-            hand.isPinned = pinnedHands?.some(p => p.id === hand.id);
+            hand.isPinned = game?.user?.getFlag(handsModule.id, 'pinned-hands')?.includes(hand.id);
             hand.isFavorite = false;
             // Handle Favorite hand
             hand.allowFavorite = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER && (game.system.id === 'swade' || game.modules.get('complete-card-management')?.active);
+
             if (hand.allowFavorite) {
                 const favoriteSWADEHandId = game.system.id === 'swade' ? game.user.getFlag('swade', 'favoriteCardsDoc') : null;
                 const favoriteCCMHandId = game.modules.get('complete-card-management')?.active ? game.user.getFlag('complete-card-management', 'playerHand') : null;
@@ -94,14 +91,22 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
                 hand.isFavorite = hand.id === favoriteHand;
             }
         }
+
+        // Categorize the hands.
+        const ownedHands = hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER));
+        const observableHands = hands.filter(hand => !ownedHands.some(owned => owned.id === hand.id) && determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER));
+        const favoriteHand = hands.find(hand => hand.isFavorite);
+        const pinnedHandsObservable = observableHands.filter(hand => hand.isPinned);
+        const pinnedHandsOwned = ownedHands.filter(hand => hand.isPinned);
         // Return the data for rendering
         const context = {
             title: this.title,
             hands,
             ownedHands,
             observableHands,
-            favoriteHand: hands.find(h => h.isFavorite),
-            pinnedHands,
+            favoriteHand,
+            pinnedHandsObservable,
+            pinnedHandsOwned,
             stats: {
                 owner: ownedHands.length,
                 observer: observableHands.length,
