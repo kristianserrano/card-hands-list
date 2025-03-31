@@ -1,29 +1,8 @@
 {{#with hand}}
 <li id="{{id}}" class="hand {{#if isFavorite}}is-favorite{{/if}} {{#if isPinned}}is-pinned{{/if}}" style="--player-color: {{owner.color}}; --player-border:{{owner.border}}" data-id="{{id}}">
     <span class="name{{#if isExplicitOwner}} is-owner{{/if}} ellipsis" data-id="{{id}}" data-action="openHand" data-tooltip="{{localize (concat parent.translationPrefix '.Open')}} {{name}}">
-        <i class="fa-solid fa-up-right-from-square"></i> {{name}}
+        {{name}}
     </span>
-    <div class="buttons">
-        <a class="hand-button pin" type="button" data-action="pinHand" data-id="{{id}}" data-tooltip="
-            {{#if isPinned}}
-            {{localize (concat parent.translationPrefix '.Unpin')}}
-            {{else}}
-            {{localize (concat parent.translationPrefix '.Pin')}}
-            {{/if}}
-        ">
-            <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
-        </a>
-        {{#if (and allowFavorite isOwner)}}
-        <a class="hand-button favorite" type="button" data-action="favoriteHand" data-id="{{id}}" data-tooltip="{{#if isFavorite}}{{localize (concat parent.translationPrefix '.Unfavorite')}}{{else}}{{localize (concat parent.translationPrefix '.Favorite')}}{{/if}}">
-            <i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
-        </a>
-        {{/if}}
-        {{#if isOwner}}
-        <a class="hand-button draw" type="button" data-action="drawCard" data-id="{{id}}" data-tooltip="{{localize 'CARDS.ACTIONS.Draw'}}">
-            <i class="far fa-cards-blank"></i>
-        </a>
-        {{/if}}
-    </div>
     <div class="cards">
         {{#if cards.size}}
         <a class="horizontal-scroll --left" type="button" data-action="scrollArrow">
@@ -65,6 +44,49 @@
         {{#if cards.size}}
         <a class="horizontal-scroll --right" type="button" data-action="scrollArrow">
             <i class="fas fa-caret-right"></i>
+        </a>
+        {{/if}}
+    </div>
+    <div class="buttons">
+        <a
+            class="hand-button pin"
+            type="button"
+            data-action="pinHand"
+            data-id="{{id}}"
+            data-tooltip="
+            {{#if isPinned}}
+                {{localize 'CardHandsList.Unpin'}}
+            {{else}}
+                {{localize 'CardHandsList.Pin'}}
+            {{/if}}
+        ">
+            <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
+        </a>
+        {{#if (and allowFavorite isOwner)}}
+        <a
+            class="hand-button favorite"
+            type="button"
+            data-action="favoriteHand"
+            data-id="{{id}}"
+            data-tooltip="
+                {{#if isFavorite}}
+                    {{localize 'CardHandsList.Unfavorite'}}
+                {{else}}
+                    {{localize 'CardHandsList.Favorite'}}
+                {{/if}}"
+            >
+            <i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+        </a>
+        {{/if}}
+        {{#if isOwner}}
+        <a
+            class="hand-button draw"
+            type="button"
+            data-action="drawCard"
+            data-id="{{id}}"
+            data-tooltip="{{localize 'CARDS.ACTIONS.Draw'}}"
+        >
+            <i class="far fa-cards-blank"></i>
         </a>
         {{/if}}
     </div>

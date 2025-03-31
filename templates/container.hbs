@@ -11,7 +11,7 @@
     <hr />
     {{/if}}
     {{#if observableHands.length}}
-    {{#each observableHands}}
+    {{#each observableHands as |hand|}}
     {{#unless (or isPinned isFavorite)}}
     {{> 'modules/card-hands-list/templates/hand.hbs' hand=hand parent=.. cards=cards id=id uuid=uuid hasPlayerOwner=hasPlayerOwner isOwner=isOwner isGM=../isGM}}
     {{/unless}}

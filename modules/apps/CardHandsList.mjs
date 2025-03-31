@@ -84,6 +84,7 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             hand.sortedCards = hand.cards.contents.sort((a, b) => a.sort - b.sort);
             // Check if this hand is pinned
             hand.isPinned = pinnedHands?.some(p => p.id === hand.id);
+            hand.isFavorite = false;
             // Handle Favorite hand
             hand.allowFavorite = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER && (game.system.id === 'swade' || game.modules.get('complete-card-management')?.active);
             if (hand.allowFavorite) {
@@ -102,8 +103,8 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             favoriteHand: hands.find(h => h.isFavorite),
             pinnedHands,
             stats: {
-                owner: hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)).length,
-                observer: hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)).length,
+                owner: ownedHands.length,
+                observer: observableHands.length,
             },
             showObservable: game.settings.get(handsModule.id, "observerLevel"),
             expanded: this.element?.classList.contains('expanded'),
