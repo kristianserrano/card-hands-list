@@ -1,7 +1,7 @@
 import { handsModule } from "../card-hands-list.mjs";
 const { DocumentSheetV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-export class CardActionsSheet extends HandlebarsApplicationMixin(DocumentSheetV2) {
+export class CardActionsSheet extends foundry.applications.sheets.CardConfig {
     static DEFAULT_OPTIONS = {
         tag: "div",
         form: {
