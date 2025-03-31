@@ -97,8 +97,14 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             });
             // Check if this hand is pinned
             hand.isPinned = pinnedHands?.some(p => p.id === hand.id);
-            const favoriteHand = game.system.id === 'swade' ? game?.user?.getFlag('swade', 'favoriteCardsDoc') : null;
-            hand.isFavorite = hand.id === favoriteHand;
+            // Handle Favorite hand
+            hand.allowFavorite = hand.getUserLevel() === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER && (game.system.id === 'swade' || game.modules.get('complete-card-management')?.active);
+            if (hand.allowFavorite) {
+                const favoriteSWADEHandId = game.system.id === 'swade' ? game.user.getFlag('swade', 'favoriteCardsDoc') : null;
+                const favoriteCCMHandId = game.modules.get('complete-card-management')?.active ? game.user.getFlag('complete-card-management', 'playerHand') : null;
+                const favoriteHand = favoriteSWADEHandId ? favoriteSWADEHandId : favoriteCCMHandId;
+                hand.isFavorite = hand.id === favoriteHand;
+            }
         }
 
         // Return the data for rendering
@@ -260,14 +266,25 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
     static async #onFavoriteHand(event, target) {
         // Prevent multiple executions
         event.stopImmediatePropagation();
-        const favoriteId = target.parentElement.parentElement.dataset.id;
-        const currentFavorite = game.user.getFlag('swade', 'favoriteCardsDoc');
+        const systemIsSwade = game.system.id === 'swade';
+        const ccmIsActive = game.modules.get('complete-card-management')?.active;
+        const favoriteId = target.closest('.hand-button.favorite')?.dataset.id;
+        const currentSWADEFavorite = systemIsSwade ? game.user.getFlag('swade', 'favoriteCardsDoc') : null;
+        const currentCCMFavorite = ccmIsActive ? game.user.getFlag('complete-card-management', 'playerHand') : null;
 
-        if (favoriteId === currentFavorite) {
-            await game.user.unsetFlag('swade', 'favoriteCardsDoc');
-        } else {
-            // Favorite the Hand based on its ID.
-            await game.user.setFlag('swade', 'favoriteCardsDoc', target.parentElement.parentElement.dataset.id);
+        if (systemIsSwade) {
+            if (favoriteId === currentSWADEFavorite) {
+                await game.user.unsetFlag('swade', 'favoriteCardsDoc');
+            } else {
+                await game.user.setFlag('swade', 'favoriteCardsDoc', favoriteId);
+            }
+        }
+        if (ccmIsActive) {
+            if (favoriteId === currentCCMFavorite) {
+                await game.user.unsetFlag('complete-card-management', 'playerHand');
+            } else {
+                await game.user.setFlag('complete-card-management', 'playerHand', favoriteId);
+            }
         }
 
         await this.render(false);

@@ -12,8 +12,7 @@
     ">
             <i class="{{#if isPinned}}fas{{else}}far{{/if}} fa-thumbtack"></i>
         </a>
-
-        {{#if (and (eq parent.system 'swade') isOwner)}}
+        {{#if (and allowFavorite isOwner)}}
         <a class="hand-button favorite" type="button" data-action="favoriteHand" data-id="{{id}}" data-tooltip="{{#if isFavorite}}{{localize (concat parent.translationPrefix '.Unfavorite')}}{{else}}{{localize (concat parent.translationPrefix '.Favorite')}}{{/if}}">
             <i class="{{#if isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
         </a>
