@@ -406,7 +406,9 @@ Hooks.on('setup', async function () {
           condition: game.user.isGM,
           callback: async el => {
             const hand = game.cards.get(el.dataset.id);
-            new foundry.applications.apps.DocumentOwnershipConfig(hand).render(true);
+            new foundry.applications.apps.DocumentOwnershipConfig({
+              document: hand,
+            }).render(true);
           }
         },
       ]
