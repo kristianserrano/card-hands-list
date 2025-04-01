@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v2.2.2
+
+- Minor enhancements.
+
 ## v2.2.1
 
 - Favorite and pinned are now separated more cleanly in that favorite hand is no longer "pinned" by default. Only hands that are actually pinned will appear in the bottom list.
