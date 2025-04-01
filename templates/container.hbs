@@ -1,47 +1,45 @@
-{{#if (or showObservable isGM)}}
+{{!-- Unpinned Hands --}}
 <ol id="available-hands" class="panel items plain scrollable flexcol" data-tooltip-direction="RIGHT">
-    {{#if ownedHands.length}}
-    {{#each ownedHands}}
-    {{#unless isPinned}}
+    {{!-- Owned Hands --}}
+    {{#if unpinnedOwnedHands.length}}
+    {{#each unpinnedOwnedHands}}
     {{> 'modules/card-hands-list/templates/hand.hbs'}}
-    {{/unless}}
     {{/each}}
     {{/if}}
-    {{#if (and ownedHands.length observableHands.length)}}
+    {{#if (and unpinnedOwnedHands.length unpinnedObservableHands.length)}}
     <hr />
     {{/if}}
-    {{#if observableHands.length}}
-    {{#each observableHands}}
-    {{#unless isPinned}}
+    {{!-- Observable Hands --}}
+    {{#if unpinnedObservableHands.length}}
+    {{#each unpinnedObservableHands}}
     {{> 'modules/card-hands-list/templates/hand.hbs'}}
-    {{/unless}}
     {{/each}}
     {{/if}}
 </ol>
-{{/if}}
+{{!-- Pinned Hands --}}
 <div id="pinned-hands" class="panel flexcol">
     <ol id="pinned-hands-list" class="container items plain scrollable flexcol" data-tooltip-direction="RIGHT">
         {{!-- Owned Hands --}}
-        {{#each pinnedHandsOwned}}
+        {{#each pinnedOwnedHands}}
         {{> 'modules/card-hands-list/templates/hand.hbs'}}
         {{/each}}
-        {{#if (and pinnedHandsOwned.length pinnedHandsObservable.length)}}
+        {{#if (and pinnedOwnedHands.length pinnedObservableHands.length)}}
         <hr />
         {{/if}}
         {{!-- Observable Hands --}}
-        {{#each pinnedHandsObservable}}
+        {{#each pinnedObservableHands}}
         {{> 'modules/card-hands-list/templates/hand.hbs'}}
         {{/each}}
     </ol>
     <div id="card-hands-stats" class="flexrow">
         <div id="hands-owned">
             <label>{{localize 'CardHandsList.Owner'}}</label>
-            <span class="owner">{{stats.owner}}</span>
+            <span class="stat-value owner">{{stats.owner}}</span>
         </div>
         {{#if showObservable}}
         <div id="hands-observable">
             <label>{{localize 'CardHandsList.Observer'}}</label>
-            <span class="observer">{{stats.observer}}</span>
+            <span class="stat-value observer">{{stats.observer}}</span>
         </div>
         {{/if}}
         <button id="expand" type="button" class="icon fa-solid fa-caret-up" data-action="expand"></button>

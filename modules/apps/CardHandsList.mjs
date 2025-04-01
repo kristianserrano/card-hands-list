@@ -96,17 +96,20 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
         const ownedHands = hands.filter(hand => determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER));
         const observableHands = hands.filter(hand => !ownedHands.some(owned => owned.id === hand.id) && determineOwnership(hand, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER));
         const favoriteHand = hands.find(hand => hand.isFavorite);
-        const pinnedHandsObservable = observableHands.filter(hand => hand.isPinned);
-        const pinnedHandsOwned = ownedHands.filter(hand => hand.isPinned);
-        // Return the data for rendering
+        const unpinnedOwnedHands = ownedHands.filter(hand => !hand.isPinned);
+        const unpinnedObservableHands = observableHands.filter(hand => !hand.isPinned);
+        const pinnedOwnedHands = ownedHands.filter(hand => hand.isPinned);
+        const pinnedObservableHands = observableHands.filter(hand => hand.isPinned);
         const context = {
             title: this.title,
             hands,
             ownedHands,
             observableHands,
             favoriteHand,
-            pinnedHandsObservable,
-            pinnedHandsOwned,
+            pinnedOwnedHands,
+            pinnedObservableHands,
+            unpinnedOwnedHands,
+            unpinnedObservableHands,
             stats: {
                 owner: ownedHands.length,
                 observer: observableHands.length,
