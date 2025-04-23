@@ -1,5 +1,35 @@
 @layer card-hands-list {
   #card-hands-list {
+    --text-color: var(--color-text-secondary);
+
+    button {
+      --button-text-color: var(--color-text-emphatic);
+      --button-hover-text-color: var(--button-text-color);
+    }
+
+    .themed.theme-light & {
+      --background-color: rgba(255, 255, 255, 0.6);
+      --border-color: rgba(255, 255, 255, 0.8);
+      --player-name-self-color: var(--color-text-emphatic);
+      --color-rating-good: #1e7e34;
+
+      button {
+        --button-background-color: rgba(0 0 0 / 10%);
+        --button-border-color: var(--color-dark-5);
+        --button-focus-outline-color: var(--color-warm-2);
+        --button-hover-background-color: var(--color-warm-2);
+        --button-hover-text-color: var(--color-light-1);
+      }
+    }
+
+    .themed.theme-dark & {
+      --background-color: var(--color-cool-5-75);
+      --border-color: var(--color-cool-4);
+      --player-name-color: var(--color-text-primary);
+      --player-name-self-color: #c0eddb;
+      --color-rating-good: #58e558;
+    }
+
     --hand-height: 80px;
     --transition-time: 0.5s;
     --delay-time: var(--transition-time);
@@ -10,12 +40,12 @@
     justify-content: end;
     row-gap: 8px;
     font-size: var(--font-size-12);
+    color: var(--text-color);
     pointer-events: none;
-    transition:
-      opacity var(--ui-fade-duration),
-      max-height var(--transition-time) ease-in,
-      visibility var(--transition-time) 0s,
-      margin-bottom var(--transition-time) ease-in;
+    transition: opacity var(--ui-fade-duration),
+    max-height var(--transition-time) ease-in,
+    visibility var(--transition-time) 0s,
+    margin-bottom var(--transition-time) ease-in;
 
     &:has(+ #players.expanded) {
       margin-bottom: -8px;
@@ -99,7 +129,6 @@
       .mode {
         font-size: var(--font-size-16);
         margin: 0 5px;
-        color: var(--color-text-light-primary);
       }
     }
 
@@ -131,12 +160,11 @@
         margin: 0;
         grid-row: 1 / 2;
         grid-column: 2 / 3;
-        color: var(--color-light-2);
         cursor: pointer;
         pointer-events: all;
 
         &.is-owner {
-          color: #c0eddb;
+          color: var(--player-name-self-color);
         }
       }
 
@@ -152,7 +180,6 @@
         align-items: center;
 
         & .hand-button {
-          color: var(--color-light-1);
           cursor: pointer;
           pointer-events: all;
 
@@ -232,7 +259,6 @@
           flex: 0;
           place-content: center;
           font-size: var(--font-size-16);
-          color: rgb(247 243 232);
           background: var(--background-color, var(--color-cool-5-75));
           opacity: 0.5;
           transition: all 0.25s ease-in-out;
@@ -254,7 +280,6 @@
     }
 
     #card-hands-stats {
-      color: var(--color-light-3);
       font-family: var(--font-monospace);
       gap: 8px;
 
@@ -273,7 +298,7 @@
 
       .owner,
       .observer {
-        color: #58e558;
+        color: var(--color-rating-good);
       }
 
       button {
@@ -281,7 +306,6 @@
         line-height: 20px;
         background: none;
         border: none;
-        color: var(--color-light-1);
         pointer-events: all;
       }
 
@@ -289,14 +313,6 @@
         justify-self: end;
         transition: transform var(--transition-time);
       }
-    }
-
-    .themed.theme-light & {
-      --background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .themed.theme-dark & {
-      --background-color: var(--color-cool-5-75);
     }
   }
 
