@@ -1,5 +1,9 @@
 # Card Hands List Changelog
 
+## v2.2.3
+
+- CSS fixes based on light/dark theme changes to the player list in Foundry v13.340.
+
 ## v2.2.2
 
 - Minor enhancements.
