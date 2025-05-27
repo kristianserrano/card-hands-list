@@ -69,11 +69,11 @@ export class CardHandsList extends HandlebarsApplicationMixin(ApplicationV2) {
             // Enrich the cards' texts
             for (const card of hand.cards) {
                 for (const face of card.faces) {
-                    face.enrichedText = await TextEditor.enrichHTML(face.text);
+                    face.enrichedText = await foundry.applications.ux.TextEditor.implementation.enrichHTML(face.text);
                 }
 
-                card.enrichedDescription = await TextEditor.enrichHTML(card.description);
-                card.back.enrichedText = await TextEditor.enrichHTML(card.back.text);
+                card.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(card.description);
+                card.back.enrichedText = await foundry.applications.ux.TextEditor.implementation.enrichHTML(card.back.text);
             }
 
             // Sort the cards by sort values
