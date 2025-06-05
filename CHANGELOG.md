@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v2.2.5
+
+- Minor CSS and animation tweaks to operate expansion a little more smoothly and to play nicely with SmallTime.
+- Fixes deprecation warnings related to TextEditor.
+
 ## v2.2.4
 
 - A super tiny CSS fix you probably won't even notice.
