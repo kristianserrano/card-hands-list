@@ -34,7 +34,7 @@
     --transition-time: 0.5s;
     --delay-time: var(--transition-time);
     position: relative;
-    margin-bottom: -16px;
+    margin-bottom: -8px;
     max-height: calc(var(--hand-height) + 4em);
     flex: none;
     justify-content: end;
@@ -43,9 +43,9 @@
     color: var(--text-color);
     pointer-events: none;
     transition: opacity var(--ui-fade-duration),
-    max-height var(--transition-time) ease-in,
+    max-height var(--transition-time) ease-in-out,
     visibility var(--transition-time) 0s,
-    margin-bottom var(--transition-time) ease-in;
+    margin-bottom var(--transition-time) linear;
 
     &:has(+ #players.expanded) {
       margin-bottom: -8px;
@@ -409,16 +409,23 @@
   }
 
   #players-inactive {
+    box-sizing: border-box;
+    margin-top: -4px;
+    margin-bottom: -6px;
     padding-top: 0;
     padding-bottom: 0;
+    max-height: 0;
     transition:
       max-height 0.5s ease-in-out,
       visibility 0.5s 0s,
-      padding 0.5s ease-in-out;
+      margin 0.5s linear 0.125s,
+      padding 0.5s linear;
 
     #players.expanded & {
+      margin: 0;
       padding-top: 6px;
       padding-bottom: 6px;
+      max-height: 300px;
     }
   }
 }
