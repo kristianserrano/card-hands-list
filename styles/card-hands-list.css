@@ -318,6 +318,8 @@
   }
 
   .card-hands-list-actions {
+    min-height: 400px;
+
     figure {
       margin: 0;
     }

@@ -18,7 +18,7 @@ export class HandActionsSheet extends foundry.applications.sheets.CardHandConfig
         },
         position: {
             width: 724,
-            height: 410,
+            height: 'auto',
             top: 80,
         },
         classes: ['card-hands-list-actions'],
