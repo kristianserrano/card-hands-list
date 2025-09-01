@@ -18,6 +18,7 @@
 </ol>
 {{!-- Pinned Hands --}}
 <div id="pinned-hands" class="panel flexcol">
+    {{#if (or pinnedOwnedHands.length pinnedObservableHands.length)}}
     <ol id="pinned-hands-list" class="container items plain scrollable flexcol" data-tooltip-direction="RIGHT">
         {{!-- Owned Hands --}}
         {{#each pinnedOwnedHands}}
@@ -31,6 +32,7 @@
         {{> 'modules/card-hands-list/templates/hand.hbs'}}
         {{/each}}
     </ol>
+    {{/if}}
     <div id="card-hands-stats" class="flexrow">
         <div id="hands-owned">
             <label>{{localize 'CardHandsList.Owner'}}</label>

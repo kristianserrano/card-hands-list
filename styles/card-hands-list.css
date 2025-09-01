@@ -60,6 +60,14 @@
       gap: var(--gap);
       background: var(--background-color, var(--color-cool-5-75));
       border-radius: 8px;
+      transition:
+        max-height var(--transition-time) ease-in-out,
+        visibility var(--transition-time) 0s;
+
+      .expanded & {
+        transition:
+          max-height var(--transition-time) ease-in-out;
+      }
 
       hr {
         margin: -5px 0;
@@ -69,41 +77,38 @@
     #available-hands {
       visibility: hidden;
       max-height: 0;
-      transition:
-        max-height var(--transition-time) ease-in-out,
-        visibility var(--transition-time) 0s;
+
+
+      .expanded &:has(.hand) {
+        visibility: visible;
+        max-height: calc((var(--hand-height) * 4) - 1.5em);
+      }
     }
 
     #pinned-hands {
-      max-height: calc(var(--hand-height) + 4em);
+      --pinned-hands-height: calc(var(--hand-height) + 4em);
+      container-type: size;
+      height: 100cqh;
+      max-height: 4em;
       overflow: clip;
-      transition:
-        max-height var(--transition-time) ease-in-out;
+
+      &:has(.hand) {
+        max-height: var(--pinned-hands-height);
+      }
+
+      .expanded & {
+        &:has(.hand) {
+          max-height: calc((var(--hand-height) + var(--gap) + 1.75em) * 3);
+        }
+      }
 
       #pinned-hands-list {
+        height: 100cqh;
         padding: 0;
         width: 100%;
         gap: var(--gap);
         scrollbar-gutter: stable;
-        height: calc(100cqh - 2.5em);
-      }
-    }
-
-    &.expanded {
-      #available-hands {
-        visibility: visible;
-        max-height: calc((var(--hand-height) * 4) - 1.5em);
-        transition:
-          max-height var(--transition-time) ease-in-out,
-          visibility var(--transition-time) 0s;
-      }
-
-      #pinned-hands {
-        max-height: calc((var(--hand-height) + var(--gap) + 1.75em) * 3);
-      }
-
-      #expand {
-        transform: rotate(180deg);
+        max-height: calc(100cqh - 2.5em);
       }
     }
 
@@ -280,10 +285,12 @@
     }
 
     #card-hands-stats {
-      font-family: var(--font-monospace);
+      position: sticky;
+      margin-top: auto;
+      bottom: 0;
       justify-content: space-between;
       gap: 8px;
-
+      font-family: var(--font-monospace);
 
       #hands-owned {
         flex: none;
@@ -313,6 +320,10 @@
       #expand {
         justify-self: end;
         transition: transform var(--transition-time);
+
+        .expanded & {
+          transform: rotate(180deg);
+        }
       }
     }
   }
