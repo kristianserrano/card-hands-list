@@ -42,10 +42,11 @@
     font-size: var(--font-size-12);
     color: var(--text-color);
     pointer-events: none;
-    transition: opacity var(--ui-fade-duration),
-    max-height var(--transition-time) ease-in-out,
-    visibility var(--transition-time) 0s,
-    margin-bottom var(--transition-time) linear;
+    transition:
+      opacity var(--ui-fade-duration),
+      max-height var(--transition-time) ease-in-out,
+      visibility var(--transition-time) 0s,
+      margin-bottom var(--transition-time) linear;
 
     &:has(+ #players.expanded) {
       margin-bottom: -8px;
@@ -78,7 +79,6 @@
       visibility: hidden;
       max-height: 0;
 
-
       .expanded &:has(.hand) {
         visibility: visible;
         max-height: calc((var(--hand-height) * 4) - 1.5em);
@@ -86,14 +86,13 @@
     }
 
     #pinned-hands {
-      --pinned-hands-height: calc(var(--hand-height) + 4em);
       container-type: size;
       height: 100cqh;
       max-height: 4em;
       overflow: clip;
 
       &:has(.hand) {
-        max-height: var(--pinned-hands-height);
+        max-height: calc(var(--hand-height) + 4em);
       }
 
       .expanded & {
