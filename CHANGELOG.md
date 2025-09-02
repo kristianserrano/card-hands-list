@@ -1,5 +1,10 @@
 # Card Hands List Changelog
 
+## v2.2.6
+
+- Improves hand actions sheet height adjustments as cards are added to the hand.
+- Improves available and pinned lists by hiding either when its empty. The pinned list will only display if a hand is pinned. The available list will hide if all available hands have been pinned.
+
 ## v2.2.5
 
 - Minor CSS and animation tweaks to operate expansion a little more smoothly and to play nicely with SmallTime.
