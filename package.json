@@ -11,6 +11,7 @@
 	"scripts": {
 		"fvttLaunchV12": "bash ./tools/fvttLaunch-v12.sh",
 		"fvttLaunchV13": "bash ./tools/fvttLaunch-v13.sh",
+		"fvttLaunchV14": "bash ./tools/fvttLaunch-v14.sh",
 		"packLDB": "node ./tools/packLDB.mjs",
 		"unpackLDB": "node ./tools/unpackLDB.mjs",
 		"package": "gulp package",
