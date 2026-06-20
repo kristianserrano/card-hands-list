@@ -18,8 +18,8 @@
 	"bugs": "",
 	"compatibility": {
 		"minimum": "13",
-		"verified": "13",
-		"maximum": "13"
+		"verified": "14",
+		"maximum": "14"
 	},
 	"esmodules": [
 		"modules/card-hands-list.mjs"
